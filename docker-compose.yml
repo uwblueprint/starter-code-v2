@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  backend:
+  ts-backend:
     build:
       context: ./backend/typescript
       dockerfile: Dockerfile
@@ -12,6 +12,17 @@ services:
       - 5000:5000
     dns:
       - 8.8.8.8
+    depends_on:
+      - db
+  py-backend:
+    restart: always
+    build:
+      context: ./backend/python
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+     - ./backend/python:/app
     depends_on:
       - db
   db:
