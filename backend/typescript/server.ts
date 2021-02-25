@@ -17,10 +17,10 @@ app.use(express.json());
 
 const eraseDatabaseOnSync = false;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
-    mongo.connect();
+  mongo.connect();
 
-    app.listen({ port: 5000 }, () => {
-        /* tslint:disable-next-line no-console */
-        console.info("Server is listening on port 5000!");
-    });
+  app.listen({ port: 5000 }, () => {
+    /* eslint-disable-next-line no-console */
+    console.info("Server is listening on port 5000!");
+  });
 });
