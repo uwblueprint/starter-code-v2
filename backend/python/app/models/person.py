@@ -3,8 +3,9 @@ from sqlalchemy.orm.properties import ColumnProperty
 
 from . import db
 
+
 class Person(db.Model):
-    __tablename__ = 'people'
+    __tablename__ = "people"
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(50), nullable=False)
@@ -27,4 +28,3 @@ class Person(db.Model):
                 # don't format the relationship's relationships
                 formatted[field] = [obj.to_dict() for obj in attr]
         return formatted
-        
