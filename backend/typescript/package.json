@@ -2,11 +2,10 @@
   "name": "typescript-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:server": "nodemon -L",
-    "lint": "tslint -c tslint.json -p tsconfig.json --fix"
+    "dev": "nodemon -L"
   },
   "keywords": [],
   "author": "",

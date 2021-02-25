@@ -2,10 +2,10 @@ FROM node:14.15.5-slim
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+COPY package.json yarn.lock ./
+RUN yarn install
 
 COPY . ./
 
 EXPOSE 5000
-ENTRYPOINT ["npm", "run", "dev:server"]
+ENTRYPOINT ["yarn", "dev"]
