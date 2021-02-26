@@ -1,0 +1,55 @@
+version: "3.7"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+     - ./frontend:/app
+     - /app/node_modules
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - ./.env
+  ts-backend:
+    build:
+      context: ./backend/typescript
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/typescript:/app
+      - /app/node_modules
+    ports:
+      - 5000:5000
+    dns:
+      - 8.8.8.8
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+  py-backend:
+    restart: always
+    build:
+      context: ./backend/python
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+     - ./backend/python:/app
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+  db:
+    image: postgres:12-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+
+volumes:
+  postgres_data:
