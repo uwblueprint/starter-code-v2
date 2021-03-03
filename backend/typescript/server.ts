@@ -2,18 +2,19 @@ import cors from "cors";
 import express from "express";
 
 import { mongo, sequelize } from "./models/index";
-// import PgPerson from "./models/person.pgmodel";
-// import MgPerson from "./models/person.mgmodel";
-
+import Entity, { IEntity } from "./models/entity.mgmodel"
+import EntityService from "./services/EntityService";
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// app.get("/", async (_req, res) => {
-//     await PgPerson.create({name: "First Last", email: "first@last.com"});
-//     await MgPerson.create({name: "First Last", email: "first@last.com"});
-//     res.send("Created some records!");
-// });
+app.get("/", async (_req, res) => {
+  // await MgPerson.create({ name: "First Last", email: "first@last.com" });
+  // await Entity.create({ string_field: "test", int_field: 7, enum_field: 'A', string_array_field: ["test"], bool_field: false })
+  const test = new EntityService();
+  const results = await test.getEntities();
+  res.send(results);
+});
 
 const eraseDatabaseOnSync = false;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
