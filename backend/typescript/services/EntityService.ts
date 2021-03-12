@@ -16,7 +16,7 @@ const test = new Entity();
 
 export interface EntityService {
     /* retrieve the Entity with the given id */
-    getEntity(id: number): Promise<IEntity | null>
+    getEntity(id: string): Promise<IEntity | null>
     /* retrieve all Entities (pagination is nice-to-have future feature) */
     getEntities(): Promise<IEntity[]>
     /* create an Entity with the fields given in the DTO, return created Entity */
@@ -30,8 +30,8 @@ export interface EntityService {
 export class EntityService {
 
     /* retrieve the Entity with the given id */
-    async getEntity(id: number): Promise<IEntity | null> {
-        return await Entity.findById(id);
+    async getEntity(id: string): Promise<IEntity | null> {
+        return await Entity.findById(mongoose.Types.ObjectId(id));
     }
 
     /* retrieve all Entities (pagination is nice-to-have future feature) */
@@ -57,8 +57,7 @@ export class EntityService {
 
     /* delete the entity with the given id */
     deleteEntity(id: string): void {
-        const _id = mongoose.Types.ObjectId(id);
-        Entity.findByIdAndDelete(_id);
+        Entity.findByIdAndDelete(mongoose.Types.ObjectId(id));
     }
 }
 
