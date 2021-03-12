@@ -4,11 +4,11 @@ enum Options {
     A, B, C, D,
 }
 
-interface EntityRequestDTO {
+export interface EntityRequestDTO {
     string_field: string;
     int_field: number;
-    enum_field: Options;
-    string_array_field: [String];
+    enum_field: string;
+    string_array_field: [string];
     bool_field: boolean;
 }
 
@@ -20,7 +20,7 @@ export interface EntityService {
     /* create an Entity with the fields given in the DTO, return created Entity */
     createEntity(entity: IEntity): Promise<IEntity>;
     /* update the Entity with the given id with fields in the DTO, return updated Entity */
-    updateEntity(id: number, entity: IEntity): Promise<IEntity | null>;
+    updateEntity(id: string, entity: IEntity): Promise<IEntity | null>;
     /* delete the entity with the given id */
     deleteEntity(id: string): void;
 }
@@ -42,15 +42,8 @@ export class EntityService {
         return await Entity.create(entity);
     }
     /* update the Entity with the given id with fields in the DTO, return updated Entity */
-    async updateEntity(id: number, entity: IEntity): Promise<IEntity | null> {
-        // const IEntityObject: IEntity = {
-        //     string_field: 'test',
-        //     int_field: 7,
-        //     enum_field: 'A',
-        //     string_array_field: ['B'],
-        //     bool_field: true,
-        // }
-        return await Entity.findByIdAndUpdate({ _id: id }, entity, { new: true })
+    async updateEntity(id: string, entity: IEntity): Promise<IEntity | null> {
+        return await Entity.findByIdAndUpdate({ _id: mongoose.Types.ObjectId(id) }, entity, { new: true })
     }
 
     /* delete the entity with the given id */
