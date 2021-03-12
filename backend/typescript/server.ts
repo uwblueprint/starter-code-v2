@@ -21,8 +21,51 @@ app.get("/", async (_req, res) => {
   //   bool_field: false,
 
   // })
-  const results = await entService.getEntities();
-  res.send(results);
+});
+
+app.get("/create/", async (_req, res) => {
+  const id: string = _req.params.id
+  try {
+    entService.deleteEntity(id);
+    res.send('Success')
+  }
+  catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
+app.get("/entities", async (_req, res) => {
+  try {
+    const result = await entService.getEntities();
+    res.send(result)
+  }
+  catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
+app.get("/entity/:id", async (_req, res) => {
+  const id: string = _req.params.id
+
+  try {
+    const result = await entService.getEntity(id);
+    res.send(result)
+  }
+  catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
+app.get("/update/:id", async (_req, res) => {
+  const id: string = _req.params.id
+
+  try {
+    const result = await entService.getEntity(id);
+    res.send(result)
+  }
+  catch (e) {
+    res.status(500).send(e.message);
+  }
 });
 
 app.get("/delete/:id", async (_req, res) => {
@@ -34,7 +77,7 @@ app.get("/delete/:id", async (_req, res) => {
   catch (e) {
     res.status(500).send(e.message);
   }
-})
+});
 
 const eraseDatabaseOnSync = false;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
