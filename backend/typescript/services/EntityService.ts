@@ -12,15 +12,13 @@ interface EntityRequestDTO {
     bool_field: boolean;
 }
 
-const test = new Entity();
-
 export interface EntityService {
     /* retrieve the Entity with the given id */
     getEntity(id: string): Promise<IEntity | null>
     /* retrieve all Entities (pagination is nice-to-have future feature) */
     getEntities(): Promise<IEntity[]>
     /* create an Entity with the fields given in the DTO, return created Entity */
-    createEntity(entity: EntityRequestDTO): Promise<IEntity>;
+    createEntity(entity: IEntity): Promise<IEntity>;
     /* update the Entity with the given id with fields in the DTO, return updated Entity */
     updateEntity(id: number, entity: IEntity): Promise<IEntity | null>;
     /* delete the entity with the given id */
@@ -40,7 +38,7 @@ export class EntityService {
     }
 
     /* create an Entity with the fields given in the DTO, return created Entity */
-    async createEntity(entity: EntityRequestDTO): Promise<IEntity> {
+    async createEntity(entity: IEntity): Promise<IEntity> {
         return await Entity.create(entity);
     }
     /* update the Entity with the given id with fields in the DTO, return updated Entity */
@@ -56,8 +54,8 @@ export class EntityService {
     }
 
     /* delete the entity with the given id */
-    deleteEntity(id: string): void {
-        Entity.findByIdAndDelete(mongoose.Types.ObjectId(id));
+    async deleteEntity(id: string): Promise<void> {
+        await Entity.findByIdAndDelete(mongoose.Types.ObjectId(id));
     }
 }
 
