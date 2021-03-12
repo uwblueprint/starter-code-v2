@@ -22,6 +22,17 @@ app.use("/entities", entityRouter);
 app.use("/users", userRouter);
 
 
+app.get("/delete/:id", async (_req, res) => {
+  const id: string = _req.params.id
+  try {
+    entService.deleteEntity(id);
+    res.send('Success')
+  }
+  catch (e) {
+    res.status(500).send(e.message);
+  }
+})
+
 const eraseDatabaseOnSync = false;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   mongo.connect();
