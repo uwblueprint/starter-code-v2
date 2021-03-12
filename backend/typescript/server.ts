@@ -4,9 +4,12 @@ import { mongo, sequelize } from "./models/index";
 import { Entity, IEntity } from "./models/entity.mgmodel"
 import EntityService from "./services/EntityService";
 import { addOptions } from "sequelize-typescript";
+var bodyParser = require('body-parser');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 
 const entService = new EntityService();
 
@@ -23,10 +26,10 @@ app.get("/", async (_req, res) => {
   // })
 });
 
-app.get("/create/", async (_req, res) => {
-  const id: string = _req.params.id
+app.post("/entities/", async (_req, res) => {
+  const obj: IEntity = _req.body.entity;
   try {
-    entService.deleteEntity(id);
+    entService.createEntity(obj);
     res.send('Success')
   }
   catch (e) {
@@ -44,7 +47,7 @@ app.get("/entities", async (_req, res) => {
   }
 });
 
-app.get("/entity/:id", async (_req, res) => {
+app.get("/entities/:id", async (_req, res) => {
   const id: string = _req.params.id
 
   try {
@@ -56,7 +59,7 @@ app.get("/entity/:id", async (_req, res) => {
   }
 });
 
-app.get("/update/:id", async (_req, res) => {
+app.put("/entities/:id", async (_req, res) => {
   const id: string = _req.params.id
 
   try {
@@ -68,8 +71,8 @@ app.get("/update/:id", async (_req, res) => {
   }
 });
 
-app.get("/delete/:id", async (_req, res) => {
-  const id: string = _req.params.id
+app.delete("/entities/:id", async (_req, res) => {
+  const id: string = _req.params.id;
   try {
     entService.deleteEntity(id);
     res.send('Success')
