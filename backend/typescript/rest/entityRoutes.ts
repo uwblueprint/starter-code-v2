@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import { Entity, IEntity } from "../models/entity.mgmodel"
-import EntityService from "../services/EntityService";
+import EntityService from "../services/implementations/EntityService";
 import { EntityRequestDTO } from "../services/interfaces/IEntityService";
 
 export const entityRouter: Router = Router();

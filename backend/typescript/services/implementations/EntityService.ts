@@ -1,6 +1,6 @@
 import { userInfo } from "node:os";
-import { Entity, IEntity } from "../models/entity.mgmodel";
-import { IEntityService, EntityRequestDTO } from "./interfaces/IEntityService";
+import { Entity, IEntity } from "../../models/entity.mgmodel";
+import { IEntityService, EntityRequestDTO } from "../interfaces/IEntityService";
 var mongoose = require('mongoose');
 
 
