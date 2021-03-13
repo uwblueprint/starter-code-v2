@@ -1,108 +1,40 @@
-import MgEntity, { Entity } from "../../models/entity.mgmodel";
-import {
-  IEntityService,
-  EntityRequestDTO,
-  EntityResponseDTO,
-} from "../interfaces/IEntityService";
-import Logger from "../../utilities/logger";
+import { userInfo } from "node:os";
+import { Entity, IEntity } from "../../models/entity.mgmodel";
+import { IEntityService, EntityRequestDTO } from "../interfaces/IEntityService";
+var mongoose = require('mongoose');
 
-class EntityService implements IEntityService {
-  /* eslint-disable class-methods-use-this */
-  async getEntity(id: string): Promise<EntityResponseDTO> {
-    let entity: Entity | null;
-    try {
-      entity = await MgEntity.findById(id);
-      if (!entity) {
-        throw new Error(`Entity id ${id} not found`);
-      }
-    } catch (error) {
-      Logger.error(`Failed to get entity. Reason = ${error.message}`);
-      throw error;
+
+export class EntityService implements IEntityService {
+
+    /* retrieve the Entity with the given id */
+    async getEntity(id: string): Promise<IEntity> {
+        let entity: IEntity | null;
+        entity = await Entity.findById(mongoose.Types.ObjectId(id));
+
+        if (!entity) {
+            throw new Error;
+        }
+        return entity;
     }
 
-    return {
-      id: entity.id,
-      stringField: entity.stringField,
-      intField: entity.intField,
-      enumField: entity.enumField,
-      stringArrayField: entity.stringArrayField,
-      boolField: entity.boolField,
-    };
-  }
-
-  async getEntities(): Promise<EntityResponseDTO[]> {
-    try {
-      const entities: Array<Entity> = await MgEntity.find();
-      return entities.map((entity) => ({
-        id: entity.id,
-        stringField: entity.stringField,
-        intField: entity.intField,
-        enumField: entity.enumField,
-        stringArrayField: entity.stringArrayField,
-        boolField: entity.boolField,
-      }));
-    } catch (error) {
-      Logger.error(`Failed to get entities. Reason = ${error.message}`);
-      throw error;
+    /* retrieve all Entities (pagination is nice-to-have future feature) */
+    async getEntities(): Promise<IEntity[]> {
+        return await Entity.find();
     }
-  }
 
-  async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
-    let newEntity: Entity | null;
-    try {
-      newEntity = await MgEntity.create(entity);
-    } catch (error) {
-      Logger.error(`Failed to create entity. Reason = ${error.message}`);
-      throw error;
+    /* create an Entity with the fields given in the DTO, return created Entity */
+    async createEntity(entity: IEntity): Promise<IEntity> {
+        return await Entity.create(entity);
     }
-    return {
-      id: newEntity.id,
-      stringField: newEntity.stringField,
-      intField: newEntity.intField,
-      enumField: newEntity.enumField,
-      stringArrayField: newEntity.stringArrayField,
-      boolField: newEntity.boolField,
-    };
-  }
+    /* update the Entity with the given id with fields in the DTO, return updated Entity */
+    async updateEntity(id: string, entity: IEntity): Promise<IEntity | null> {
+        return await Entity.findByIdAndUpdate({ _id: mongoose.Types.ObjectId(id) }, entity, { new: true })
+    }
 
-  async updateEntity(
-    id: string,
-    entity: EntityRequestDTO,
-  ): Promise<EntityResponseDTO | null> {
-    let updatedEntity: Entity | null;
-    try {
-      updatedEntity = await MgEntity.findByIdAndUpdate(id, entity, {
-        new: true,
-        runValidators: true,
-      });
-      if (!updatedEntity) {
-        throw new Error(`Entity id ${id} not found`);
-      }
-    } catch (error) {
-      Logger.error(`Failed to update entity. Reason = ${error.message}`);
-      throw error;
+    /* delete the entity with the given id */
+    async deleteEntity(id: string): Promise<void> {
+        await Entity.findByIdAndDelete(mongoose.Types.ObjectId(id));
     }
-    return {
-      id: updatedEntity.id,
-      stringField: updatedEntity.stringField,
-      intField: updatedEntity.intField,
-      enumField: updatedEntity.enumField,
-      stringArrayField: updatedEntity.stringArrayField,
-      boolField: updatedEntity.boolField,
-    };
-  }
-
-  async deleteEntity(id: string): Promise<void> {
-    try {
-      const deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
-      if (!deletedEntity) {
-        throw new Error(`Entity id ${id} not found`);
-      }
-    } catch (error) {
-      Logger.error(`Failed to delete entity. Reason = ${error.message}`);
-      throw error;
-    }
-  }
 }
 
 export default EntityService;
