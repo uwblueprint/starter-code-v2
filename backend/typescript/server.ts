@@ -7,12 +7,11 @@ import authRouter from "./rest/authRoutes";
 import entityRouter from "./rest/entityRoutes";
 import userRouter from "./rest/userRoutes";
 import { mongo, sequelize } from "./models/index";
-import { Entity, IEntity } from "./models/entity.mgmodel"
-import EntityService, { EntityRequestDTO } from "./services/EntityService";
-import { entityRouter } from "../typescript/rest/entityRoutes";
 import { addOptions } from "sequelize-typescript";
-
 var bodyParser = require('body-parser');
+
+const entityRouter = require('./rest/entityRoutes');
+
 
 const app = express();
 app.use(cookieParser());
