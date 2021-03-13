@@ -1,3 +1,4 @@
+import { userInfo } from "node:os";
 import { Entity, IEntity } from "../models/entity.mgmodel"
 var mongoose = require('mongoose');
 enum Options {
@@ -14,7 +15,7 @@ export interface EntityRequestDTO {
 
 export interface EntityService {
     /* retrieve the Entity with the given id */
-    getEntity(id: string): Promise<IEntity | null>
+    getEntity(id: string): Promise<IEntity>
     /* retrieve all Entities (pagination is nice-to-have future feature) */
     getEntities(): Promise<IEntity[]>
     /* create an Entity with the fields given in the DTO, return created Entity */
@@ -28,8 +29,14 @@ export interface EntityService {
 export class EntityService {
 
     /* retrieve the Entity with the given id */
-    async getEntity(id: string): Promise<IEntity | null> {
-        return await Entity.findById(mongoose.Types.ObjectId(id));
+    async getEntity(id: string): Promise<IEntity> {
+        let entity: IEntity | null;
+        entity = await Entity.findById(mongoose.Types.ObjectId(id));
+
+        if (!entity) {
+            throw new Error;
+        }
+        return entity;
     }
 
     /* retrieve all Entities (pagination is nice-to-have future feature) */
