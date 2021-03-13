@@ -1,4 +1,4 @@
-export type Role = number;
+export type Role = "User" | "Admin";
 
 export type Token = {
   accessToken: string;
@@ -6,7 +6,7 @@ export type Token = {
 };
 
 export type UserDTO = {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
