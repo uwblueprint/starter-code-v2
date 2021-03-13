@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import { Entity, IEntity } from "../models/entity.mgmodel"
 import EntityService, { EntityRequestDTO } from "../services/EntityService";
 
 export const entityRouter: Router = Router();
 
 /* Create entity Object */
-entityRouter.post("/entities/", async (_req, res) => {
+entityRouter.post("/", async (_req, res) => {
     const entityObj: EntityRequestDTO = _req.body.entity;
     const IentityObj = {} as IEntity;
     const entService = new EntityService();
@@ -26,7 +26,7 @@ entityRouter.post("/entities/", async (_req, res) => {
 
 
 /* Get all entity objects */
-entityRouter.get("/entities", async (_req, res) => {
+entityRouter.get("/", async (_req, res) => {
     const entService = new EntityService();
 
     try {
@@ -39,7 +39,7 @@ entityRouter.get("/entities", async (_req, res) => {
 });
 
 /* Get entity object by id */
-entityRouter.get("/entities/:id", async (_req, res) => {
+entityRouter.get("/:id", async (_req, res) => {
     const entService = new EntityService();
     const id: string = _req.params.id;
 
@@ -53,7 +53,7 @@ entityRouter.get("/entities/:id", async (_req, res) => {
 });
 
 /* Update entity object by id */
-entityRouter.put("/entities/:id", async (_req, res) => {
+entityRouter.put("/:id", async (_req, res) => {
     const entService = new EntityService();
     const id: string = _req.params.id;
     const entityObj: EntityRequestDTO = _req.body.entity;
@@ -74,7 +74,7 @@ entityRouter.put("/entities/:id", async (_req, res) => {
 });
 
 /* Delete entity object by id */
-entityRouter.delete("/entities/:id", async (_req, res) => {
+entityRouter.delete("/:id", async (_req, res) => {
     const entService = new EntityService();
     const id: string = _req.params.id;
 
@@ -86,3 +86,5 @@ entityRouter.delete("/entities/:id", async (_req, res) => {
         res.status(500).send(e.message);
     }
 });
+
+module.exports = entityRouter

@@ -1,12 +1,11 @@
 import cors from "cors";
 import express from "express";
 import { mongo, sequelize } from "./models/index";
-import { Entity, IEntity } from "./models/entity.mgmodel"
-import EntityService, { EntityRequestDTO } from "./services/EntityService";
-import { entityRouter } from "../typescript/rest/entityRoutes";
 import { addOptions } from "sequelize-typescript";
-
 var bodyParser = require('body-parser');
+
+const entityRouter = require('./rest/entityRoutes');
+
 
 const app = express();
 app.use(cors());
