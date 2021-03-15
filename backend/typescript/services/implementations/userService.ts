@@ -2,7 +2,7 @@ import * as firebaseAdmin from "firebase-admin";
 
 import IUserService from "../interfaces/userService";
 import MgUser, { User } from "../../models/user.mgmodel";
-import { CreateUserDTO, UpdateUserDTO, UserDTO } from "../../types";
+import { CreateUserDTO, Role, UpdateUserDTO, UserDTO } from "../../types";
 import Logger from "../../utilities/logger";
 
 class UserService implements IUserService {
@@ -56,6 +56,32 @@ class UserService implements IUserService {
       email: firebaseUser.email ?? "",
       role: user.role,
     };
+  }
+
+  async getUserRoleByAuthId(authId: string): Promise<Role> {
+    try {
+      const user: User | null = await MgUser.findOne({ authId });
+      if (!user) {
+        throw new Error(`userId with authId ${authId} not found.`);
+      }
+      return user.role;
+    } catch (error) {
+      Logger.error(`Failed to get user role. Reason = ${error.message}`);
+      throw error;
+    }
+  }
+
+  async getAuthIdById(userId: string): Promise<string> {
+    try {
+      const user = await MgUser.findById(userId);
+      if (!user) {
+        throw new Error(`userId ${userId} not found.`);
+      }
+      return user.authId;
+    } catch (error) {
+      Logger.error(`Failed to get user. Reason = ${error.message}`);
+      throw error;
+    }
   }
 
   async getUsers(): Promise<Array<UserDTO>> {
