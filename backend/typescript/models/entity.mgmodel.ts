@@ -1,35 +1,35 @@
 import mongoose, { Schema, Document, model } from "mongoose";
 
-export interface IEntity extends Document {
-    string_field: string;
-    int_field: number;
-    enum_field: string;
-    string_array_field: [string];
-    bool_field: Boolean;
+export interface Entity extends Document {
+    stringField: string;
+    intField: number;
+    enumField: string;
+    stringArrayField: [string];
+    boolField: Boolean;
 }
 
 const EntitySchema: Schema = new Schema({
-    string_field: {
+    stringField: {
         type: String,
         required: true,
     },
-    int_field: {
+    intField: {
         type: Number,
         required: true,
     },
-    enum_field: {
+    enumField: {
         type: String,
         enum: ['A', 'B', 'C', 'D'],
         required: true,
     },
-    string_array_field: {
+    stringArrayField: {
         type: [String],
         required: true,
     },
-    bool_field: {
+    boolField: {
         type: Boolean,
         required: true,
     },
 });
 
-export const Entity = model<IEntity>("Entity", EntitySchema);
+export const MEntity = model<Entity>("Entity", EntitySchema);
