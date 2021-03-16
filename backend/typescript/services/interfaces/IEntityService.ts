@@ -1,26 +1,51 @@
-import { Entity, IEntity } from "../../models/entity.mgmodel";
+import { Entity } from "../../models/entity.mgmodel";
 
 enum Options {
     A, B, C, D,
 }
 
 export interface EntityRequestDTO {
-    string_field: string;
-    int_field: number;
-    enum_field: string;
-    string_array_field: [string];
-    bool_field: boolean;
+    stringField: string;
+    intField: number;
+    enumField: string;
+    stringArrayField: [string];
+    boolField: boolean;
 }
 
 export interface IEntityService {
-    /* retrieve the Entity with the given id */
-    getEntity(id: string): Promise<IEntity>
-    /* retrieve all Entities (pagination is nice-to-have future feature) */
-    getEntities(): Promise<IEntity[]>
-    /* create an Entity with the fields given in the DTO, return created Entity */
-    createEntity(entity: IEntity): Promise<IEntity>;
-    /* update the Entity with the given id with fields in the DTO, return updated Entity */
-    updateEntity(id: string, entity: IEntity): Promise<IEntity | null>;
-    /* delete the entity with the given id */
+    /**
+   * retrieve the Entity with the given id
+   * @param id entity id
+   * @returns requested Entity
+   */
+    getEntity(id: string): Promise<Entity>
+
+    /**
+   * retrieve all Entities
+   * @param 
+   * @returns returns array of Entities
+   */
+    getEntities(): Promise<Entity[]>
+
+    /**
+   * create an Entity with the fields given in the DTO, return created Entity
+   * @param entity user's email
+   * @returns the created Entity
+   */
+    createEntity(entity: Entity): Promise<Entity>;
+
+    /**
+   * update the Entity with the given id with fields in the DTO, return updated Entity
+   * @param id entity id
+   * @param entity Updated Entity
+   * @returns the updated Entity
+   */
+    updateEntity(id: string, entity: Entity): Promise<Entity | null>;
+
+    /**
+   * delete the entity with the given id
+   * @param id entity id
+   * @returns nothing
+   */
     deleteEntity(id: string): void;
 }

@@ -1,39 +1,50 @@
-import { userInfo } from "node:os";
-import { Entity, IEntity } from "../../models/entity.mgmodel";
+import { errorMonitor } from "node:events";
+import { MEntity, Entity } from "../../models/entity.mgmodel";
 import { IEntityService, EntityRequestDTO } from "../interfaces/IEntityService";
-var mongoose = require('mongoose');
 
 
 export class EntityService implements IEntityService {
 
-    /* retrieve the Entity with the given id */
-    async getEntity(id: string): Promise<IEntity> {
-        let entity: IEntity | null;
-        entity = await Entity.findById(mongoose.Types.ObjectId(id));
+    async getEntity(id: string): Promise<Entity> {
+        let entity: Entity | null;
+        entity = await MEntity.findById(id);
 
         if (!entity) {
-            throw new Error;
+            throw new Error(`Entity id ${id} not found.`);
         }
         return entity;
     }
 
-    /* retrieve all Entities (pagination is nice-to-have future feature) */
-    async getEntities(): Promise<IEntity[]> {
-        return await Entity.find();
+    async getEntities(): Promise<Entity[]> {
+        return await MEntity.find();
     }
 
-    /* create an Entity with the fields given in the DTO, return created Entity */
-    async createEntity(entity: IEntity): Promise<IEntity> {
-        return await Entity.create(entity);
+    async createEntity(entity: Entity): Promise<Entity> {
+        try {
+            const newEntity: Entity | null = await MEntity.create(entity);
+            return newEntity;
+        }
+        catch (e) {
+            throw Error;
+        }
     }
-    /* update the Entity with the given id with fields in the DTO, return updated Entity */
-    async updateEntity(id: string, entity: IEntity): Promise<IEntity | null> {
-        return await Entity.findByIdAndUpdate({ _id: mongoose.Types.ObjectId(id) }, entity, { new: true })
+    async updateEntity(id: string, entity: Entity): Promise<Entity | null> {
+        try {
+            const updatedEntity: Entity | null = await MEntity.findByIdAndUpdate({ _id: id }, entity, { new: true, runValidators: true })
+            return updatedEntity;
+        }
+        catch (e) {
+            throw Error;
+        }
     }
 
-    /* delete the entity with the given id */
     async deleteEntity(id: string): Promise<void> {
-        await Entity.findByIdAndDelete(mongoose.Types.ObjectId(id));
+        try {
+            await MEntity.findByIdAndDelete(id);
+        }
+        catch (e) {
+            throw Error;
+        }
     }
 }
 

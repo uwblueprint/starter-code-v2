@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { Entity, IEntity } from "../models/entity.mgmodel"
+import { Entity } from "../models/entity.mgmodel"
 import EntityService from "../services/implementations/EntityService";
 import { EntityRequestDTO } from "../services/interfaces/IEntityService";
 
@@ -8,13 +8,13 @@ export const entityRouter: Router = Router();
 /* Create entity Object */
 entityRouter.post("/", async (_req, res) => {
     const entityObj: EntityRequestDTO = _req.body.entity;
-    const IentityObj = {} as IEntity;
+    const IentityObj = {} as Entity;
     const entService = new EntityService();
-    IentityObj.string_field = entityObj.string_field;
-    IentityObj.int_field = entityObj.int_field;
-    IentityObj.enum_field = entityObj.enum_field;
-    IentityObj.string_array_field = entityObj.string_array_field;
-    IentityObj.bool_field = entityObj.bool_field;
+    IentityObj.stringField = entityObj.stringField;
+    IentityObj.intField = entityObj.intField;
+    IentityObj.enumField = entityObj.enumField;
+    IentityObj.stringArrayField = entityObj.stringArrayField;
+    IentityObj.boolField = entityObj.boolField;
 
     try {
         await entService.createEntity(IentityObj);
@@ -59,12 +59,12 @@ entityRouter.put("/:id", async (_req, res) => {
     const id: string = _req.params.id;
     const entityObj: EntityRequestDTO = _req.body.entity;
 
-    const IentityObj = {} as IEntity;
-    IentityObj.string_field = entityObj.string_field;
-    IentityObj.int_field = entityObj.int_field;
-    IentityObj.enum_field = entityObj.enum_field;
-    IentityObj.string_array_field = entityObj.string_array_field;
-    IentityObj.bool_field = entityObj.bool_field;
+    const IentityObj = {} as Entity;
+    IentityObj.stringField = entityObj.stringField;
+    IentityObj.intField = entityObj.intField;
+    IentityObj.enumField = entityObj.enumField;
+    IentityObj.stringArrayField = entityObj.stringArrayField;
+    IentityObj.boolField = entityObj.boolField;
     try {
         const result = await entService.updateEntity(id, IentityObj);
         res.send(result)
