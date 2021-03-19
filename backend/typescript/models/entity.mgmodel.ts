@@ -1,14 +1,19 @@
-import mongoose, { Schema, Document, model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
 export interface Entity extends Document {
+    id: string,
     stringField: string;
     intField: number;
     enumField: string;
     stringArrayField: [string];
-    boolField: Boolean;
+    boolField: boolean;
 }
 
 const EntitySchema: Schema = new Schema({
+    id: {
+        type: String,
+        required: true
+    },
     stringField: {
         type: String,
         required: true,
@@ -32,4 +37,4 @@ const EntitySchema: Schema = new Schema({
     },
 });
 
-export const MEntity = model<Entity>("Entity", EntitySchema);
+export default model<Entity>("Entity", EntitySchema);
