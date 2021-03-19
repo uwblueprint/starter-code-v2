@@ -1,19 +1,24 @@
 import cors from "cors";
 import express from "express";
-
 import { mongo, sequelize } from "./models/index";
-// import PgPerson from "./models/person.pgmodel";
-// import MgPerson from "./models/person.mgmodel";
+import { addOptions } from "sequelize-typescript";
+var bodyParser = require('body-parser');
+
+const entityRouter = require('./rest/entityRoutes');
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 
-// app.get("/", async (_req, res) => {
-//     await PgPerson.create({name: "First Last", email: "first@last.com"});
-//     await MgPerson.create({name: "First Last", email: "first@last.com"});
-//     res.send("Created some records!");
-// });
+
+app.get("/", async (_req, res) => {
+  res.send("Hello!")
+});
+
+
+app.use("/entities", entityRouter);
 
 const eraseDatabaseOnSync = false;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
