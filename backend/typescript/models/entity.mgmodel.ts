@@ -10,10 +10,6 @@ export interface Entity extends Document {
 }
 
 const EntitySchema: Schema = new Schema({
-    id: {
-        type: String,
-        required: true
-    },
     stringField: {
         type: String,
         required: true,

@@ -8,9 +8,14 @@ const entService = new EntityService();
 
 /* Create entity Object */
 entityRouter.post("/", async (req, res) => {
-    const entityObj: EntityRequestDTO = req.body.entity;
     try {
-        const newEntity = await entService.createEntity(entityObj);
+        const newEntity = await entService.createEntity({
+            stringField: req.body.stringField,
+            intField: req.body.intField,
+            enumField: req.body.enumField,
+            stringArrayField: req.body.stringArrayField,
+            boolField: req.body.boolField,
+        });
         res.status(200).json(newEntity);
     }
     catch (e) {

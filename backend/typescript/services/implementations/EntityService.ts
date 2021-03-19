@@ -1,10 +1,10 @@
 import MgEntity, { Entity } from "../../models/entity.mgmodel";
-import { IEntityService, EntityRequestDTO } from "../interfaces/IEntityService";
+import { IEntityService, EntityRequestDTO, EntityResponseDTO } from "../interfaces/IEntityService";
 
 
 export class EntityService implements IEntityService {
 
-    async getEntity(id: string): Promise<EntityRequestDTO> {
+    async getEntity(id: string): Promise<EntityResponseDTO> {
         let entity: Entity | null;
         entity = await MgEntity.findById(id);
 
@@ -12,6 +12,7 @@ export class EntityService implements IEntityService {
             throw new Error(`Entity id ${id} not found.`);
         }
         return {
+            id: entity.id,
             stringField: entity.stringField,
             intField: entity.intField,
             enumField: entity.enumField,
@@ -20,12 +21,13 @@ export class EntityService implements IEntityService {
         };
     }
 
-    async getEntities(): Promise<EntityRequestDTO[]> {
-        let entityDtos: Array<EntityRequestDTO> = [];
+    async getEntities(): Promise<EntityResponseDTO[]> {
+        let entityDtos: Array<EntityResponseDTO> = [];
         try {
             const entities: Array<Entity> = await MgEntity.find();
             entities.map((entity) => {
                 let entityRequestDto = {
+                    id: entity.id,
                     stringField: entity.stringField,
                     intField: entity.intField,
                     enumField: entity.enumField,
@@ -41,7 +43,7 @@ export class EntityService implements IEntityService {
         return entityDtos;
     }
 
-    async createEntity(entity: EntityRequestDTO): Promise<EntityRequestDTO> {
+    async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
         let newEntity: Entity | null;
         try {
             newEntity = await MgEntity.create(entity);
@@ -50,6 +52,7 @@ export class EntityService implements IEntityService {
             throw new Error(`Cannot create entity`);
         }
         return {
+            id: newEntity.id,
             stringField: newEntity.stringField,
             intField: newEntity.intField,
             enumField: newEntity.enumField,
@@ -58,7 +61,7 @@ export class EntityService implements IEntityService {
 
         };
     }
-    async updateEntity(id: string, entity: EntityRequestDTO): Promise<EntityRequestDTO | null> {
+    async updateEntity(id: string, entity: EntityRequestDTO): Promise<EntityResponseDTO | null> {
         let updatedEntity: Entity | null;
         try {
             updatedEntity = await MgEntity.findByIdAndUpdate({ _id: id }, entity, { new: true, runValidators: true });
@@ -70,6 +73,7 @@ export class EntityService implements IEntityService {
             throw error;
         }
         return {
+            id: updatedEntity.id,
             stringField: updatedEntity.stringField,
             intField: updatedEntity.intField,
             enumField: updatedEntity.enumField,
