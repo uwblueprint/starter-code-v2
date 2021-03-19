@@ -36,7 +36,7 @@ export class EntityService implements IEntityService {
             })
 
         } catch (e) {
-
+            throw new Error(`entities not found`);
         }
         return entityDtos;
     }
@@ -47,7 +47,7 @@ export class EntityService implements IEntityService {
             newEntity = await MgEntity.create(entity);
         }
         catch (error) {
-            throw error;
+            throw new Error(`Cannot create entity`);
         }
         return {
             stringField: newEntity.stringField,
@@ -63,9 +63,8 @@ export class EntityService implements IEntityService {
         try {
             updatedEntity = await MgEntity.findByIdAndUpdate({ _id: id }, entity, { new: true, runValidators: true });
             if (updatedEntity == null) {
-                throw Error;
+                throw new Error(`Cannot update entity`);
             }
-
         }
         catch (error) {
             throw error;
@@ -80,11 +79,10 @@ export class EntityService implements IEntityService {
     }
 
     async deleteEntity(id: string): Promise<void> {
-        try {
-            await MgEntity.findByIdAndDelete(id);
-        }
-        catch (error) {
-            throw error;
+        let deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
+
+        if (!deletedEntity) {
+            throw new Error(`Entity id ${id} not found.`);
         }
     }
 }
