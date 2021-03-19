@@ -1,49 +1,90 @@
-import { errorMonitor } from "node:events";
-import { MEntity, Entity } from "../../models/entity.mgmodel";
+import MgEntity, { Entity } from "../../models/entity.mgmodel";
 import { IEntityService, EntityRequestDTO } from "../interfaces/IEntityService";
 
 
 export class EntityService implements IEntityService {
 
-    async getEntity(id: string): Promise<Entity> {
+    async getEntity(id: string): Promise<EntityRequestDTO> {
         let entity: Entity | null;
-        entity = await MEntity.findById(id);
+        entity = await MgEntity.findById(id);
 
         if (!entity) {
             throw new Error(`Entity id ${id} not found.`);
         }
-        return entity;
+        return {
+            stringField: entity.stringField,
+            intField: entity.intField,
+            enumField: entity.enumField,
+            stringArrayField: entity.stringArrayField,
+            boolField: entity.boolField,
+        };
     }
 
-    async getEntities(): Promise<Entity[]> {
-        return await MEntity.find();
+    async getEntities(): Promise<EntityRequestDTO[]> {
+        let entityDtos: Array<EntityRequestDTO> = [];
+        try {
+            const entities: Array<Entity> = await MgEntity.find();
+            entities.map((entity) => {
+                let entityRequestDto = {
+                    stringField: entity.stringField,
+                    intField: entity.intField,
+                    enumField: entity.enumField,
+                    stringArrayField: entity.stringArrayField,
+                    boolField: entity.boolField,
+                }
+                entityDtos.push(entityRequestDto)
+            })
+
+        } catch (e) {
+
+        }
+        return entityDtos;
     }
 
-    async createEntity(entity: Entity): Promise<Entity> {
+    async createEntity(entity: EntityRequestDTO): Promise<EntityRequestDTO> {
+        let newEntity: Entity | null;
         try {
-            const newEntity: Entity | null = await MEntity.create(entity);
-            return newEntity;
+            newEntity = await MgEntity.create(entity);
         }
-        catch (e) {
-            throw Error;
+        catch (error) {
+            throw error;
         }
+        return {
+            stringField: newEntity.stringField,
+            intField: newEntity.intField,
+            enumField: newEntity.enumField,
+            stringArrayField: newEntity.stringArrayField,
+            boolField: newEntity.boolField,
+
+        };
     }
-    async updateEntity(id: string, entity: Entity): Promise<Entity | null> {
+    async updateEntity(id: string, entity: EntityRequestDTO): Promise<EntityRequestDTO | null> {
+        let updatedEntity: Entity | null;
         try {
-            const updatedEntity: Entity | null = await MEntity.findByIdAndUpdate({ _id: id }, entity, { new: true, runValidators: true })
-            return updatedEntity;
+            updatedEntity = await MgEntity.findByIdAndUpdate({ _id: id }, entity, { new: true, runValidators: true });
+            if (updatedEntity == null) {
+                throw Error;
+            }
+
         }
-        catch (e) {
-            throw Error;
+        catch (error) {
+            throw error;
         }
+        return {
+            stringField: updatedEntity.stringField,
+            intField: updatedEntity.intField,
+            enumField: updatedEntity.enumField,
+            stringArrayField: updatedEntity.stringArrayField,
+            boolField: updatedEntity.boolField,
+        };
     }
 
     async deleteEntity(id: string): Promise<void> {
         try {
-            await MEntity.findByIdAndDelete(id);
+            await MgEntity.findByIdAndDelete(id);
         }
-        catch (e) {
-            throw Error;
+        catch (error) {
+            throw error;
         }
     }
 }

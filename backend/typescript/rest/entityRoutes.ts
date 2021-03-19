@@ -4,6 +4,7 @@ import EntityService from "../services/implementations/EntityService";
 import { EntityRequestDTO } from "../services/interfaces/IEntityService";
 
 export const entityRouter: Router = Router();
+const entService = new EntityService();
 
 /* Create entity Object */
 entityRouter.post("/", async (_req, res) => {
@@ -28,8 +29,6 @@ entityRouter.post("/", async (_req, res) => {
 
 /* Get all entity objects */
 entityRouter.get("/", async (_req, res) => {
-    const entService = new EntityService();
-
     try {
         const result = await entService.getEntities();
         res.send(result)
@@ -41,7 +40,6 @@ entityRouter.get("/", async (_req, res) => {
 
 /* Get entity object by id */
 entityRouter.get("/:id", async (_req, res) => {
-    const entService = new EntityService();
     const id: string = _req.params.id;
 
     try {
@@ -55,7 +53,6 @@ entityRouter.get("/:id", async (_req, res) => {
 
 /* Update entity object by id */
 entityRouter.put("/:id", async (_req, res) => {
-    const entService = new EntityService();
     const id: string = _req.params.id;
     const entityObj: EntityRequestDTO = _req.body.entity;
 
@@ -76,7 +73,6 @@ entityRouter.put("/:id", async (_req, res) => {
 
 /* Delete entity object by id */
 entityRouter.delete("/:id", async (_req, res) => {
-    const entService = new EntityService();
     const id: string = _req.params.id;
 
     try {

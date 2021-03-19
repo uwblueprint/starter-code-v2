@@ -1,5 +1,3 @@
-import { Entity } from "../../models/entity.mgmodel";
-
 enum Options {
     A, B, C, D,
 }
@@ -18,21 +16,21 @@ export interface IEntityService {
    * @param id entity id
    * @returns requested Entity
    */
-    getEntity(id: string): Promise<Entity>
+    getEntity(id: string): Promise<EntityRequestDTO>
 
     /**
    * retrieve all Entities
    * @param 
    * @returns returns array of Entities
    */
-    getEntities(): Promise<Entity[]>
+    getEntities(): Promise<EntityRequestDTO[]>
 
     /**
    * create an Entity with the fields given in the DTO, return created Entity
    * @param entity user's email
    * @returns the created Entity
    */
-    createEntity(entity: Entity): Promise<Entity>;
+    createEntity(entity: EntityRequestDTO): Promise<EntityRequestDTO>;
 
     /**
    * update the Entity with the given id with fields in the DTO, return updated Entity
@@ -40,7 +38,7 @@ export interface IEntityService {
    * @param entity Updated Entity
    * @returns the updated Entity
    */
-    updateEntity(id: string, entity: Entity): Promise<Entity | null>;
+    updateEntity(id: string, entity: EntityRequestDTO): Promise<EntityRequestDTO | null>;
 
     /**
    * delete the entity with the given id
