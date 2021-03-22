@@ -1,4 +1,4 @@
-import { CreateUserDTO, UpdateUserDTO, UserDTO } from "../../types";
+import { CreateUserDTO, Role, UpdateUserDTO, UserDTO } from "../../types";
 
 interface IUserService {
   /**
@@ -16,6 +16,22 @@ interface IUserService {
    * @throws Error if user retrieval fails
    */
   getUserByEmail(email: string): Promise<UserDTO>;
+
+  /**
+   * Get role of user associated with authId
+   * @param authId user's authId
+   * @returns role of the user
+   * @throws Error if user role retrieval fails
+   */
+  getUserRoleByAuthId(authId: string): Promise<Role>;
+
+  /**
+   * Get authId of user associated with id
+   * @param userId user's id
+   * @returns user's authId
+   * @throws Error if user authId retrieval fails
+   */
+  getAuthIdById(userId: string): Promise<string>;
 
   /**
    * Get all user information (possibly paginated in the future)

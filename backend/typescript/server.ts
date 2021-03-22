@@ -5,10 +5,14 @@ import * as firebaseAdmin from "firebase-admin";
 import { mongo, sequelize } from "./models";
 
 /** ***************************************************************************
- * TEMPORARY: UserService test endpoints
+ * TEMPORARY: UserService and AuthService test endpoints
  *************************************************************************** */
 import UserService from "./services/implementations/userService";
 import IUserService from "./services/interfaces/userService";
+
+import AuthService from "./services/implementations/authService";
+import IAuthService from "./services/interfaces/authService";
+import { Role } from "./types";
 
 const app = express();
 app.use(cors());
@@ -61,7 +65,45 @@ app.get("/delete-user-by-email/:email", async (req, res) => {
   await userService.deleteUserByEmail(req.params.email);
   res.status(204).send();
 });
-/** ************************************************************************ */
+
+const authService: IAuthService = new AuthService();
+
+app.get("/generate-token/:email/:password", async (req, res) => {
+  const token = await authService.generateToken(
+    req.params.email,
+    req.params.password,
+  );
+  res.status(200).json(token);
+});
+
+app.get("/is-authorized/:token/:role", async (req, res) => {
+  if (req.params.role !== "Admin" && req.params.role !== "User") {
+    res.status(400).json({ error: "Role must be either Admin or User" });
+    return;
+  }
+  const authorized = await authService.isAuthorized(
+    req.params.token,
+    req.params.role as Role,
+  );
+  res.status(200).json(authorized);
+});
+
+app.get("/renew-token/:refreshToken", async (req, res) => {
+  const token = await authService.renewToken(req.params.refreshToken);
+  res.status(200).json(token);
+});
+
+app.get("/revoke-tokens/:userId", async (req, res) => {
+  await authService.revokeTokens(req.params.userId);
+  res.status(204).send();
+});
+
+app.get("/generate-password-reset-link/:email", async (req, res) => {
+  const resetLink = await authService.generatePasswordResetLink(
+    req.params.email,
+  );
+  res.status(200).send({ resetLink });
+});
 
 const eraseDatabaseOnSync = false;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
