@@ -1,11 +1,12 @@
 import express, { Router } from 'express';
 import { Entity } from "../models/entity.mgmodel"
-import EntityService from "../services/implementations/EntityService";
+import EntityServiceMg from "../services/implementations/EntityServiceMg";
+import EntityServicePg from "../services/implementations/EntityServicePg";
 import { EntityRequestDTO } from "../services/interfaces/IEntityService";
 
 export const entityRouter: Router = Router();
-const entService = new EntityService();
-
+const entService = new EntityServiceMg();
+const entServicePg = new EntityServicePg();
 /* Create entity Object */
 entityRouter.post("/", async (req, res) => {
     try {

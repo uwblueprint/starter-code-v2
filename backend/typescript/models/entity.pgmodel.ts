@@ -6,7 +6,7 @@ export default class Entity extends Model {
     string_field!: string;
 
     @Column
-    int_field!: string;
+    int_field!: number;
 
     @Column
     enum_field!: string;
@@ -15,5 +15,5 @@ export default class Entity extends Model {
     string_array_field!: string;
 
     @Column
-    bool_field!: string;
+    bool_field!: boolean;
 }
