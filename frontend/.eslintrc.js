@@ -16,5 +16,8 @@ module.exports = {
     },
   },
   extends: ["airbnb-typescript", "prettier", "plugin:prettier/recommended"],
-  rules: {},
+  // This needs to be added to work on Windows Machines
+  rules: {
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
+  }
 };
