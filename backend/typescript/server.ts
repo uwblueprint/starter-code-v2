@@ -1,13 +1,8 @@
 import cors from "cors";
 import express from "express";
-import { mongo, sequelize } from "./models/index";
-import { addOptions } from "sequelize-typescript";
-var bodyParser = require('body-parser');
 
-const entityRouter = require('./rest/entityRoutes');
-
-import * as firebaseAdmin from "firebase-admin";
-
+// import * as firebaseAdmin from "firebase-admin";
+import bodyParser from "body-parser";
 import { mongo, sequelize } from "./models";
 
 /** ***************************************************************************
@@ -20,15 +15,12 @@ import AuthService from "./services/implementations/authService";
 import IAuthService from "./services/interfaces/authService";
 import { Role } from "./types";
 
+import entityRouter from "./rest/entityRoutes";
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }))
-
-
-app.get("/", async (_req, res) => {
-  res.send("Hello!")
-});
+app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.use("/entities", entityRouter);
@@ -123,9 +115,9 @@ const eraseDatabaseOnSync = false;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   mongo.connect();
 
-  firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.applicationDefault(),
-  });
+  // firebaseAdmin.initializeApp({
+  //  credential: firebaseAdmin.credential.applicationDefault(),
+  // });
 
   app.listen({ port: 5000 }, () => {
     /* eslint-disable-next-line no-console */
