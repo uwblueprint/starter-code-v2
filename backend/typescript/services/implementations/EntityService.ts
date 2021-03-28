@@ -4,18 +4,20 @@ import {
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
+import Logger from "../../utilities/logger";
 
 export class EntityService implements IEntityService {
   async getEntity(id: string): Promise<EntityResponseDTO> {
     let entity: Entity | null;
     try {
       entity = await MgEntity.findById(id);
-    }
-    catch (e) {
-      throw new Error(e.message);
+    } catch (e) {
+      Logger.error(`Error Reason = ${e.message}`);
+      throw Error;
     }
     if (!entity) {
-      throw new Error(`Entity id ${id} not found.`);
+      Logger.error(`Entity id ${id} not found`);
+      throw Error;
     }
     return {
       id: entity.id,
@@ -43,7 +45,8 @@ export class EntityService implements IEntityService {
         entityDtos.push(entityRequestDto);
       });
     } catch (e) {
-      throw new Error(`entities not found`);
+      Logger.error(`Entities not found`);
+      throw Error;
     }
     return entityDtos;
   }
@@ -52,8 +55,9 @@ export class EntityService implements IEntityService {
     let newEntity: Entity | null;
     try {
       newEntity = await MgEntity.create(entity);
-    } catch (error) {
-      throw new Error(`Cannot create entity`);
+    } catch (e) {
+      Logger.error(`Entity not created: ${e.message}`);
+      throw Error;
     }
     return {
       id: newEntity.id,
@@ -65,7 +69,10 @@ export class EntityService implements IEntityService {
     };
   }
 
-  async updateEntity(id: string, entity: EntityRequestDTO): Promise<EntityResponseDTO | null> {
+  async updateEntity(
+    id: string,
+    entity: EntityRequestDTO,
+  ): Promise<EntityResponseDTO | null> {
     let updatedEntity: Entity | null;
     try {
       updatedEntity = await MgEntity.findByIdAndUpdate({ _id: id }, entity, {
@@ -73,7 +80,8 @@ export class EntityService implements IEntityService {
         runValidators: true,
       });
       if (updatedEntity == null) {
-        throw new Error(`Error: ${id} not found`);
+        Logger.error(`Entity id ${id} not found`);
+        throw Error;
       }
     } catch (error) {
       throw error;
@@ -92,7 +100,8 @@ export class EntityService implements IEntityService {
     const deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
 
     if (!deletedEntity) {
-      throw new Error(`Entity id ${id} not found.`);
+      Logger.error(`Entity id ${id} not found`);
+      throw Error;
     }
   }
 }
