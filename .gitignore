@@ -5,3 +5,4 @@
 **/__pycache__
 **/*.log
 **/firebaseServiceAccount.json
+**/.DS_Store
