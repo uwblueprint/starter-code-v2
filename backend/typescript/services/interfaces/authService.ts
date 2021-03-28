@@ -7,27 +7,34 @@ interface IAuthService {
    * @param email user's email
    * @param password user's password
    * @returns Token object containing the access token and refresh token
+   * @throws Error if token generation fails
    */
-  generateToken(email: string, password: string): Token;
+  generateToken(email: string, password: string): Promise<Token>;
 
   /**
-   * Revoke the provided access and refresh tokens in the Token object
-   * @param token Token to be revoked
+   * Revoke all refresh tokens of a user
+   * @param userId userId of user whose refresh tokens are to be revoked
+   * @throws Error if token revocation fails
    */
-  revokeToken(token: Token): void;
+  revokeTokens(userId: string): Promise<void>;
 
   /**
-   * Generate a new access token using the provided refresh token
+   * Generate new access and refresh token pair using the provided refresh token
    * @param refreshToken refresh token
-   * @returns new access token
+   * @returns Token object containing new access and refresh tokens
    */
-  renewToken(refreshToken: string): string;
+  renewToken(refreshToken: string): Promise<Token>;
 
   /**
-   * Trigger password reset flow for the user with the given email
-   * @param email user's email
+   * Generate a password reset link
+   * @param email email of user requesting password reset
+   * @returns password reset link
+   * @throws Error if unable to generate link
    */
-  resetPassword(email: string): void;
+  generatePasswordResetLink(email: string): Promise<string>;
+
+  // TODO: resetPassword(email: string): Promise<void>;
+  // (dependent on EmailService)
 
   /**
    * Determine if the provided access token is valid and authorized for the
@@ -36,5 +43,7 @@ interface IAuthService {
    * @param role role to check for
    * @returns true if token valid and authorized, false otherwise
    */
-  isAuthorized(accessToken: string, role: Role): boolean;
+  isAuthorized(accessToken: string, role: Role): Promise<boolean>;
 }
+
+export default IAuthService;
