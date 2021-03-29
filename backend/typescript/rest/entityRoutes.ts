@@ -1,12 +1,9 @@
-import { Router } from 'express';
-import { Entity } from "../models/entity.mgmodel"
-import EntityServiceMg from "../services/implementations/EntityServiceMg";
-import EntityServicePg from "../services/implementations/EntityServicePg";
-import { EntityRequestDTO } from "../services/interfaces/IEntityService";
+import { Router } from "express";
+import EntityService from "../services/implementations/EntityService";
 
-export const entityRouter: Router = Router();
-const entService = new EntityServiceMg();
-const entServicePg = new EntityServicePg();
+const entityRouter: Router = Router();
+const entService = new EntityService();
+
 /* Create entity Object */
 entityRouter.post("/", async (req, res) => {
   try {
@@ -48,9 +45,14 @@ entityRouter.get("/:id", async (req, res) => {
 /* Update entity object by id */
 entityRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const entityObj: EntityRequestDTO = req.body.entity;
   try {
-    const entity = await entService.updateEntity(id, entityObj);
+    const entity = await entService.updateEntity(id, {
+      stringField: req.body.stringField,
+      intField: req.body.intField,
+      enumField: req.body.enumField,
+      stringArrayField: req.body.stringArrayField,
+      boolField: req.body.boolField,
+    });
     res.status(200).json(entity);
   } catch (e) {
     res.status(500).send(e.message);
@@ -62,7 +64,7 @@ entityRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    entService.deleteEntity(id);
+    await entService.deleteEntity(id);
     res.status(204).send();
   } catch (e) {
     res.status(500).send(e.message);

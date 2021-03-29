@@ -1,45 +1,30 @@
 import cors from "cors";
 import express from "express";
-<<<<<<< HEAD
 import * as firebaseAdmin from "firebase-admin";
-=======
->>>>>>> origin/raveen/mongo-crud-rest
 
 // import * as firebaseAdmin from "firebase-admin";
 import bodyParser from "body-parser";
 import { mongo, sequelize } from "./models";
+import entityRouter from "./rest/entityRoutes";
 
-/** ***************************************************************************
- * TEMPORARY: UserService and AuthService test endpoints
- *************************************************************************** */
 import UserService from "./services/implementations/userService";
 import IUserService from "./services/interfaces/userService";
 
 import AuthService from "./services/implementations/authService";
 import IAuthService from "./services/interfaces/authService";
 import { Role } from "./types";
-<<<<<<< HEAD
-=======
-
-import entityRouter from "./rest/entityRoutes";
->>>>>>> origin/raveen/mongo-crud-rest
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
-<<<<<<< HEAD
-app.get("/", async (_req, res) => {
-  res.send("Hello!")
-});
-
-
-=======
+app.use(express.urlencoded());
 app.use("/entities", entityRouter);
->>>>>>> origin/raveen/mongo-crud-rest
 const userService: IUserService = new UserService();
 
+/** ***************************************************************************
+ * TEMPORARY: UserService and AuthService test endpoints
+ *************************************************************************** */
 app.get("/create-user/:firstName/:lastName", async (req, res) => {
   const newUser = await userService.createUser({
     firstName: req.params.firstName,
