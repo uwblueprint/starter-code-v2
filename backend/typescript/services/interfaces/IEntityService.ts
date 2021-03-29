@@ -20,6 +20,7 @@ export interface IEntityService {
    * retrieve the Entity with the given id
    * @param id entity id
    * @returns requested Entity
+   * @throws Error if retrieval fails
    */
   getEntity(id: string): Promise<EntityResponseDTO>;
 
@@ -27,6 +28,7 @@ export interface IEntityService {
    * retrieve all Entities
    * @param
    * @returns returns array of Entities
+   * @throws Error if retrieval fails
    */
   getEntities(): Promise<EntityResponseDTO[]>;
 
@@ -34,6 +36,7 @@ export interface IEntityService {
    * create an Entity with the fields given in the DTO, return created Entity
    * @param entity user's email
    * @returns the created Entity
+   * @throws Error if creation fails
    */
   createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO>;
 
@@ -42,6 +45,7 @@ export interface IEntityService {
    * @param id entity id
    * @param entity Updated Entity
    * @returns the updated Entity
+   * @throws Error if update fails
    */
   updateEntity(
     id: string,
@@ -51,7 +55,7 @@ export interface IEntityService {
   /**
    * delete the entity with the given id
    * @param id entity id
-   * @returns nothing
+   * @throws Error if deletion fails
    */
   deleteEntity(id: string): Promise<void>;
 }

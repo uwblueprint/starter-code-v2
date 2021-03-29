@@ -64,7 +64,7 @@ entityRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    entService.deleteEntity(id);
+    await entService.deleteEntity(id);
     res.status(204).send();
   } catch (e) {
     res.status(500).send(e.message);
