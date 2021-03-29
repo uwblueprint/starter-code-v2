@@ -1,8 +1,7 @@
 import { Router } from "express";
 import EntityService from "../services/implementations/EntityService";
-import { EntityRequestDTO } from "../services/interfaces/IEntityService";
 
-export const entityRouter: Router = Router();
+const entityRouter: Router = Router();
 const entService = new EntityService();
 
 /* Create entity Object */
@@ -46,9 +45,14 @@ entityRouter.get("/:id", async (req, res) => {
 /* Update entity object by id */
 entityRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const entityObj: EntityRequestDTO = req.body.entity;
   try {
-    const entity = await entService.updateEntity(id, entityObj);
+    const entity = await entService.updateEntity(id, {
+      stringField: req.body.stringField,
+      intField: req.body.intField,
+      enumField: req.body.enumField,
+      stringArrayField: req.body.stringArrayField,
+      boolField: req.body.boolField,
+    });
     res.status(200).json(entity);
   } catch (e) {
     res.status(500).send(e.message);
