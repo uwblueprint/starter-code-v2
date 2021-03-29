@@ -1,13 +1,10 @@
 import cors from "cors";
 import express from "express";
+import * as firebaseAdmin from "firebase-admin";
 
-// import * as firebaseAdmin from "firebase-admin";
-import bodyParser from "body-parser";
 import { mongo, sequelize } from "./models";
+import entityRouter from "./rest/entityRoutes";
 
-/** ***************************************************************************
- * TEMPORARY: UserService and AuthService test endpoints
- *************************************************************************** */
 import UserService from "./services/implementations/userService";
 import IUserService from "./services/interfaces/userService";
 
@@ -15,16 +12,17 @@ import AuthService from "./services/implementations/authService";
 import IAuthService from "./services/interfaces/authService";
 import { Role } from "./types";
 
-import entityRouter from "./rest/entityRoutes";
-
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded());
 
 app.use("/entities", entityRouter);
 const userService: IUserService = new UserService();
 
+/** ***************************************************************************
+ * TEMPORARY: UserService and AuthService test endpoints
+ *************************************************************************** */
 app.get("/create-user/:firstName/:lastName", async (req, res) => {
   const newUser = await userService.createUser({
     firstName: req.params.firstName,
@@ -114,9 +112,9 @@ const eraseDatabaseOnSync = false;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   mongo.connect();
 
-  // firebaseAdmin.initializeApp({
-  //  credential: firebaseAdmin.credential.applicationDefault(),
-  // });
+  firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.applicationDefault(),
+  });
 
   app.listen({ port: 5000 }, () => {
     /* eslint-disable-next-line no-console */
