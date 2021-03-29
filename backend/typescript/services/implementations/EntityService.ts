@@ -6,7 +6,7 @@ import {
 } from "../interfaces/IEntityService";
 import Logger from "../../utilities/logger";
 
-export class EntityService implements IEntityService {
+class EntityService implements IEntityService {
   async getEntity(id: string): Promise<EntityResponseDTO> {
     let entity: Entity | null;
     try {
