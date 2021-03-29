@@ -9,7 +9,7 @@ import Logger from "../../utilities/logger";
 class EntityService implements IEntityService {
   /* eslint-disable class-methods-use-this */
   async getEntity(id: string): Promise<EntityResponseDTO> {
-    let entity: Entity | null
+    let entity: Entity | null;
     try {
       entity = await MgEntity.findById(id);
       if (!entity) {
