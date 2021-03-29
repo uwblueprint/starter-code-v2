@@ -22,6 +22,7 @@ interface IAuthService {
    * Generate new access and refresh token pair using the provided refresh token
    * @param refreshToken refresh token
    * @returns Token object containing new access and refresh tokens
+   * @throws Error if token renewal fails
    */
   renewToken(refreshToken: string): Promise<Token>;
 
