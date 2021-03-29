@@ -1,15 +1,25 @@
-import { IEntityService, EntityRequestDTO, EntityResponseDTO } from "../interfaces/IEntityService";
-import { Entity } from "../../models/entity.mgmodel";
 import PgEntity from "../../models/entity.pgmodel";
+import {
+    IEntityService,
+    EntityRequestDTO,
+    EntityResponseDTO,
+} from "../interfaces/IEntityService";
+import Logger from "../../utilities/logger";
 
-export class PgEntityService implements IEntityService {
+class EntityService implements IEntityService {
+    /* eslint-disable class-methods-use-this */
     async getEntity(id: string): Promise<EntityResponseDTO> {
         let entity: Entity | null;
-        entity = await PgEntity.findById(id);
-
-        if (!entity) {
-            throw new Error(`Entity id ${id} not found.`);
+        try {
+            entity = await Entity.findById(id);
+            if (!entity) {
+                throw new Error(`Entity id ${id} not found`);
+            }
+        } catch (error) {
+            Logger.error(`Failed to get entity. Reason = ${error.message}`);
+            throw error;
         }
+
         return {
             id: entity.id,
             stringField: entity.stringField,
@@ -21,34 +31,29 @@ export class PgEntityService implements IEntityService {
     }
 
     async getEntities(): Promise<EntityResponseDTO[]> {
-        let entityDtos: Array<EntityResponseDTO> = [];
         try {
-            const entities: Array<Entity> = await PgEntity.find();
-            entities.map((entity) => {
-                let entityRequestDto = {
-                    id: entity.id,
-                    stringField: entity.stringField,
-                    intField: entity.intField,
-                    enumField: entity.enumField,
-                    stringArrayField: entity.stringArrayField,
-                    boolField: entity.boolField,
-                }
-                entityDtos.push(entityRequestDto)
-            })
-
-        } catch (e) {
-            throw new Error(`entities not found`);
+            const entities: Array<Entity> = await MgEntity.find();
+            return entities.map((entity) => ({
+                id: entity.id,
+                stringField: entity.stringField,
+                intField: entity.intField,
+                enumField: entity.enumField,
+                stringArrayField: entity.stringArrayField,
+                boolField: entity.boolField,
+            }));
+        } catch (error) {
+            Logger.error(`Failed to get entities. Reason = ${error.message}`);
+            throw error;
         }
-        return entityDtos;
     }
 
     async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
         let newEntity: Entity | null;
         try {
-            newEntity = await PgEntity.create(entity);
-        }
-        catch (error) {
-            throw new Error(`Cannot create entity`);
+            newEntity = await MgEntity.create(entity);
+        } catch (error) {
+            Logger.error(`Failed to create entity. Reason = ${error.message}`);
+            throw error;
         }
         return {
             id: newEntity.id,
@@ -57,18 +62,24 @@ export class PgEntityService implements IEntityService {
             enumField: newEntity.enumField,
             stringArrayField: newEntity.stringArrayField,
             boolField: newEntity.boolField,
-
         };
     }
-    async updateEntity(id: string, entity: EntityRequestDTO): Promise<EntityResponseDTO | null> {
+
+    async updateEntity(
+        id: string,
+        entity: EntityRequestDTO,
+    ): Promise<EntityResponseDTO | null> {
         let updatedEntity: Entity | null;
         try {
-            updatedEntity = await PgEntity.findByIdAndUpdate({ _id: id }, entity, { new: true, runValidators: true });
-            if (updatedEntity == null) {
-                throw new Error(`Cannot update entity`);
+            updatedEntity = await MgEntity.findByIdAndUpdate(id, entity, {
+                new: true,
+                runValidators: true,
+            });
+            if (!updatedEntity) {
+                throw new Error(`Entity id ${id} not found`);
             }
-        }
-        catch (error) {
+        } catch (error) {
+            Logger.error(`Failed to update entity. Reason = ${error.message}`);
             throw error;
         }
         return {
@@ -82,12 +93,16 @@ export class PgEntityService implements IEntityService {
     }
 
     async deleteEntity(id: string): Promise<void> {
-        let deletedEntity: Entity | null = await PgEntity.findByIdAndDelete(id);
-
-        if (!deletedEntity) {
-            throw new Error(`Entity id ${id} not found.`);
+        try {
+            const deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
+            if (!deletedEntity) {
+                throw new Error(`Entity id ${id} not found`);
+            }
+        } catch (error) {
+            Logger.error(`Failed to delete entity. Reason = ${error.message}`);
+            throw error;
         }
     }
 }
 
-export default PgEntityService;
+export default EntityService;

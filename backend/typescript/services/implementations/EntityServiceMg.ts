@@ -6,19 +6,20 @@ import {
 } from "../interfaces/IEntityService";
 import Logger from "../../utilities/logger";
 
-export class EntityService implements IEntityService {
+class EntityService implements IEntityService {
+  /* eslint-disable class-methods-use-this */
   async getEntity(id: string): Promise<EntityResponseDTO> {
     let entity: Entity | null;
     try {
       entity = await MgEntity.findById(id);
-    } catch (e) {
-      Logger.error(`Error Reason = ${e.message}`);
-      throw Error;
+      if (!entity) {
+        throw new Error(`Entity id ${id} not found`);
+      }
+    } catch (error) {
+      Logger.error(`Failed to get entity. Reason = ${error.message}`);
+      throw error;
     }
-    if (!entity) {
-      Logger.error(`Entity id ${id} not found`);
-      throw Error;
-    }
+
     return {
       id: entity.id,
       stringField: entity.stringField,
@@ -30,34 +31,29 @@ export class EntityService implements IEntityService {
   }
 
   async getEntities(): Promise<EntityResponseDTO[]> {
-    const entityDtos: Array<EntityResponseDTO> = [];
     try {
       const entities: Array<Entity> = await MgEntity.find();
-      entities.map((entity) => {
-        const entityRequestDto = {
-          id: entity.id,
-          stringField: entity.stringField,
-          intField: entity.intField,
-          enumField: entity.enumField,
-          stringArrayField: entity.stringArrayField,
-          boolField: entity.boolField,
-        };
-        entityDtos.push(entityRequestDto);
-      });
-    } catch (e) {
-      Logger.error(`Entities not found`);
-      throw Error;
+      return entities.map((entity) => ({
+        id: entity.id,
+        stringField: entity.stringField,
+        intField: entity.intField,
+        enumField: entity.enumField,
+        stringArrayField: entity.stringArrayField,
+        boolField: entity.boolField,
+      }));
+    } catch (error) {
+      Logger.error(`Failed to get entities. Reason = ${error.message}`);
+      throw error;
     }
-    return entityDtos;
   }
 
   async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
     let newEntity: Entity | null;
     try {
       newEntity = await MgEntity.create(entity);
-    } catch (e) {
-      Logger.error(`Entity not created: ${e.message}`);
-      throw Error;
+    } catch (error) {
+      Logger.error(`Failed to create entity. Reason = ${error.message}`);
+      throw error;
     }
     return {
       id: newEntity.id,
@@ -75,15 +71,15 @@ export class EntityService implements IEntityService {
   ): Promise<EntityResponseDTO | null> {
     let updatedEntity: Entity | null;
     try {
-      updatedEntity = await MgEntity.findByIdAndUpdate({ _id: id }, entity, {
+      updatedEntity = await MgEntity.findByIdAndUpdate(id, entity, {
         new: true,
         runValidators: true,
       });
-      if (updatedEntity == null) {
-        Logger.error(`Entity id ${id} not found`);
-        throw Error;
+      if (!updatedEntity) {
+        throw new Error(`Entity id ${id} not found`);
       }
     } catch (error) {
+      Logger.error(`Failed to update entity. Reason = ${error.message}`);
       throw error;
     }
     return {
@@ -97,11 +93,14 @@ export class EntityService implements IEntityService {
   }
 
   async deleteEntity(id: string): Promise<void> {
-    const deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
-
-    if (!deletedEntity) {
-      Logger.error(`Entity id ${id} not found`);
-      throw Error;
+    try {
+      const deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
+      if (!deletedEntity) {
+        throw new Error(`Entity id ${id} not found`);
+      }
+    } catch (error) {
+      Logger.error(`Failed to delete entity. Reason = ${error.message}`);
+      throw error;
     }
   }
 }

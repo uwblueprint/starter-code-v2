@@ -1,5 +1,5 @@
 import { Router } from "express";
-import EntityService from "../services/implementations/EntityService";
+import EntityService from "../services/implementations/EntityServiceMg";
 
 const entityRouter: Router = Router();
 const entService = new EntityService();
