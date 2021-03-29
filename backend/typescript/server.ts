@@ -2,7 +2,6 @@ import cors from "cors";
 import express from "express";
 import * as firebaseAdmin from "firebase-admin";
 
-// import * as firebaseAdmin from "firebase-admin";
 import bodyParser from "body-parser";
 import { mongo, sequelize } from "./models";
 import entityRouter from "./rest/entityRoutes";

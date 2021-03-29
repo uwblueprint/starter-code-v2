@@ -1,4 +1,5 @@
 import PgEntity from "../../models/entity.pgmodel";
+import { Entity } from "../../models/entity.mgmodel"
 import {
     IEntityService,
     EntityRequestDTO,
@@ -11,7 +12,7 @@ class EntityService implements IEntityService {
     async getEntity(id: string): Promise<EntityResponseDTO> {
         let entity: Entity | null;
         try {
-            entity = await Entity.findById(id);
+            entity = await PgEntity.findByPk(id);
             if (!entity) {
                 throw new Error(`Entity id ${id} not found`);
             }
@@ -32,7 +33,7 @@ class EntityService implements IEntityService {
 
     async getEntities(): Promise<EntityResponseDTO[]> {
         try {
-            const entities: Array<Entity> = await MgEntity.find();
+            const entities: Array<Entity> = await PgEntity.findAll();
             return entities.map((entity) => ({
                 id: entity.id,
                 stringField: entity.stringField,
@@ -50,7 +51,7 @@ class EntityService implements IEntityService {
     async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
         let newEntity: Entity | null;
         try {
-            newEntity = await MgEntity.create(entity);
+            newEntity = await PgEntity.create(entity);
         } catch (error) {
             Logger.error(`Failed to create entity. Reason = ${error.message}`);
             throw error;
@@ -71,7 +72,7 @@ class EntityService implements IEntityService {
     ): Promise<EntityResponseDTO | null> {
         let updatedEntity: Entity | null;
         try {
-            updatedEntity = await MgEntity.findByIdAndUpdate(id, entity, {
+            updatedEntity = await PgEntity.findByIdAndUpdate(id, entity, {
                 new: true,
                 runValidators: true,
             });
@@ -94,7 +95,7 @@ class EntityService implements IEntityService {
 
     async deleteEntity(id: string): Promise<void> {
         try {
-            const deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
+            const deletedEntity: Entity | null = await PgEntity.findByIdAndDelete(id);
             if (!deletedEntity) {
                 throw new Error(`Entity id ${id} not found`);
             }

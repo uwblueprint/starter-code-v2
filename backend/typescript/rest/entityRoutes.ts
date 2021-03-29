@@ -1,8 +1,9 @@
 import { Router } from "express";
 import EntityService from "../services/implementations/EntityServiceMg";
+import EntityServicePg from "../services/implementations/EntityServicePg";
 
 const entityRouter: Router = Router();
-const entService = new EntityService();
+const entService = new EntityServicePg();
 
 /* Create entity Object */
 entityRouter.post("/", async (req, res) => {
