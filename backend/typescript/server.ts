@@ -3,10 +3,8 @@ import express from "express";
 import * as firebaseAdmin from "firebase-admin";
 
 import { mongo, sequelize } from "./models";
+import entityRouter from "./rest/entityRoutes";
 
-/** ***************************************************************************
- * TEMPORARY: UserService and AuthService test endpoints
- *************************************************************************** */
 import UserService from "./services/implementations/userService";
 import IUserService from "./services/interfaces/userService";
 
@@ -17,9 +15,14 @@ import { Role } from "./types";
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded());
 
+app.use("/entities", entityRouter);
 const userService: IUserService = new UserService();
 
+/** ***************************************************************************
+ * TEMPORARY: UserService and AuthService test endpoints
+ *************************************************************************** */
 app.get("/create-user/:firstName/:lastName", async (req, res) => {
   const newUser = await userService.createUser({
     firstName: req.params.firstName,
