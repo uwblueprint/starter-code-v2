@@ -62,7 +62,7 @@ class AuthService implements IAuthService {
     }
   }
 
-  async isAuthorized(accessToken: string, role: Role): Promise<boolean> {
+  async isAuthorized(accessToken: string, roles: Set<Role>): Promise<boolean> {
     try {
       const decodedIdToken: firebaseAdmin.auth.DecodedIdToken = await firebaseAdmin
         .auth()
@@ -71,7 +71,7 @@ class AuthService implements IAuthService {
         decodedIdToken.uid,
       );
 
-      return userRole === role;
+      return roles.has(userRole);
     } catch (error) {
       return false;
     }
