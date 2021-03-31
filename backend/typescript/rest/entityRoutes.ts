@@ -1,11 +1,11 @@
 import { Router } from "express";
 
-import isAuthorized from "../middlewares/auth";
+import { isAuthorizedByRole } from "../middlewares/auth";
 import EntityService from "../services/implementations/EntityService";
 import { IEntityService } from "../services/interfaces/IEntityService";
 
 const entityRouter: Router = Router();
-entityRouter.use(isAuthorized(new Set(["User", "Admin"])));
+entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
 
 const entityService: IEntityService = new EntityService();
 

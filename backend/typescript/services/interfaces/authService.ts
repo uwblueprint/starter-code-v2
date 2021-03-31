@@ -44,7 +44,30 @@ interface IAuthService {
    * @param roles roles to check for
    * @returns true if token valid and authorized, false otherwise
    */
-  isAuthorized(accessToken: string, roles: Set<Role>): Promise<boolean>;
+  isAuthorizedByRole(accessToken: string, roles: Set<Role>): Promise<boolean>;
+
+  /**
+   * Determine if the provided access token is valid and issued to the requested user
+   * @param accessToken user's access token
+   * @param requestedUserId userId of requested user
+   * @returns true if token valid and authorized, false otherwise
+   */
+  isAuthorizedByUserId(
+    accessToken: string,
+    requestedUserId: string,
+  ): Promise<boolean>;
+
+  /**
+   * Determine if the provided access token is valid and issued to the requested user
+   * with the specified email address
+   * @param accessToken user's access token
+   * @param requestedEmail email address of requested user
+   * @returns true if token valid and authorized, false otherwise
+   */
+  isAuthorizedByEmail(
+    accessToken: string,
+    requestedEmail: string,
+  ): Promise<boolean>;
 }
 
 export default IAuthService;

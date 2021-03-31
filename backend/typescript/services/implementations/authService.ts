@@ -62,7 +62,10 @@ class AuthService implements IAuthService {
     }
   }
 
-  async isAuthorized(accessToken: string, roles: Set<Role>): Promise<boolean> {
+  async isAuthorizedByRole(
+    accessToken: string,
+    roles: Set<Role>,
+  ): Promise<boolean> {
     try {
       const decodedIdToken: firebaseAdmin.auth.DecodedIdToken = await firebaseAdmin
         .auth()
@@ -72,6 +75,38 @@ class AuthService implements IAuthService {
       );
 
       return roles.has(userRole);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async isAuthorizedByUserId(
+    accessToken: string,
+    requestedUserId: string,
+  ): Promise<boolean> {
+    try {
+      const decodedIdToken: firebaseAdmin.auth.DecodedIdToken = await firebaseAdmin
+        .auth()
+        .verifyIdToken(accessToken, true);
+      const tokenUserId = await this.userService.getUserIdByAuthId(
+        decodedIdToken.uid,
+      );
+
+      return tokenUserId === requestedUserId;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async isAuthorizedByEmail(
+    accessToken: string,
+    requestedEmail: string,
+  ): Promise<boolean> {
+    try {
+      const decodedIdToken: firebaseAdmin.auth.DecodedIdToken = await firebaseAdmin
+        .auth()
+        .verifyIdToken(accessToken, true);
+      return decodedIdToken.email === requestedEmail;
     } catch (error) {
       return false;
     }

@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { isAuthorizedByEmail, isAuthorizedByUserId } from "../middlewares/auth";
 import AuthService from "../services/implementations/authService";
 import IAuthService from "../services/interfaces/authService";
 
@@ -46,26 +47,34 @@ authRouter.post("/refresh", async (req, res) => {
 });
 
 /* Revokes all of the specified user's refresh tokens */
-authRouter.post("/logout/:userId", async (req, res) => {
-  try {
-    await authService.revokeTokens(req.params.userId);
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+authRouter.post(
+  "/logout/:userId",
+  isAuthorizedByUserId("userId"),
+  async (req, res) => {
+    try {
+      await authService.revokeTokens(req.params.userId);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+);
 
 /* Returns a password reset link for the user with the specified email */
 /* TODO: actually send reset link in an email */
-authRouter.post("/resetPassword/:email", async (req, res) => {
-  try {
-    const resetLink = await authService.generatePasswordResetLink(
-      req.params.email,
-    );
-    res.status(200).json({ resetLink });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+authRouter.post(
+  "/resetPassword/:email",
+  isAuthorizedByEmail("email"),
+  async (req, res) => {
+    try {
+      const resetLink = await authService.generatePasswordResetLink(
+        req.params.email,
+      );
+      res.status(200).json({ resetLink });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+);
 
 export default authRouter;
