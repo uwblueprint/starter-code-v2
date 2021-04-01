@@ -13,7 +13,10 @@ const entityResolvers = {
     },
   },
   Mutation: {
-    createEntity: async (_req: any, entity: EntityRequestDTO) => {
+    createEntity: async (
+      _req: any,
+      { entity }: { entity: EntityRequestDTO },
+    ) => {
       return entityService.createEntity({
         stringField: entity.stringField,
         intField: entity.intField,

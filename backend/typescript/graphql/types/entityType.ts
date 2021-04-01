@@ -27,14 +27,12 @@ const entityType = gql`
 
   extend type Query {
     entity(id: String!): EntityResponseDTO!
-    entities: [Entity!]!
+    entities: [EntityResponseDTO!]!
   }
 
   extend type Mutation {
-    createEntity(
-      entity: EntityRequestDTO!
-    ): EntityResponseDTO!
-    updateEntity(id: ID!, obj: EntityRequestDTO!): EntityResponseDTO!
+    createEntity(entity: EntityRequestDTO!): EntityResponseDTO!
+    updateEntity(id: ID!, entity: EntityRequestDTO!): EntityResponseDTO!
     deleteEntity(id: ID!): ID
   }
 `;
