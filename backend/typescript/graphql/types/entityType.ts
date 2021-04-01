@@ -5,39 +5,36 @@ const entityType = gql`
     A
     B
     C
+    D
   }
 
-  type Entity {
-    id: String
-    stringField: String
-    intField: Int
-    enumField: Enum
-    stringArrayField: [String]
-    boolField: Boolean
+  type EntityResponseDTO {
+    id: String!
+    stringField: String!
+    intField: Int!
+    enumField: Enum!
+    stringArrayField: [String]!
+    boolField: Boolean!
   }
 
   input EntityRequestDTO {
-    stringField: String
-    intField: Int
-    enumField: Enum
-    stringArrayField: [String]
-    boolField: Boolean
+    stringField: String!
+    intField: Int!
+    enumField: Enum!
+    stringArrayField: [String]!
+    boolField: Boolean!
   }
 
   extend type Query {
-    entity(id: String): Entity
+    entity(id: String!): EntityResponseDTO!
     entities: [Entity!]!
   }
 
   extend type Mutation {
     createEntity(
-      stringField: String
-      intField: Int
-      enumField: Enum
-      stringArrayField: [String]
-      boolField: Boolean
-    ): Entity
-    updateEntity(id: String, obj: EntityRequestDTO!): Entity
+      entity: EntityRequestDTO!
+    ): EntityResponseDTO!
+    updateEntity(id: ID!, obj: EntityRequestDTO!): EntityResponseDTO!
     deleteEntity(id: ID!): ID
   }
 `;

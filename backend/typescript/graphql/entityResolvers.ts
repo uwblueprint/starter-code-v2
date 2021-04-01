@@ -6,7 +6,6 @@ const entityService = new EntityService();
 const entityResolvers = {
   Query: {
     entity: async (_req: any, { id }: { id: string }) => {
-      console.log(id);
       return entityService.getEntity(id);
     },
     entities: async () => {
@@ -14,25 +13,25 @@ const entityResolvers = {
     },
   },
   Mutation: {
-    createEntity: async (_req: any, obj: EntityRequestDTO) => {
+    createEntity: async (_req: any, entity: EntityRequestDTO) => {
       return entityService.createEntity({
-        stringField: obj.stringField,
-        intField: obj.intField,
-        enumField: obj.enumField,
-        stringArrayField: obj.stringArrayField,
-        boolField: obj.boolField,
+        stringField: entity.stringField,
+        intField: entity.intField,
+        enumField: entity.enumField,
+        stringArrayField: entity.stringArrayField,
+        boolField: entity.boolField,
       });
     },
     updateEntity: async (
       _req: any,
-      { id, obj }: { id: string; obj: EntityRequestDTO },
+      { id, entity }: { id: string; entity: EntityRequestDTO },
     ) => {
       return entityService.updateEntity(id, {
-        stringField: obj.stringField,
-        intField: obj.intField,
-        enumField: obj.enumField,
-        stringArrayField: obj.stringArrayField,
-        boolField: obj.boolField,
+        stringField: entity.stringField,
+        intField: entity.intField,
+        enumField: entity.enumField,
+        stringArrayField: entity.stringArrayField,
+        boolField: entity.boolField,
       });
     },
     deleteEntity: async (_req: any, { id }: { id: string }) => {
