@@ -1,5 +1,4 @@
 import PgEntity from "../../models/entity.pgmodel";
-import { Entity } from "../../models/entity.mgmodel"
 import {
     IEntityService,
     EntityRequestDTO,
@@ -7,25 +6,17 @@ import {
 } from "../interfaces/IEntityService";
 import Logger from "../../utilities/logger";
 
-interface entityPgModel {
-    id: number;
-    string_field: string;
-    int_field: number;
-    enum_field: string;
-    string_array_field: [string];
-    bool_field: boolean;
-
-}
 
 class EntityService implements IEntityService {
     /* eslint-disable class-methods-use-this */
     async getEntity(id: string): Promise<EntityResponseDTO> {
-        let entity: any | null;
+        let entity: PgEntity | null;
         try {
-            entity = await PgEntity.findByPk(id);
+            entity = await PgEntity.findByPk(id, { raw: true });
             if (!entity) {
                 throw new Error(`Entity id ${id} not found`);
             }
+            console.log(entity)
         } catch (error) {
             Logger.error(`Failed to get entity. Reason = ${error.message}`);
             throw error;
@@ -43,7 +34,7 @@ class EntityService implements IEntityService {
 
     async getEntities(): Promise<EntityResponseDTO[]> {
         try {
-            const entities: Array<any> = await PgEntity.findAll();
+            const entities: Array<any> = await PgEntity.findAll({ raw: true });
             return entities.map((entity) => ({
                 id: entity.id,
                 stringField: entity.string_field,

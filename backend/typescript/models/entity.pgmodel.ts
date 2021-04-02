@@ -1,4 +1,4 @@
-import { Column, Model, Table } from "sequelize-typescript";
+import { Column, Model, Table, DataType } from "sequelize-typescript";
 
 @Table({ tableName: "entity" })
 export default class Entity extends Model {
@@ -11,8 +11,8 @@ export default class Entity extends Model {
     @Column
     enum_field!: string;
 
-    @Column
-    string_array_field!: string;
+    @Column({ type: DataType.ARRAY(DataType.STRING) })
+    string_array_field!: string[];
 
     @Column
     bool_field!: boolean;
