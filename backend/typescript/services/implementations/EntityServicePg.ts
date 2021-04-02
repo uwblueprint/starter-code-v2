@@ -6,7 +6,6 @@ import {
 } from "../interfaces/IEntityService";
 import Logger from "../../utilities/logger";
 
-
 class EntityService implements IEntityService {
     /* eslint-disable class-methods-use-this */
     async getEntity(id: string): Promise<EntityResponseDTO> {
@@ -22,7 +21,7 @@ class EntityService implements IEntityService {
         }
 
         return {
-            id: entity.id.toString(),
+            id: entity.id,
             stringField: entity.string_field,
             intField: entity.int_field,
             enumField: entity.enum_field,
@@ -56,7 +55,7 @@ class EntityService implements IEntityService {
                 int_field: entity.intField,
                 enum_field: entity.enumField,
                 string_array_field: entity.stringArrayField,
-                bool_field: entity.boolField
+                bool_field: entity.boolField,
             });
         } catch (error) {
             Logger.error(`Failed to create entity. Reason = ${error.message}`);
@@ -72,17 +71,23 @@ class EntityService implements IEntityService {
         };
     }
 
-    async updateEntity(id: string, entity: EntityRequestDTO,): Promise<EntityResponseDTO | null> {
-        let resultingEntity: PgEntity | null
+    async updateEntity(
+        id: string,
+        entity: EntityRequestDTO,
+    ): Promise<EntityResponseDTO | null> {
+        let resultingEntity: PgEntity | null;
         let updatedEntity: [number, PgEntity[]] | null;
         try {
-            updatedEntity = await PgEntity.update({
-                string_field: entity.stringField,
-                int_field: entity.intField,
-                enum_field: entity.enumField,
-                string_array_field: entity.stringArrayField,
-                bool_field: entity.boolField
-            }, { where: { id: id }, returning: true })
+            updatedEntity = await PgEntity.update(
+                {
+                    string_field: entity.stringField,
+                    int_field: entity.intField,
+                    enum_field: entity.enumField,
+                    string_array_field: entity.stringArrayField,
+                    bool_field: entity.boolField,
+                },
+                { where: { id }, returning: true },
+            );
 
             if (!updatedEntity) {
                 throw new Error(`Entity id ${id} not found`);
@@ -108,8 +113,10 @@ class EntityService implements IEntityService {
 
     async deleteEntity(id: string): Promise<void> {
         try {
-            const deletedEntity: number
-                | null = await PgEntity.destroy({ where: { id: id } });
+            const deletedEntity: number | null = await PgEntity.destroy({
+                where: { id },
+            });
+
             if (!deletedEntity) {
                 throw new Error(`Entity id ${id} not found`);
             }
