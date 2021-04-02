@@ -72,45 +72,37 @@ class EntityService implements IEntityService {
         };
     }
 
-    async updateEntity(
-        id: string,
-        entity: EntityRequestDTO,
-    ): Promise<EntityResponseDTO | null> {
-        let entitytoUpdate: PgEntity | null
-        // let updatedEntity: any | null;
+    async updateEntity(id: string, entity: EntityRequestDTO,): Promise<EntityResponseDTO | null> {
+        let resultingEntity: PgEntity | null
+        let updatedEntity: [number, PgEntity[]] | null;
         try {
-            //     updatedEntity = await PgEntity.update({
-            //         string_field: entity.stringField,
-            //         int_field: entity.intField,
-            //         enum_field: entity.enumField,
-            //         string_array_field: entity.stringArrayField,
-            //         bool_field: entity.boolField
-            //     }, { where: { id: id }, returning: true })
-            entitytoUpdate = await PgEntity.findByPk(id, { raw: true });
+            updatedEntity = await PgEntity.update({
+                string_field: entity.stringField,
+                int_field: entity.intField,
+                enum_field: entity.enumField,
+                string_array_field: entity.stringArrayField,
+                bool_field: entity.boolField
+            }, { where: { id: id }, returning: true })
 
-
-            if (!entitytoUpdate) {
+            if (!updatedEntity) {
                 throw new Error(`Entity id ${id} not found`);
             }
+            resultingEntity = updatedEntity[1][0];
 
-            entitytoUpdate.string_field = entity.stringField;
-            entitytoUpdate.int_field = entity.intField;
-            entitytoUpdate.enum_field = entity.enumField;
-            entitytoUpdate.string_array_field = entity.stringArrayField;
-            entitytoUpdate.bool_field = entity.boolField;
-            await entitytoUpdate.save()
-
+            if (!resultingEntity) {
+                throw new Error(`Entity id ${id} not found`);
+            }
         } catch (error) {
             Logger.error(`Failed to update entity. Reason = ${error.message}`);
             throw error;
         }
         return {
-            id: entitytoUpdate.id,
-            stringField: entitytoUpdate.string_field,
-            intField: entitytoUpdate.int_field,
-            enumField: entitytoUpdate.enum_field,
-            stringArrayField: entitytoUpdate.string_array_field,
-            boolField: entitytoUpdate.bool_field,
+            id: resultingEntity.id,
+            stringField: resultingEntity.string_field,
+            intField: resultingEntity.int_field,
+            enumField: resultingEntity.enum_field,
+            stringArrayField: resultingEntity.string_array_field,
+            boolField: resultingEntity.bool_field,
         };
     }
 
