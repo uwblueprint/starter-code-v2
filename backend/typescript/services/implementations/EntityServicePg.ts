@@ -16,7 +16,6 @@ class EntityService implements IEntityService {
             if (!entity) {
                 throw new Error(`Entity id ${id} not found`);
             }
-            console.log(entity)
         } catch (error) {
             Logger.error(`Failed to get entity. Reason = ${error.message}`);
             throw error;
@@ -34,7 +33,7 @@ class EntityService implements IEntityService {
 
     async getEntities(): Promise<EntityResponseDTO[]> {
         try {
-            const entities: Array<any> = await PgEntity.findAll({ raw: true });
+            const entities: Array<PgEntity> = await PgEntity.findAll({ raw: true });
             return entities.map((entity) => ({
                 id: entity.id,
                 stringField: entity.string_field,
@@ -50,7 +49,7 @@ class EntityService implements IEntityService {
     }
 
     async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
-        let newEntity: any | null;
+        let newEntity: PgEntity | null;
         try {
             newEntity = await PgEntity.create({
                 string_field: entity.stringField,
@@ -77,35 +76,47 @@ class EntityService implements IEntityService {
         id: string,
         entity: EntityRequestDTO,
     ): Promise<EntityResponseDTO | null> {
-        let updatedEntity: any | null;
+        let entitytoUpdate: PgEntity | null
+        // let updatedEntity: any | null;
         try {
-            updatedEntity = await PgEntity.update({
-                string_field: entity.stringField,
-                int_field: entity.intField,
-                enum_field: entity.enumField,
-                string_array_field: entity.stringArrayField,
-                bool_field: entity.boolField
-            }, { where: { id: id } })
-            if (!updatedEntity) {
+            //     updatedEntity = await PgEntity.update({
+            //         string_field: entity.stringField,
+            //         int_field: entity.intField,
+            //         enum_field: entity.enumField,
+            //         string_array_field: entity.stringArrayField,
+            //         bool_field: entity.boolField
+            //     }, { where: { id: id }, returning: true })
+            entitytoUpdate = await PgEntity.findByPk(id, { raw: true });
+
+
+            if (!entitytoUpdate) {
                 throw new Error(`Entity id ${id} not found`);
             }
+
+            entitytoUpdate.string_field = entity.stringField;
+            entitytoUpdate.int_field = entity.intField;
+            entitytoUpdate.enum_field = entity.enumField;
+            entitytoUpdate.string_array_field = entity.stringArrayField;
+            entitytoUpdate.bool_field = entity.boolField;
+            await entitytoUpdate.save()
+
         } catch (error) {
             Logger.error(`Failed to update entity. Reason = ${error.message}`);
             throw error;
         }
         return {
-            id: updatedEntity.id,
-            stringField: updatedEntity.stringField,
-            intField: updatedEntity.intField,
-            enumField: updatedEntity.enumField,
-            stringArrayField: updatedEntity.stringArrayField,
-            boolField: updatedEntity.boolField,
+            id: entitytoUpdate.id,
+            stringField: entitytoUpdate.string_field,
+            intField: entitytoUpdate.int_field,
+            enumField: entitytoUpdate.enum_field,
+            stringArrayField: entitytoUpdate.string_array_field,
+            boolField: entitytoUpdate.bool_field,
         };
     }
 
     async deleteEntity(id: string): Promise<void> {
         try {
-            const deletedEntity: any
+            const deletedEntity: number
                 | null = await PgEntity.destroy({ where: { id: id } });
             if (!deletedEntity) {
                 throw new Error(`Entity id ${id} not found`);
