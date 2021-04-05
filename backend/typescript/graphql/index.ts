@@ -1,7 +1,7 @@
 import { makeExecutableSchema, gql } from "apollo-server-express";
 import { merge } from "lodash";
-import entityType from "./graphql/types/entityType";
-import entityResolvers from "./graphql/resolvers/entityResolvers";
+import entityType from "./types/entityType";
+import entityResolvers from "./resolvers/entityResolvers";
 
 const query = gql`
   type Query {
