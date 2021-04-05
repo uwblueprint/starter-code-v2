@@ -1,7 +1,10 @@
 import { makeExecutableSchema, gql } from "apollo-server-express";
 import { merge } from "lodash";
-import entityType from "./graphql/types/entityType";
-import entityResolvers from "./graphql/resolvers/entityResolvers";
+
+import entityResolvers from "./resolvers/entityResolvers";
+import entityType from "./types/entityType";
+import userResolvers from "./resolvers/userResolvers";
+import userType from "./types/userType";
 
 const query = gql`
   type Query {
@@ -16,8 +19,8 @@ const mutation = gql`
 `;
 
 const executableSchema = makeExecutableSchema({
-  typeDefs: [query, mutation, entityType],
-  resolvers: merge(entityResolvers),
+  typeDefs: [query, mutation, entityType, userType],
+  resolvers: merge(entityResolvers, userResolvers),
 });
 
 export default executableSchema;
