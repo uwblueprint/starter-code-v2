@@ -1,13 +1,18 @@
 import { Router } from "express";
+
+import { isAuthorizedByRole } from "../middlewares/auth";
 import EntityService from "../services/implementations/EntityService";
+import { IEntityService } from "../services/interfaces/IEntityService";
 
 const entityRouter: Router = Router();
-const entService = new EntityService();
+entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
 
-/* Create entity Object */
+const entityService: IEntityService = new EntityService();
+
+/* Create entity */
 entityRouter.post("/", async (req, res) => {
   try {
-    const newEntity = await entService.createEntity({
+    const newEntity = await entityService.createEntity({
       stringField: req.body.stringField,
       intField: req.body.intField,
       enumField: req.body.enumField,
@@ -20,33 +25,33 @@ entityRouter.post("/", async (req, res) => {
   }
 });
 
-/* Get all entity objects */
-entityRouter.get("/", async (req, res) => {
+/* Get all entities */
+entityRouter.get("/", async (_req, res) => {
   try {
-    const entities = await entService.getEntities();
+    const entities = await entityService.getEntities();
     res.status(200).json(entities);
   } catch (e) {
     res.status(500).send(e.message);
   }
 });
 
-/* Get entity object by id */
+/* Get entity by id */
 entityRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const entity = await entService.getEntity(id);
+    const entity = await entityService.getEntity(id);
     res.status(200).json(entity);
   } catch (e) {
     res.status(500).send(e.message);
   }
 });
 
-/* Update entity object by id */
+/* Update entity by id */
 entityRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const entity = await entService.updateEntity(id, {
+    const entity = await entityService.updateEntity(id, {
       stringField: req.body.stringField,
       intField: req.body.intField,
       enumField: req.body.enumField,
@@ -59,12 +64,12 @@ entityRouter.put("/:id", async (req, res) => {
   }
 });
 
-/* Delete entity object by id */
+/* Delete entity by id */
 entityRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    await entService.deleteEntity(id);
+    await entityService.deleteEntity(id);
     res.status(204).send();
   } catch (e) {
     res.status(500).send(e.message);

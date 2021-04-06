@@ -1,9 +1,12 @@
 import { Router } from "express";
 
+import { isAuthorizedByRole } from "../middlewares/auth";
 import UserService from "../services/implementations/userService";
 import IUserService from "../services/interfaces/userService";
 
 const userRouter: Router = Router();
+userRouter.use(isAuthorizedByRole(new Set(["Admin"])));
+
 const userService: IUserService = new UserService();
 
 /* Get all users, optionally filter by a userId or email query parameter to retrieve a single user */
