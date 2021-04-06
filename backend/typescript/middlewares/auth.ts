@@ -6,7 +6,7 @@ import { Role } from "../types";
 
 const authService: IAuthService = new AuthService();
 
-const getAccessToken = (req: Request) => {
+export const getAccessToken = (req: Request) => {
   const authHeaderParts = req.headers.authorization?.split(" ");
   if (
     authHeaderParts &&
