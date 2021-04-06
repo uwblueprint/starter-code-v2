@@ -21,7 +21,15 @@ app.use("/auth", authRouter);
 app.use("/entities", entityRouter);
 app.use("/users", userRouter);
 
-const server = new ApolloServer({ schema });
+const server = new ApolloServer({
+  schema,
+  context: ({ req, res }) => ({ req, res }),
+  playground: {
+    settings: {
+      "request.credentials": "include",
+    },
+  },
+});
 
 server.applyMiddleware({ app, path: "/graphql" });
 
