@@ -6,9 +6,9 @@ class EntityDTO(object):
         elif int_field is None:
             raise ValueError('Invalid int_field value, must not be empty')      
         elif string_array_field is None:
-            raise ValueError('Invalid string_field value, must not be empty')
+            raise ValueError('Invalid string_array_field value, must not be empty')
         elif bool_field is None:
-            raise ValueError('Invalid string_field value, must not be empty')
+            raise ValueError('Invalid bool_field value, must not be empty')
         elif enum_field is not None:
             enum_values  = {'A', 'B', 'C', 'D'}
             if enum_field.upper() not in enum_values:
