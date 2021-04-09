@@ -1,6 +1,12 @@
 import { makeExecutableSchema, gql } from "apollo-server-express";
+import { applyMiddleware } from "graphql-middleware";
 import { merge } from "lodash";
 
+import {
+  isAuthorizedByEmail,
+  isAuthorizedByRole,
+  isAuthorizedByUserId,
+} from "../middlewares/auth.graphql";
 import authResolvers from "./resolvers/authResolvers";
 import authType from "./types/authType";
 import entityResolvers from "./resolvers/entityResolvers";
@@ -25,4 +31,29 @@ const executableSchema = makeExecutableSchema({
   resolvers: merge(authResolvers, entityResolvers, userResolvers),
 });
 
-export default executableSchema;
+const authorizedByAllRoles = () =>
+  isAuthorizedByRole(new Set(["User", "Admin"]));
+const authorizedByAdmin = () => isAuthorizedByRole(new Set(["Admin"]));
+
+const graphQLMiddlewares = {
+  Query: {
+    entity: authorizedByAllRoles(),
+    entities: authorizedByAllRoles(),
+    userById: authorizedByAdmin(),
+    userByEmail: authorizedByAdmin(),
+    users: authorizedByAdmin(),
+  },
+  Mutation: {
+    createEntity: authorizedByAllRoles(),
+    updateEntity: authorizedByAllRoles(),
+    deleteEntity: authorizedByAllRoles(),
+    createUser: authorizedByAdmin(),
+    updateUser: authorizedByAdmin(),
+    deleteUserById: authorizedByAdmin(),
+    deleteUserByEmail: authorizedByAdmin(),
+    logout: isAuthorizedByUserId("userId"),
+    resetPassword: isAuthorizedByEmail("email"),
+  },
+};
+
+export default applyMiddleware(executableSchema, graphQLMiddlewares);

@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "firebase-admin": "^9.5.0",
     "graphql": "^15.5.0",
+    "graphql-middleware": "^6.0.6",
     "lodash": "^4.17.21",
     "mongoose": "^5.11.17",
     "node-fetch": "^2.6.1",
