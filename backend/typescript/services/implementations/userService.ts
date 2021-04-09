@@ -5,6 +5,14 @@ import MgUser, { User } from "../../models/user.mgmodel";
 import { CreateUserDTO, Role, UpdateUserDTO, UserDTO } from "../../types";
 import Logger from "../../utilities/logger";
 
+const getMongoUserByAuthId = async (authId: string): Promise<User> => {
+  const user: User | null = await MgUser.findOne({ authId });
+  if (!user) {
+    throw new Error(`user with authId ${authId} not found.`);
+  }
+  return user;
+};
+
 class UserService implements IUserService {
   /* eslint-disable class-methods-use-this */
   async getUserById(userId: string): Promise<UserDTO> {
@@ -60,13 +68,20 @@ class UserService implements IUserService {
 
   async getUserRoleByAuthId(authId: string): Promise<Role> {
     try {
-      const user: User | null = await MgUser.findOne({ authId });
-      if (!user) {
-        throw new Error(`userId with authId ${authId} not found.`);
-      }
-      return user.role;
+      const { role } = await getMongoUserByAuthId(authId);
+      return role;
     } catch (error) {
       Logger.error(`Failed to get user role. Reason = ${error.message}`);
+      throw error;
+    }
+  }
+
+  async getUserIdByAuthId(authId: string): Promise<string> {
+    try {
+      const { id } = await getMongoUserByAuthId(authId);
+      return id;
+    } catch (error) {
+      Logger.error(`Failed to get user id. Reason = ${error.message}`);
       throw error;
     }
   }

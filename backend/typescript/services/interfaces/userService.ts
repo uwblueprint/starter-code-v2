@@ -26,6 +26,14 @@ interface IUserService {
   getUserRoleByAuthId(authId: string): Promise<Role>;
 
   /**
+   * Get id of user associated with authId
+   * @param authId user's authId
+   * @returns id of the user
+   * @throws Error if user id retrieval fails
+   */
+  getUserIdByAuthId(authId: string): Promise<string>;
+
+  /**
    * Get authId of user associated with id
    * @param userId user's id
    * @returns user's authId
