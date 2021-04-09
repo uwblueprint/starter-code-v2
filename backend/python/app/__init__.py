@@ -19,8 +19,9 @@ def create_app(config_name):
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    from . import models
+    from . import models, routes
 
     models.init_app(app)
+    routes.init_app(app)
 
     return app
