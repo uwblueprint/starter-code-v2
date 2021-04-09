@@ -74,6 +74,21 @@ class PGUserService implements IUserService {
     }
   }
 
+  async getUserIdByAuthId(authId: string): Promise<string> {
+    try {
+      const user: User | null = await User.findOne({
+        where: { authId: authId },
+      });
+      if (!user) {
+        throw new Error(`user with authId ${authId} not found.`);
+      }
+      return user.id;
+    } catch (error) {
+      Logger.console.error(`Failed to get user id. Reason = ${error.message}`);
+      throw error;
+    }
+  }
+
   async getAuthIdById(userId: string): Promise<string> {
     try {
       const user: User | null = await User.findByPk(userId);
