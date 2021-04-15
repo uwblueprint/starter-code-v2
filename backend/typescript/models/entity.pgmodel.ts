@@ -1,6 +1,6 @@
 import { Column, Model, Table, DataType } from "sequelize-typescript";
 
-@Table({ tableName: "entity" })
+@Table({ tableName: "entities" })
 export default class Entity extends Model {
   @Column
   string_field!: string;

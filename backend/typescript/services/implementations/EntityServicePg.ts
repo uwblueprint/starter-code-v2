@@ -76,9 +76,9 @@ class EntityService implements IEntityService {
         entity: EntityRequestDTO,
     ): Promise<EntityResponseDTO | null> {
         let resultingEntity: PgEntity | null;
-        let updatedEntity: [number, PgEntity[]] | null;
+        let updateResult: [number, PgEntity[]] | null;
         try {
-            updatedEntity = await PgEntity.update(
+            updateResult = await PgEntity.update(
                 {
                     string_field: entity.stringField,
                     int_field: entity.intField,
@@ -89,14 +89,11 @@ class EntityService implements IEntityService {
                 { where: { id }, returning: true },
             );
 
-            if (!updatedEntity) {
+            if (!updateResult[0]) {
                 throw new Error(`Entity id ${id} not found`);
             }
-            resultingEntity = updatedEntity[1][0];
+            [, [resultingEntity]] = updateResult;
 
-            if (!resultingEntity) {
-                throw new Error(`Entity id ${id} not found`);
-            }
         } catch (error) {
             Logger.error(`Failed to update entity. Reason = ${error.message}`);
             throw error;
