@@ -1,5 +1,7 @@
 import { Column, Model, Table, DataType } from "sequelize-typescript";
 
+import { Letters } from "../types";
+
 @Table({ tableName: "entities" })
 export default class Entity extends Model {
   @Column
@@ -8,8 +10,8 @@ export default class Entity extends Model {
   @Column
   int_field!: number;
 
-  @Column
-  enum_field!: string;
+  @Column({ type: DataType.ENUM("A", "B", "C", "D") })
+  enum_field!: Letters;
 
   @Column({ type: DataType.ARRAY(DataType.STRING) })
   string_array_field!: string[];
