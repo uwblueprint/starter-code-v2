@@ -17,4 +17,4 @@ export type CreateUserDTO = Omit<UserDTO, "id"> & { password: string };
 
 export type UpdateUserDTO = Omit<UserDTO, "id">;
 
-export type Letters = "A" | "B" | "C" | "D"
+export type Letters = "A" | "B" | "C" | "D";
