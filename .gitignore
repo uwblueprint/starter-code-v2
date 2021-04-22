@@ -6,3 +6,4 @@
 **/*.log
 **/firebaseServiceAccount.json
 **/.DS_Store
+**/nodemailer.config.ts
