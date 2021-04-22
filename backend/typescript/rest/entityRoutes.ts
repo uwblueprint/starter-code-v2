@@ -1,5 +1,5 @@
 import { Router } from "express";
-import EntityServiceMg from "../services/implementations/EntityServiceMg";
+// import EntityServiceMg from "../services/implementations/EntityServiceMg";
 import EntityServicePg from "../services/implementations/EntityServicePg";
 import { isAuthorizedByRole } from "../middlewares/auth";
 import { IEntityService } from "../services/interfaces/IEntityService";
