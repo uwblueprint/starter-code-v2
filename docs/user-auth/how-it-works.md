@@ -1,8 +1,8 @@
 ---
 layout: default
-title: How it works
+title: How User Auth works
 nav_order: 1
 parent: User Auth
 ---
 
-# How it works - User Auth
+# How User Auth works

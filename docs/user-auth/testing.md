@@ -1,6 +1,6 @@
 ---
 layout: default
-title: How to test
+title: Testing User Auth
 nav_order: 4
 parent: User Auth
 ---

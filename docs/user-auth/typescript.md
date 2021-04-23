@@ -1,6 +1,6 @@
 ---
 layout: default
-title: How it works
+title: TypeScript User Auth
 nav_order: 3
 parent: User Auth
 ---
