@@ -1,4 +1,4 @@
-import EntityService from "../../services/implementations/EntityService";
+import EntityService from "../../services/implementations/EntityServiceMg";
 import { EntityRequestDTO } from "../../services/interfaces/IEntityService";
 
 const entityService = new EntityService();

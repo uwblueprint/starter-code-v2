@@ -2,7 +2,7 @@ export interface EntityRequestDTO {
   stringField: string;
   intField: number;
   enumField: string;
-  stringArrayField: [string];
+  stringArrayField: string[];
   boolField: boolean;
 }
 
@@ -11,7 +11,7 @@ export interface EntityResponseDTO {
   stringField: string;
   intField: number;
   enumField: string;
-  stringArrayField: [string];
+  stringArrayField: string[];
   boolField: boolean;
 }
 
