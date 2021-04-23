@@ -6,18 +6,24 @@ import Logger from "../../utilities/logger";
 class EmailService implements IEmailService {
   transporter: Transporter;
 
-  constructor(nodemailerConfig: NodemailerConfig) {
+  sender: string;
+
+  constructor(nodemailerConfig: NodemailerConfig, displayName?: string) {
     this.transporter = nodemailer.createTransport(nodemailerConfig);
+    if (displayName) {
+      this.sender = `${displayName} <${nodemailerConfig.auth.user}>`;
+    } else {
+      this.sender = nodemailerConfig.auth.user;
+    }
   }
 
   async sendEmail(
-    from: string,
     to: string,
     subject: string,
     htmlBody: string,
   ): Promise<void> {
     const mailOptions = {
-      from,
+      from: this.sender,
       to,
       subject,
       html: htmlBody,
