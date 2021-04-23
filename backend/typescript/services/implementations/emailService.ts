@@ -1,26 +1,33 @@
-import nodemailer from "nodemailer";
-import NODEMAILER_CONFIG from "./nodemailer.config";
+import nodemailer, { Transporter } from "nodemailer";
 import IEmailService from "../interfaces/emailService";
+import { NodemailerConfig } from "../../types";
 import Logger from "../../utilities/logger";
 
-const EMAIL_FROM = `"Display Name" <address@email.org>`;
-const transporter = nodemailer.createTransport(NODEMAILER_CONFIG);
-
 class EmailService implements IEmailService {
-  /* eslint-disable class-methods-use-this */
-  async sendEmail(to: string, subject: string, html: string): Promise<void> {
+  transporter: Transporter;
+
+  constructor(nodemailerConfig: NodemailerConfig) {
+    this.transporter = nodemailer.createTransport(nodemailerConfig);
+  }
+
+  async sendEmail(
+    from: string,
+    to: string,
+    subject: string,
+    htmlBody: string,
+  ): Promise<void> {
     const mailOptions = {
-      from: EMAIL_FROM,
+      from,
       to,
       subject,
-      html,
+      html: htmlBody,
     };
 
     try {
-      return await transporter.sendMail(mailOptions);
+      return await this.transporter.sendMail(mailOptions);
     } catch (error) {
       Logger.error(`Failed to send email. Reason = ${error.message}`);
-      return Promise.reject(error);
+      throw error;
     }
   }
 }
