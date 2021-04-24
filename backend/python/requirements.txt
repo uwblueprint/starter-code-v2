@@ -4,6 +4,12 @@ black==20.8b1
 click==7.1.2
 Flask==1.1.2
 Flask-SQLAlchemy==2.4.4
+google-api-core==1.26.3
+google-api-python-client==2.2.0
+google-auth==1.29.0
+google-auth-httplib2==0.1.0
+googleapis-common-protos==1.53.0
+httplib2==0.19.1
 itsdangerous==1.1.0
 Jinja2==2.11.2
 Mako==1.1.4
