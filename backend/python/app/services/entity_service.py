@@ -12,7 +12,7 @@ def get_entity(id):
     # get queries by the primary key, which is id for the Entity table
     entity = Entity.query.get(id)
     if entity is None:
-        return entity
+        raise ValueError
     return entity.to_dict()
 
 
@@ -31,16 +31,16 @@ def update_entity(id, entity):
     db.session.commit()
 
     if updated_entity is None:
-        return updated_entity
+        raise ValueError
     return updated_entity.to_dict()
 
 
 def delete_entity(id):
     deleted = Entity.query.filter_by(id=id).delete()
     db.session.commit()
-    
+
     # deleted is the number of rows deleted
     if deleted == 1:
         return id
-    return None
-    
+
+    raise ValueError

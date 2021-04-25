@@ -3,4 +3,3 @@ def init_app(app):
 
     # see entity_routes.py for route definitions
     app.register_blueprint(entity_routes.blueprint)
-    
