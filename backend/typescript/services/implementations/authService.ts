@@ -1,6 +1,5 @@
 import * as firebaseAdmin from "firebase-admin";
 
-import UserService from "./userService";
 import IAuthService from "../interfaces/authService";
 import IUserService from "../interfaces/userService";
 import { Token, Role } from "../../types";
@@ -10,8 +9,8 @@ import Logger from "../../utilities/logger";
 class AuthService implements IAuthService {
   userService: IUserService;
 
-  constructor() {
-    this.userService = new UserService();
+  constructor(userService: IUserService) {
+    this.userService = userService;
   }
 
   /* eslint-disable class-methods-use-this */

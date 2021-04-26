@@ -2,10 +2,11 @@ import { Router } from "express";
 
 import { isAuthorizedByEmail, isAuthorizedByUserId } from "../middlewares/auth";
 import AuthService from "../services/implementations/authService";
+import UserService from "../services/implementations/userService";
 import IAuthService from "../services/interfaces/authService";
 
 const authRouter: Router = Router();
-const authService: IAuthService = new AuthService();
+const authService: IAuthService = new AuthService(new UserService());
 
 /* Returns access token in response body and sets refreshToken as an httpOnly cookie */
 authRouter.post("/login", async (req, res) => {
