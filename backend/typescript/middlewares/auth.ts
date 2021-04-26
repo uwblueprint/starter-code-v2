@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
 import AuthService from "../services/implementations/authService";
+import UserService from "../services/implementations/userService";
 import IAuthService from "../services/interfaces/authService";
 import { Role } from "../types";
 
-const authService: IAuthService = new AuthService();
+const authService: IAuthService = new AuthService(new UserService());
 
 export const getAccessToken = (req: Request) => {
   const authHeaderParts = req.headers.authorization?.split(" ");

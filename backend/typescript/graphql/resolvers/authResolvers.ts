@@ -1,9 +1,10 @@
 import { CookieOptions, Request, Response } from "express";
 
 import AuthService from "../../services/implementations/authService";
+import UserService from "../../services/implementations/userService";
 import IAuthService from "../../services/interfaces/authService";
 
-const authService: IAuthService = new AuthService();
+const authService: IAuthService = new AuthService(new UserService());
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,

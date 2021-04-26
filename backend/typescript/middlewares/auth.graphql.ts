@@ -3,10 +3,11 @@ import { GraphQLResolveInfo } from "graphql";
 
 import { getAccessToken } from "./auth";
 import AuthService from "../services/implementations/authService";
+import UserService from "../services/implementations/userService";
 import IAuthService from "../services/interfaces/authService";
 import { Role } from "../types";
 
-const authService: IAuthService = new AuthService();
+const authService: IAuthService = new AuthService(new UserService());
 
 /* Determine if request is authorized based on accessToken validity and role of client */
 export const isAuthorizedByRole = (roles: Set<Role>) => {
