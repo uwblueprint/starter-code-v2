@@ -36,6 +36,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5000:5000
+    dns:
+      - 8.8.8.8
     volumes:
      - ./backend/python:/app
     depends_on:
