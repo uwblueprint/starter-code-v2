@@ -22,8 +22,9 @@ def get_entities():
 def get_entity(id):
     try:
         result = entity_service.get_entity(id)
-    except Exception as error:
-        return jsonify(str(error)), 500
+    except Exception as e:
+        error_message = getattr(e, "message", None)
+        return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     # HTTP status code 200 means OK
     return jsonify(result), 200
@@ -37,8 +38,9 @@ def create_entity():
         # data validators and transformations are applied when constructing the resource,
         # this allows downstream code to make safe assumptions about the data
         body = EntityDTO(**request.json)
-    except Exception as error:
-        return jsonify(str(error)), 500
+    except Exception as e:
+        error_message = getattr(e, "message", None)
+        return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     # HTTP status code 201 means Created
     return jsonify(entity_service.create_entity(body.__dict__)), 201
@@ -49,13 +51,15 @@ def create_entity():
 def update_entity(id):
     try:
         body = EntityDTO(**request.json)
-    except Exception as error:
-        return jsonify(str(error)), 500
+    except Exception as e:
+        error_message = getattr(e, "message", None)
+        return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     try:
         result = entity_service.update_entity(id, body.__dict__)
-    except Exception as error:
-        return jsonify(str(error)), 500
+    except Exception as e:
+        error_message = getattr(e, "message", None)
+        return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     return jsonify(result), 200
 
@@ -65,7 +69,8 @@ def update_entity(id):
 def delete_entity(id):
     try:
         result = entity_service.delete_entity(id)
-    except Exception as error:
-        return jsonify(str(error)), 500
+    except Exception as e:
+        error_message = getattr(e, "message", None)
+        return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     return jsonify(result), 200
