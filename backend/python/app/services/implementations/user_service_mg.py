@@ -327,7 +327,9 @@ class UserService(IUserService):
         user = User.objects(auth_id=auth_id).first()
 
         if not user:
-            raise Exception("user with auth_id {auth_id}".format(auth_id=auth_id))
+            raise Exception(
+                "user with auth_id {auth_id} not found".format(auth_id=auth_id)
+            )
 
         return user
 
