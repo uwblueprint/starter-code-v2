@@ -1,8 +1,11 @@
-from flask import Blueprint, request
+from flask import Blueprint, current_app, request
 from flask import jsonify
 
 from ..resources.entity_dto import EntityDTO
-from ..services import entity_service
+from ..services.implementations.entity_service import EntityService
+
+# define instance of EntityService
+entity_service = EntityService(current_app.logger)
 
 # defines a shared URL prefix for all routes
 blueprint = Blueprint("entity", __name__, url_prefix="/entities")
@@ -19,10 +22,8 @@ def get_entities():
 def get_entity(id):
     try:
         result = entity_service.get_entity(id)
-    except:
-        error = {"error": "entity not found"}
-        # HTTP status code 404 means Not Found
-        return jsonify(error), 404
+    except Exception as error:
+        return jsonify(str(error)), 500
 
     # HTTP status code 200 means OK
     return jsonify(result), 200
@@ -37,9 +38,7 @@ def create_entity():
         # this allows downstream code to make safe assumptions about the data
         body = EntityDTO(**request.json)
     except Exception as error:
-        error = {"error": str(error)}
-        # HTTP status code 400 means Bad Request
-        return jsonify(error), 400
+        return jsonify(str(error)), 500
 
     # HTTP status code 201 means Created
     return jsonify(entity_service.create_entity(body.__dict__)), 201
@@ -51,14 +50,12 @@ def update_entity(id):
     try:
         body = EntityDTO(**request.json)
     except Exception as error:
-        error = {"error": str(error)}
-        return jsonify(error), 400
+        return jsonify(str(error)), 500
 
     try:
         result = entity_service.update_entity(id, body.__dict__)
     except Exception as error:
-        error = {"error": "entity not found"}
-        return jsonify(error), 404
+        return jsonify(str(error)), 500
 
     return jsonify(result), 200
 
@@ -69,7 +66,6 @@ def delete_entity(id):
     try:
         result = entity_service.delete_entity(id)
     except Exception as error:
-        error = {"error": "entity not found"}
-        return jsonify(error), 404
+        return jsonify(str(error)), 500
 
     return jsonify(result), 200
