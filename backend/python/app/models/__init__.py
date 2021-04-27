@@ -5,7 +5,7 @@ erase_db_and_sync = True
 
 
 def init_app(app):
-    from .person import Person
+    from .entity import Entity
 
     app.app_context().push()
     db.init_app(app)
