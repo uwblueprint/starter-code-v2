@@ -16,6 +16,7 @@ class EntityService(IEntityService):
         # get queries by the primary key, which is id for the Entity table
         entity = Entity.query.get(id)
         if entity is None:
+            self.logger.error("Invalid id")
             raise Exception("Invalid id")
         return entity.to_dict()
 
@@ -23,6 +24,7 @@ class EntityService(IEntityService):
         try:
             new_entity = Entity(**entity)
         except Exception as error:
+            self.logger.error(str(error))
             raise error
 
         db.session.add(new_entity)
@@ -37,6 +39,7 @@ class EntityService(IEntityService):
         db.session.commit()
 
         if updated_entity is None:
+            self.logger.error("Invalid id")
             raise Exception("Invalid id")
         return updated_entity.to_dict()
 
@@ -48,4 +51,5 @@ class EntityService(IEntityService):
         if deleted == 1:
             return id
 
+        self.logger.error("Invalid id")
         raise Exception("Invalid id")
