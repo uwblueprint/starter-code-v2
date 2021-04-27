@@ -9,7 +9,7 @@ class AuthService(IAuthService):
     AuthService implementation with user authentication methods
     """
 
-    def __init__(self, logger, user_service, email_service):
+    def __init__(self, logger, user_service, email_service=None):
         """
         Create an instance of AuthService
 
@@ -60,6 +60,14 @@ class AuthService(IAuthService):
             raise e
 
     def reset_password(self, email):
+        if not self.email_service:
+            error_message = """
+                Attempted to call reset_password but this instance of AuthService 
+                does not have an EmailService instance
+                """
+            self.logger.error(error_message)
+            raise Exception(error_message)
+
         try:
             reset_link = firebase_admin.auth.generate_password_reset_link(email)
             email_body = """
