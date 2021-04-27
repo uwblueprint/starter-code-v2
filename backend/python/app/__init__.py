@@ -46,9 +46,9 @@ def create_app(config_name):
     # required for auth
     firebase_admin.initialize_app()
 
-    from . import models, routes
+    from . import models, rest
 
     models.init_app(app)
-    routes.init_app(app)
+    rest.init_app(app)
 
     return app
