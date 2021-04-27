@@ -15,8 +15,8 @@ email_service = EmailService(
         "client_id": os.getenv("EMAIL_CLIENT_ID"),
         "client_secret": os.getenv("EMAIL_CLIENT_SECRET"),
     },
-    "sherryli@uwblueprint.org",  # must replace
-    "Sherry Li",  # must replace
+    "name@domain.org",  # must replace
+    "Display Name",  # must replace
 )
 auth_service = AuthService(current_app.logger, user_service, email_service)
 blueprint = Blueprint("auth", __name__, url_prefix="/auth")
