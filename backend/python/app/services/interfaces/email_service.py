@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class IEmailService(ABC):
     """
-    A class for handling email related functionality
+    EmailService interface for handling email related functionality
     """
 
     @abstractmethod
@@ -11,14 +11,15 @@ class IEmailService(ABC):
         """
         Sends email with given parameters
 
-        Args:
-            to: recipient's email
-            subject: email subject
-            body: email body as html
-        Returns:
-            A dict that contains fields like id, threadId, labelIds
-            of the sent email
-        Raises:
-            Error if email was not sent successfully
+        :param to: recipient's email
+        :type to: str
+        :param subject: email subject
+        :type subject: str
+        :param body: email body as html
+        :type body: str
+        :return: a dict that contains fields like id, threadId, labelIds
+        of the sent email
+        :rtype: dict
+        :raises Exception: if email was not sent successfully
         """
         pass
