@@ -1,3 +1,4 @@
+// mongodb {
 import * as firebaseAdmin from "firebase-admin";
 
 import IUserService from "../interfaces/userService";
@@ -321,3 +322,5 @@ class UserService implements IUserService {
 }
 
 export default UserService;
+
+// } mongodb

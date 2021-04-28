@@ -14,6 +14,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
     env_file:
       - ./.env
+  typescript {
   ts-backend:
     build:
       context: ./backend/typescript
@@ -29,6 +30,8 @@ services:
       - db
     env_file:
       - ./.env
+  } typescript
+  python {
   py-backend:
     restart: always
     build:
@@ -44,6 +47,7 @@ services:
       - db
     env_file:
       - ./.env
+  } python 
   db:
     image: postgres:12-alpine
     ports:

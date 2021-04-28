@@ -1,13 +1,16 @@
 import { Router } from "express";
-// import EntityServiceMg from "../services/implementations/EntityServiceMg";
-import EntityServicePg from "../services/implementations/EntityServicePg";
+import EntityService from "../services/implementations/entityService";
+// auth {
 import { isAuthorizedByRole } from "../middlewares/auth";
+// } auth
 import { IEntityService } from "../services/interfaces/IEntityService";
 
 const entityRouter: Router = Router();
+// auth {
 entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
+// } auth
 
-const entityService: IEntityService = new EntityServicePg();
+const entityService: IEntityService = new EntityService();
 
 /* Create entity */
 entityRouter.post("/", async (req, res) => {
