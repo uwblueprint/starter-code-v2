@@ -65,7 +65,7 @@ def create_entity():
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     # HTTP status code 201 means Created
-    return jsonify(entity_service.create_entity(body.__dict__)), 201
+    return jsonify(entity_service.create_entity(body)), 201
 
 
 # POSTGRES
@@ -79,7 +79,7 @@ def create_entity():
 #         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
 #     try:
-#         result = entity_service.update_entity(id, body.__dict__)
+#         result = entity_service.update_entity(id, body)
 #     except Exception as e:
 #         error_message = getattr(e, "message", None)
 #         return jsonify({"error": (error_message if error_message else str(e))}), 500
@@ -98,7 +98,7 @@ def update_entity(id):
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     try:
-        result = entity_service.update_entity(id, body.__dict__)
+        result = entity_service.update_entity(id, body)
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500

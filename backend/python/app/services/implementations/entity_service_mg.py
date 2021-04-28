@@ -26,7 +26,7 @@ class EntityService(IEntityService):
 
     def create_entity(self, entity):
         try:
-            new_entity = Entity(**entity)
+            new_entity = Entity(**entity.__dict__)
             new_entity.save()
         except Exception as error:
             self.logger.error(str(error))
@@ -35,21 +35,17 @@ class EntityService(IEntityService):
         return new_entity.to_serializable_dict()
 
     def update_entity(self, id, entity):
-        updated_entity = Entity.objects.get(id=id)
+        updated_entity = Entity.objects(id=id).modify(new=True, **entity.__dict__)
 
         if updated_entity is None:
             self.logger.error("Invalid id")
             raise Exception("Invalid id")
 
-        updated_entity.update(**entity)
-        updated_entity = Entity.objects.get(id=id)
-
         return updated_entity.to_serializable_dict()
 
     def delete_entity(self, id):
         try:
-            deleted = Entity.objects.get(id=id)
-            deleted.delete()
+            deleted = Entity.objects(id=id).modify(remove=True)
             return id
         except Exception as error:
             self.logger.error(str(error))
