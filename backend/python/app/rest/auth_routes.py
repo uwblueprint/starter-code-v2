@@ -2,6 +2,10 @@ import os
 
 from flask import Blueprint, current_app, jsonify, request
 
+from ..middlewares.auth import (
+    require_authorization_by_user_id,
+    require_authorization_by_email,
+)
 from ..services.implementations.auth_service import AuthService
 from ..services.implementations.email_service import EmailService
 from ..services.implementations.user_service_mg import UserService
@@ -65,6 +69,7 @@ def refresh():
 
 
 @blueprint.route("/logout/<string:user_id>", methods=["POST"], strict_slashes=False)
+@require_authorization_by_user_id("user_id")
 def logout(user_id):
     """
     Revokes all of the specified user's refresh tokens
@@ -80,6 +85,7 @@ def logout(user_id):
 @blueprint.route(
     "/reset_password/<string:email>", methods=["POST"], strict_slashes=False
 )
+@require_authorization_by_email("email")
 def reset_password(email):
     """
     Triggers password reset for user with specified email (reset link will be emailed)

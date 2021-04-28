@@ -1,5 +1,6 @@
 from flask import Blueprint, current_app, jsonify, request
 
+from ..middlewares.auth import require_authorization_by_role
 from ..resources.create_user_dto import CreateUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
 from ..services.implementations.user_service_mg import UserService
@@ -10,6 +11,7 @@ blueprint = Blueprint("users", __name__, url_prefix="/users")
 
 
 @blueprint.route("/", methods=["GET"], strict_slashes=False)
+@require_authorization_by_role({"User", "Admin"})
 def get_users():
     """
     Get all users, optionally filter by a user_id or email query parameter to retrieve a single user
@@ -58,6 +60,7 @@ def get_users():
 
 
 @blueprint.route("/", methods=["POST"], strict_slashes=False)
+@require_authorization_by_role({"User", "Admin"})
 def create_user():
     """
     Create a user
@@ -72,6 +75,7 @@ def create_user():
 
 
 @blueprint.route("/<string:user_id>", methods=["PUT"], strict_slashes=False)
+@require_authorization_by_role({"User", "Admin"})
 def update_user(user_id):
     """
     Update the user with the specified user_id
@@ -86,6 +90,7 @@ def update_user(user_id):
 
 
 @blueprint.route("/", methods=["DELETE"], strict_slashes=False)
+@require_authorization_by_role({"User", "Admin"})
 def delete_user():
     """
     Delete a user by user_id or email, specified through a query parameter

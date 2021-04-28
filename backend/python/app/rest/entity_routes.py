@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app, request
 from flask import jsonify
 
+from ..middlewares.auth import require_authorization_by_role
 from ..resources.entity_dto import EntityDTO
 from ..services.implementations.entity_service import EntityService
 
@@ -12,6 +13,7 @@ blueprint = Blueprint("entity", __name__, url_prefix="/entities")
 
 # defines GET endpoint for retrieving all entities
 @blueprint.route("/", methods=["GET"], strict_slashes=False)
+@require_authorization_by_role({"User"})
 def get_entities():
     result = entity_service.get_entities()
     return jsonify(result), 200
@@ -19,6 +21,7 @@ def get_entities():
 
 # defines GET endpoint for retrieving a single entity based on a provided id
 @blueprint.route("/<int:id>", methods=["GET"], strict_slashes=False)
+@require_authorization_by_role({"User"})
 def get_entity(id):
     try:
         result = entity_service.get_entity(id)
@@ -32,6 +35,7 @@ def get_entity(id):
 
 # define POST endpoint for creating an entity
 @blueprint.route("/", methods=["POST"], strict_slashes=False)
+@require_authorization_by_role({"User"})
 def create_entity():
     try:
         # create a EntityResource object instead of using the raw request body
@@ -48,6 +52,7 @@ def create_entity():
 
 # defines PUT endpoint for updating the entity with the provided id
 @blueprint.route("/<int:id>", methods=["PUT"], strict_slashes=False)
+@require_authorization_by_role({"User"})
 def update_entity(id):
     try:
         body = EntityDTO(**request.json)
@@ -66,6 +71,7 @@ def update_entity(id):
 
 # defines DELETE endpoint for deleting the entity with the provided id
 @blueprint.route("/<int:id>", methods=["DELETE"], strict_slashes=False)
+@require_authorization_by_role({"User"})
 def delete_entity(id):
     try:
         result = entity_service.delete_entity(id)
