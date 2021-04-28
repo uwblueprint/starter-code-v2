@@ -5,7 +5,9 @@ from .enum import enum
 class Entity(Document):
     string_field = StringField(max_length=200, required=True)
     int_field = IntField(required=True)
-    enum_field = StringField(max_length=200, required=True, choices=["A", "B", "C", "D"])
+    enum_field = StringField(
+        max_length=200, required=True, choices=["A", "B", "C", "D"]
+    )
     string_array_field = ListField(StringField(max_length=200))
     bool_field = BooleanField()
 

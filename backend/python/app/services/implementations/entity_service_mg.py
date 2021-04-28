@@ -1,6 +1,7 @@
 from ...models.entity_mg import Entity
 from ..interfaces.entity_service import IEntityService
 
+
 class EntityService(IEntityService):
     def __init__(self, logger):
         self.logger = logger
