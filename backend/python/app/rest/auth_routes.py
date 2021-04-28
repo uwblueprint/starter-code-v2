@@ -13,6 +13,7 @@ from ..services.implementations.user_service_mg import UserService
 
 user_service = UserService(current_app.logger)
 email_service = EmailService(
+    current_app.logger,
     {
         "refresh_token": os.getenv("EMAIL_REFRESH_TOKEN"),
         "token_uri": "https://oauth2.googleapis.com/token",
