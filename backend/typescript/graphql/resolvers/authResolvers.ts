@@ -1,10 +1,17 @@
 import { CookieOptions, Request, Response } from "express";
 
+import nodemailerConfig from "../../nodemailer.config";
 import AuthService from "../../services/implementations/authService";
+import EmailService from "../../services/implementations/emailService";
 import UserService from "../../services/implementations/userService";
 import IAuthService from "../../services/interfaces/authService";
+import IEmailService from "../../services/interfaces/emailService";
 
-const authService: IAuthService = new AuthService(new UserService());
+const emailService: IEmailService = new EmailService(nodemailerConfig);
+const authService: IAuthService = new AuthService(
+  new UserService(),
+  emailService,
+);
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
@@ -19,9 +26,10 @@ const authResolvers = {
       { email, password }: { email: string; password: string },
       { res }: { res: Response },
     ) => {
-      const token = await authService.generateToken(email, password);
-      res.cookie("refreshToken", token.refreshToken, cookieOptions);
-      return token.accessToken;
+      const authDTO = await authService.generateToken(email, password);
+      const { refreshToken, ...rest } = authDTO;
+      res.cookie("refreshToken", refreshToken, cookieOptions);
+      return rest;
     },
     refresh: async (
       _parent: any,
@@ -36,7 +44,8 @@ const authResolvers = {
       await authService.revokeTokens(userId);
     },
     resetPassword: async (_parent: any, { email }: { email: string }) => {
-      return authService.generatePasswordResetLink(email);
+      await authService.resetPassword(email);
+      return true;
     },
   },
 };

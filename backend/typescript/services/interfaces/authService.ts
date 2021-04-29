@@ -1,4 +1,4 @@
-import { Role, Token } from "../../types";
+import { AuthDTO, Role, Token } from "../../types";
 
 interface IAuthService {
   /**
@@ -6,10 +6,10 @@ interface IAuthService {
    * when supplied user's email and password
    * @param email user's email
    * @param password user's password
-   * @returns Token object containing the access token and refresh token
+   * @returns AuthDTO object containing the access token, refresh token, and user info
    * @throws Error if token generation fails
    */
-  generateToken(email: string, password: string): Promise<Token>;
+  generateToken(email: string, password: string): Promise<AuthDTO>;
 
   /**
    * Revoke all refresh tokens of a user
@@ -27,15 +27,12 @@ interface IAuthService {
   renewToken(refreshToken: string): Promise<Token>;
 
   /**
-   * Generate a password reset link
+   * Generate a password reset link for the user with the given email and send
+   * the link to that that email address
    * @param email email of user requesting password reset
-   * @returns password reset link
-   * @throws Error if unable to generate link
+   * @throws Error if unable to generate link or send email
    */
-  generatePasswordResetLink(email: string): Promise<string>;
-
-  // TODO: resetPassword(email: string): Promise<void>;
-  // (dependent on EmailService)
+  resetPassword(email: string): Promise<void>;
 
   /**
    * Determine if the provided access token is valid and authorized for at least
