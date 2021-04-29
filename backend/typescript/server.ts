@@ -11,9 +11,16 @@ import userRouter from "./rest/userRoutes";
 
 import schema from "./graphql";
 
+const CORS_ALLOW_LIST = ["http://localhost:3000"];
+
+const CORS_OPTIONS: cors.CorsOptions = {
+  origin: CORS_ALLOW_LIST,
+  credentials: true,
+};
+
 const app = express();
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(CORS_OPTIONS));
 app.use(express.json());
 app.use(express.urlencoded());
 
