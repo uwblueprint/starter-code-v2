@@ -1,6 +1,7 @@
 import firebase_admin.auth
 
 from ..interfaces.auth_service import IAuthService
+from ...resources.auth_dto import AuthDTO
 from ...utilities.firebase_rest_client import FirebaseRestClient
 
 
@@ -27,7 +28,9 @@ class AuthService(IAuthService):
 
     def generate_token(self, email, password):
         try:
-            return self.firebase_rest_client.sign_in_with_password(email, password)
+            token = self.firebase_rest_client.sign_in_with_password(email, password)
+            user = self.user_service.get_user_by_email(email)
+            return AuthDTO(**{**token.__dict__, **user.__dict__})
         except Exception as e:
             self.logger.error(
                 "Failed to generate token for user with email {email}".format(

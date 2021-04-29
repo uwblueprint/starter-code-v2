@@ -16,8 +16,8 @@ class IAuthService(ABC):
         :type email: str
         :param password: user's password
         :type password: str
-        :return: Token object containing the access and refresh tokens
-        :rtype: Token
+        :return: AuthDTO object containing the access token, refresh token, and user info
+        :rtype: AuthDTO
         :raises Exception: if token generation fails
         """
         pass
