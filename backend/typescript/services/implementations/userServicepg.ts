@@ -97,7 +97,7 @@ class PGUserService implements IUserService {
       }
       return user.authId;
     } catch (error) {
-      Logger.error(`Failed to get user role. Reason = ${error.message}`);
+      Logger.error(`Failed to get authId. Reason = ${error.message}`);
       throw error;
     }
   }
@@ -164,7 +164,7 @@ class PGUserService implements IUserService {
             "Orphaned authId (Firebase uid) =",
             firebaseUser.uid,
           ];
-          Logger.error(errorMessage.join(""));
+          Logger.error(errorMessage.join(" "));
         }
 
         throw postgresError;
@@ -184,17 +184,10 @@ class PGUserService implements IUserService {
   }
 
   async updateUserById(userId: string, user: UpdateUserDTO): Promise<UserDTO> {
-    let oldUser: User | null;
     let updatedFirebaseUser: firebaseAdmin.auth.UserRecord;
 
     try {
-      oldUser = await User.findByPk(Number(userId));
-
-      if (!oldUser) {
-        throw new Error(`userId ${userId} not found.`);
-      }
-
-      User.update(
+      const updateResult = await User.update(
         {
           firstName: user.firstName,
           lastName: user.lastName,
@@ -202,8 +195,19 @@ class PGUserService implements IUserService {
         },
         {
           where: { id: userId },
+          returning: true,
         },
       );
+
+      // check number of rows affected
+      if (updateResult[0] < 1) {
+        throw new Error(`userId ${userId} not found.`);
+      }
+
+      // the cast to "any" is needed due to a missing property in the Sequelize type definitions
+      // https://github.com/sequelize/sequelize/issues/9978#issuecomment-426342219
+      /* eslint-disable-next-line no-underscore-dangle */
+      const oldUser: User = (updateResult[1][0] as any)._previousDataValues;
 
       try {
         updatedFirebaseUser = await firebaseAdmin
@@ -250,6 +254,7 @@ class PGUserService implements IUserService {
 
   async deleteUserById(userId: string): Promise<void> {
     try {
+      // Sequelize doesn't provide a way to atomically find, delete, and return deleted row
       const deletedUser: User | null = await User.findByPk(Number(userId));
 
       if (!deletedUser) {
