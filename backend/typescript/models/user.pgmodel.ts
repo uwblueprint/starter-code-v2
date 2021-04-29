@@ -4,13 +4,13 @@ import { Role } from "../types";
 @Table({ tableName: "users" })
 export default class User extends Model {
   @Column({ type: DataType.STRING })
-  firstName!: string;
+  first_name!: string;
 
   @Column({ type: DataType.STRING })
-  lastName!: string;
+  last_name!: string;
 
   @Column({ type: DataType.STRING })
-  authId!: string;
+  auth_id!: string;
 
   @Column({ type: DataType.ENUM("User", "Admin") })
   role!: Role;

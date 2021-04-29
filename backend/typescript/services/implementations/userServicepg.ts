@@ -17,7 +17,7 @@ class PGUserService implements IUserService {
       if (!user) {
         throw new Error(`userId ${userId} not found.`);
       }
-      firebaseUser = await firebaseAdmin.auth().getUser(user.authId);
+      firebaseUser = await firebaseAdmin.auth().getUser(user.auth_id);
     } catch (error) {
       Logger.error(`Failed to get user. Reason = ${error.message}`);
       throw error;
@@ -25,8 +25,8 @@ class PGUserService implements IUserService {
 
     return {
       id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: user.first_name,
+      lastName: user.last_name,
       email: firebaseUser.email ?? "",
       role: user.role,
     };
@@ -39,7 +39,7 @@ class PGUserService implements IUserService {
     try {
       firebaseUser = await firebaseAdmin.auth().getUserByEmail(email);
       user = await User.findOne({
-        where: { authId: firebaseUser.uid },
+        where: { auth_id: firebaseUser.uid },
       });
 
       if (!user) {
@@ -52,8 +52,8 @@ class PGUserService implements IUserService {
 
     return {
       id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: user.first_name,
+      lastName: user.last_name,
       email: firebaseUser.email ?? "",
       role: user.role,
     };
@@ -62,7 +62,7 @@ class PGUserService implements IUserService {
   async getUserRoleByAuthId(authId: string): Promise<Role> {
     try {
       const user: User | null = await User.findOne({
-        where: { authId },
+        where: { auth_id: authId },
       });
       if (!user) {
         throw new Error(`userId with authId ${authId} not found.`);
@@ -77,7 +77,7 @@ class PGUserService implements IUserService {
   async getUserIdByAuthId(authId: string): Promise<string> {
     try {
       const user: User | null = await User.findOne({
-        where: { authId },
+        where: { auth_id: authId },
       });
       if (!user) {
         throw new Error(`user with authId ${authId} not found.`);
@@ -95,7 +95,7 @@ class PGUserService implements IUserService {
       if (!user) {
         throw new Error(`userId ${userId} not found.`);
       }
-      return user.authId;
+      return user.auth_id;
     } catch (error) {
       Logger.error(`Failed to get authId. Reason = ${error.message}`);
       throw error;
@@ -112,18 +112,18 @@ class PGUserService implements IUserService {
           let firebaseUser: firebaseAdmin.auth.UserRecord;
 
           try {
-            firebaseUser = await firebaseAdmin.auth().getUser(user.authId);
+            firebaseUser = await firebaseAdmin.auth().getUser(user.auth_id);
           } catch (error) {
             Logger.error(
-              `user with authId ${user.authId} could not be fetched from Firebase`,
+              `user with authId ${user.auth_id} could not be fetched from Firebase`,
             );
             throw error;
           }
 
           return {
             id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            firstName: user.first_name,
+            lastName: user.last_name,
             email: firebaseUser.email ?? "",
             role: user.role,
           };
@@ -149,9 +149,9 @@ class PGUserService implements IUserService {
 
       try {
         newUser = await User.create({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          authId: firebaseUser.uid,
+          first_name: user.firstName,
+          last_name: user.lastName,
+          auth_id: firebaseUser.uid,
           role: user.role,
         });
       } catch (postgresError) {
@@ -176,8 +176,8 @@ class PGUserService implements IUserService {
 
     return {
       id: newUser.id,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
+      firstName: newUser.first_name,
+      lastName: newUser.last_name,
       email: firebaseUser.email ?? "",
       role: newUser.role,
     };
@@ -189,8 +189,8 @@ class PGUserService implements IUserService {
     try {
       const updateResult = await User.update(
         {
-          firstName: user.firstName,
-          lastName: user.lastName,
+          first_name: user.firstName,
+          last_name: user.lastName,
           role: user.role,
         },
         {
@@ -212,14 +212,14 @@ class PGUserService implements IUserService {
       try {
         updatedFirebaseUser = await firebaseAdmin
           .auth()
-          .updateUser(oldUser.authId, { email: user.email });
+          .updateUser(oldUser.auth_id, { email: user.email });
       } catch (error) {
         // rollback Postgres user updates
         try {
           await User.update(
             {
-              firstName: oldUser.firstName,
-              lastName: oldUser.lastName,
+              first_name: oldUser.first_name,
+              last_name: oldUser.last_name,
               role: oldUser.role,
             },
             {
@@ -270,14 +270,14 @@ class PGUserService implements IUserService {
       }
 
       try {
-        await firebaseAdmin.auth().deleteUser(deletedUser.authId);
+        await firebaseAdmin.auth().deleteUser(deletedUser.auth_id);
       } catch (error) {
         // rollback user deletion in Postgres
         try {
           await User.create({
-            firstName: deletedUser.firstName,
-            lastName: deletedUser.lastName,
-            authId: deletedUser.authId,
+            first_name: deletedUser.first_name,
+            last_name: deletedUser.last_name,
+            auth_id: deletedUser.auth_id,
             role: deletedUser.role,
           });
         } catch (postgresError) {
@@ -285,7 +285,7 @@ class PGUserService implements IUserService {
             "Failed to rollback Postgres user deletion after Firebase user deletion failure. Reason =",
             postgresError.message,
             "Firebase uid with non-existent Postgres record =",
-            deletedUser.authId,
+            deletedUser.auth_id,
           ];
           Logger.error(errorMessage.join(" "));
         }
@@ -304,7 +304,7 @@ class PGUserService implements IUserService {
         .auth()
         .getUserByEmail(email);
       const deletedUser: User | null = await User.findOne({
-        where: { authId: firebaseUser.uid },
+        where: { auth_id: firebaseUser.uid },
       });
 
       if (!deletedUser) {
@@ -312,7 +312,7 @@ class PGUserService implements IUserService {
       }
 
       const numDestroyed: number = await User.destroy({
-        where: { id: firebaseUser.uid },
+        where: { auth_id: firebaseUser.uid },
       });
 
       if (numDestroyed <= 0) {
@@ -322,14 +322,14 @@ class PGUserService implements IUserService {
       }
 
       try {
-        await firebaseAdmin.auth().deleteUser(deletedUser.authId);
+        await firebaseAdmin.auth().deleteUser(deletedUser.auth_id);
       } catch (error) {
         // rollback user deletion in Postgres
         try {
           await User.create({
-            firstName: deletedUser.firstName,
-            lastName: deletedUser.lastName,
-            authId: deletedUser.authId,
+            first_name: deletedUser.first_name,
+            last_name: deletedUser.last_name,
+            auth_id: deletedUser.auth_id,
             role: deletedUser.role,
           });
         } catch (postgresError) {
@@ -337,7 +337,7 @@ class PGUserService implements IUserService {
             "Failed to rollback Postgres user deletion after Firebase user deletion failure. Reason =",
             postgresError.message,
             "Firebase uid with non-existent Postgres record =",
-            deletedUser.authId,
+            deletedUser.auth_id,
           ];
           Logger.error(errorMessage.join(" "));
         }
