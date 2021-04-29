@@ -7,7 +7,7 @@ const Logout = () => {
   const { setIsAuthenticated } = useContext(AuthContext);
 
   const onLogOutClick = async () => {
-    const success = await authAPIClient.logout("6089f0e3df238eb0662e3ceb");
+    const success = await authAPIClient.logout("PLACEHOLDER");
     setIsAuthenticated(!success);
   };
 

@@ -4,7 +4,7 @@ import authAPIClient from "../../APIClients/AuthAPIClient";
 
 const ResetPassword = () => {
   const onResetPasswordClick = async () => {
-    await authAPIClient.resetPassword("sherryli@uwblueprint.org");
+    await authAPIClient.resetPassword("PLACEHOLDER");
   };
 
   return (
