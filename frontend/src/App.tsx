@@ -1,26 +1,26 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-function App() {
+import Login from "./components/auth/Login";
+import PrivateRoute from "./components/auth/PrivateRoute";
+import Default from "./components/pages/Default";
+import NotFound from "./components/pages/NotFound";
+import AuthContext from "./contexts/AuthContext";
+
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+      <Router>
+        <Switch>
+          <PrivateRoute exact path="/" component={Default} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="*" component={NotFound} />
+        </Switch>
+      </Router>
+    </AuthContext.Provider>
   );
-}
+};
 
 export default App;

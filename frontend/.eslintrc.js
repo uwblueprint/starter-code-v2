@@ -17,6 +17,6 @@ module.exports = {
   },
   extends: ["airbnb-typescript", "prettier", "plugin:prettier/recommended"],
   rules: {
-    "prettier/prettier": ["error", { "endOfLine": "auto" }]
+    "prettier/prettier": ["error", { endOfLine: "auto" }],
   },
 };
