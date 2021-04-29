@@ -22,7 +22,7 @@ class EntityService(IEntityService):
 
     def create_entity(self, entity):
         try:
-            new_entity = Entity(**entity)
+            new_entity = Entity(**entity.__dict__)
         except Exception as error:
             self.logger.error(str(error))
             raise error
@@ -34,7 +34,7 @@ class EntityService(IEntityService):
         return new_entity.to_dict()
 
     def update_entity(self, id, entity):
-        Entity.query.filter_by(id=id).update(entity)
+        Entity.query.filter_by(id=id).update(**entity.__dict__)
         updated_entity = Entity.query.get(id)
         db.session.commit()
 
