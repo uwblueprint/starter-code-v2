@@ -2,6 +2,7 @@ import os
 import firebase_admin
 
 from flask import Flask
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from logging.config import dictConfig
 
@@ -32,6 +33,11 @@ def create_app(config_name):
 
     app = Flask(__name__)
     app.config.from_object(app_config[config_name])
+
+    app.config["CORS_ORIGINS"] = ["http://localhost:3000"]
+    app.config["CORS_SUPPORTS_CREDENTIALS"] = True
+    CORS(app)
+
     app.config[
         "SQLALCHEMY_DATABASE_URI"
     ] = "postgres://{username}:{password}@{host}:5432/{db}".format(
