@@ -1,37 +1,51 @@
 import baseAPIClient from "./BaseAPIClient";
-import USER_ACCESS_TOKEN_KEY from "../constants/AuthConstants";
+import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
+import { AuthenticatedUser } from "../contexts/AuthContext";
+import {
+  getLocalStorageObjProperty,
+  setLocalStorageObjProperty,
+} from "../utils/LocalStorageUtils";
 
-const login = async (email: string, password: string): Promise<boolean> => {
+const login = async (
+  email: string,
+  password: string,
+): Promise<AuthenticatedUser> => {
   try {
     const { data } = await baseAPIClient.post(
       "/auth/login",
       { email, password },
       { withCredentials: true },
     );
-    localStorage.setItem(USER_ACCESS_TOKEN_KEY, data.accessToken);
-    return true;
+    localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(data));
+    return data;
   } catch (error) {
-    return false;
+    return null;
   }
 };
 
-const logout = async (userId: string): Promise<boolean> => {
-  const bearerToken = `Bearer ${localStorage.getItem(USER_ACCESS_TOKEN_KEY)}`;
+const logout = async (userId: string | undefined): Promise<boolean> => {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
   try {
     await baseAPIClient.post(
       `/auth/logout/${userId}`,
       {},
       { headers: { Authorization: bearerToken } },
     );
-    localStorage.removeItem(USER_ACCESS_TOKEN_KEY);
+    localStorage.removeItem(AUTHENTICATED_USER_KEY);
     return true;
   } catch (error) {
     return false;
   }
 };
 
-const resetPassword = async (email: string): Promise<boolean> => {
-  const bearerToken = `Bearer ${localStorage.getItem(USER_ACCESS_TOKEN_KEY)}`;
+const resetPassword = async (email: string | undefined): Promise<boolean> => {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
   try {
     await baseAPIClient.post(
       `/auth/resetPassword/${email}`,
@@ -52,7 +66,11 @@ const refresh = async (): Promise<boolean> => {
       {},
       { withCredentials: true },
     );
-    localStorage.setItem(USER_ACCESS_TOKEN_KEY, data.accessToken);
+    setLocalStorageObjProperty(
+      AUTHENTICATED_USER_KEY,
+      "accessToken",
+      data.accessToken,
+    );
     return true;
   } catch (error) {
     return false;

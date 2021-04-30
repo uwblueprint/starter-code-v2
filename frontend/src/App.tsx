@@ -6,15 +6,23 @@ import Default from "./components/pages/Default";
 import CreatePage from "./components/pages/CreatePage";
 import UpdatePage from "./components/pages/UpdatePage";
 import NotFound from "./components/pages/NotFound";
-import AuthContext from "./contexts/AuthContext";
 import GetPage from "./components/pages/GetPage";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
+import AuthContext, { AuthenticatedUser } from "./contexts/AuthContext";
+import { getLocalStorageObj } from "./utils/LocalStorageUtils";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const currentUser: AuthenticatedUser = getLocalStorageObj(
+    AUTHENTICATED_USER_KEY,
+  );
+
+  const [authenticatedUser, setAuthenticatedUser] = useState<AuthenticatedUser>(
+    currentUser,
+  );
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+    <AuthContext.Provider value={{ authenticatedUser, setAuthenticatedUser }}>
       <Router>
         <Switch>
           <PrivateRoute exact path="/" component={Default} />
