@@ -1,18 +1,24 @@
 import { makeExecutableSchema, gql } from "apollo-server-express";
+// auth {
 import { applyMiddleware } from "graphql-middleware";
+// } auth
 import { merge } from "lodash";
 
+// auth {
 import {
   isAuthorizedByEmail,
   isAuthorizedByRole,
   isAuthorizedByUserId,
-} from "../middlewares/auth.graphql";
+} from "../middlewares/auth";
 import authResolvers from "./resolvers/authResolvers";
 import authType from "./types/authType";
+// } auth
 import entityResolvers from "./resolvers/entityResolvers";
 import entityType from "./types/entityType";
+// auth {
 import userResolvers from "./resolvers/userResolvers";
 import userType from "./types/userType";
+// } auth
 
 const query = gql`
   type Query {
@@ -26,6 +32,16 @@ const mutation = gql`
   }
 `;
 
+// no-auth {
+const executableSchema = makeExecutableSchema({
+  typeDefs: [query, mutation, entityType],
+  resolvers: merge(entityResolvers),
+});
+
+export default executableSchema;
+// } no-auth
+
+// auth {
 const executableSchema = makeExecutableSchema({
   typeDefs: [query, mutation, authType, entityType, userType],
   resolvers: merge(authResolvers, entityResolvers, userResolvers),
@@ -57,3 +73,5 @@ const graphQLMiddlewares = {
 };
 
 export default applyMiddleware(executableSchema, graphQLMiddlewares);
+
+// } auth

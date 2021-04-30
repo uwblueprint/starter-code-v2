@@ -1,12 +1,15 @@
+// postgresql {
 import * as path from "path";
-
-import mongoose from "mongoose";
 import { Sequelize } from "sequelize-typescript";
 
 export const sequelize = new Sequelize(
   `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.DB_HOST}:5432/${process.env.POSTGRES_DB}`,
   { models: [path.join(__dirname, "/*.pgmodel.ts")] },
 );
+
+// } postgresql
+// mongodb {
+import mongoose from "mongoose";
 
 export const mongo = {
   connect: () => {
@@ -29,3 +32,5 @@ export const mongo = {
     );
   },
 };
+
+// } mongodb
