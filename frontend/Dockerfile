@@ -6,6 +6,7 @@ COPY package.json yarn.lock ./
 RUN yarn install
 
 COPY . ./
+RUN yarn fix
 
 EXPOSE 3000
 ENTRYPOINT ["yarn", "start"]

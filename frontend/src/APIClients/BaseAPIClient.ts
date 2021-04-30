@@ -1,17 +1,24 @@
+// typescript {
+import axios, { AxiosRequestConfig } from "axios";
+// } typescript
+// python {
 import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { camelizeKeys, decamelizeKeys } from "humps";
+// } python
+// auth {
 import jwt from "jsonwebtoken";
 
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 
+// } auth
 const baseAPIClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
 });
 
+// python {
 // Python API uses snake_case, frontend uses camelCase
 // convert request and response data to/from snake_case and camelCase through axios interceptors
-// python {
 baseAPIClient.interceptors.response.use((response: AxiosResponse) => {
   if (
     response.data &&
@@ -26,6 +33,7 @@ baseAPIClient.interceptors.response.use((response: AxiosResponse) => {
 baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
   const newConfig = { ...config };
 
+  // auth {
   // if access token in header has expired, do a refresh
   const authHeaderParts = config.headers.Authorization?.split(" ");
   if (
@@ -56,6 +64,7 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
     }
   }
 
+  // } auth
   // python {
   if (config.params) {
     newConfig.params = decamelizeKeys(config.params);
@@ -63,8 +72,8 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
   if (config.data) {
     newConfig.data = decamelizeKeys(config.data);
   }
-  // } python
 
+  // } python
   return newConfig;
 });
 

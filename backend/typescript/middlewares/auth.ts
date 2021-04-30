@@ -79,16 +79,28 @@ export const isAuthorizedByEmail = (emailField: string) => {
 
 // } rest
 // graphql {
+import { Request } from "express";
 import { AuthenticationError, ExpressContext } from "apollo-server-express";
 import { GraphQLResolveInfo } from "graphql";
 
-import { getAccessToken } from "./auth";
 import AuthService from "../services/implementations/authService";
 import UserService from "../services/implementations/userService";
 import IAuthService from "../services/interfaces/authService";
 import { Role } from "../types";
 
 const authService: IAuthService = new AuthService(new UserService());
+
+export const getAccessToken = (req: Request) => {
+  const authHeaderParts = req.headers.authorization?.split(" ");
+  if (
+    authHeaderParts &&
+    authHeaderParts.length >= 2 &&
+    authHeaderParts[0].toLowerCase() === "bearer"
+  ) {
+    return authHeaderParts[1];
+  }
+  return null;
+};
 
 /* Determine if request is authorized based on accessToken validity and role of client */
 export const isAuthorizedByRole = (roles: Set<Role>) => {

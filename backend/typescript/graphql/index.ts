@@ -39,8 +39,8 @@ const executableSchema = makeExecutableSchema({
 });
 
 export default executableSchema;
-// } no-auth
 
+// } no-auth
 // auth {
 const executableSchema = makeExecutableSchema({
   typeDefs: [query, mutation, authType, entityType, userType],

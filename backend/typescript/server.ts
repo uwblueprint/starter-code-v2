@@ -8,7 +8,13 @@ import * as firebaseAdmin from "firebase-admin";
 // graphql {
 import { ApolloServer } from "apollo-server-express";
 // } graphql
-import { mongo, sequelize } from "./models";
+// mongodb {
+import { mongo } from "./models";
+// } mongodb
+// postgresql {
+import { sequelize } from "./models";
+// } postgresql
+// rest {
 // auth {
 import authRouter from "./rest/authRoutes";
 // } auth
@@ -17,6 +23,7 @@ import entityRouter from "./rest/entityRoutes";
 import userRouter from "./rest/userRoutes";
 // } auth
 
+// } rest
 // graphql {
 import schema from "./graphql";
 
@@ -34,6 +41,7 @@ app.use(cors(CORS_OPTIONS));
 app.use(express.json());
 app.use(express.urlencoded());
 
+// rest {
 // auth {
 app.use("/auth", authRouter);
 // } auth
@@ -42,6 +50,7 @@ app.use("/entities", entityRouter);
 app.use("/users", userRouter);
 // } auth
 
+// } rest
 // graphql {
 const server = new ApolloServer({
   schema,
@@ -58,20 +67,24 @@ server.applyMiddleware({
   path: "/graphql",
   cors: { origin: CORS_ALLOW_LIST, credentials: true },
 });
+
 // } graphql
-
+// postgresql {
 const eraseDatabaseOnSync = false;
-sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
-  mongo.connect();
+sequelize.sync({ force: eraseDatabaseOnSync });
 
-  // auth {
-  firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.applicationDefault(),
-  });
-  // } auth
+// } postgresql
+// mongodb {
+mongo.connect();
 
-  app.listen({ port: 5000 }, () => {
-    /* eslint-disable-next-line no-console */
-    console.info("Server is listening on port 5000!");
-  });
+// } mongodb
+// auth {
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.applicationDefault(),
+});
+
+// } auth
+app.listen({ port: 5000 }, () => {
+  /* eslint-disable-next-line no-console */
+  console.info("Server is listening on port 5000!");
 });

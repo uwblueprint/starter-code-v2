@@ -1,5 +1,5 @@
 // mongodb {
-import MgEntity, { Entity } from "../../models/entity.mgmodel";
+import MgEntity, { Entity } from "../../models/entity.model";
 import {
   IEntityService,
   EntityRequestDTO,
@@ -110,7 +110,7 @@ export default EntityService;
 
 // } mongodb
 // postgresql {
-import PgEntity from "../../models/entity.pgmodel";
+import PgEntity from "../../models/entity.model";
 import {
   IEntityService,
   EntityRequestDTO,

@@ -1,5 +1,7 @@
 import os
+# auth {
 import firebase_admin
+# } auth
 
 from flask import Flask
 from flask_cors import CORS
@@ -38,6 +40,7 @@ def create_app(config_name):
     app.config["CORS_SUPPORTS_CREDENTIALS"] = True
     CORS(app)
 
+    # postgresql {
     app.config[
         "SQLALCHEMY_DATABASE_URI"
     ] = "postgres://{username}:{password}@{host}:5432/{db}".format(
@@ -47,11 +50,15 @@ def create_app(config_name):
         db=os.getenv("POSTGRES_DB"),
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    # } postgresql
+    # mongodb {
     app.config["MONGODB_URL"] = os.getenv("MG_DATABASE_URL")
+    # } mongodb
 
-    # required for auth
+    # auth {
     firebase_admin.initialize_app()
 
+    # } auth
     from . import models, rest
 
     models.init_app(app)

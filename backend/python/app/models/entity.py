@@ -1,3 +1,4 @@
+# postgresql {
 from sqlalchemy import inspect
 from sqlalchemy.orm.properties import ColumnProperty
 
@@ -43,3 +44,27 @@ class Entity(db.Model):
                 # don't format the relationship's relationships
                 formatted[field] = [obj.to_dict() for obj in attr]
         return formatted
+
+# } postgresql
+# mongodb {
+from mongoengine import BooleanField, Document, IntField, ListField, StringField
+
+
+class Entity(Document):
+    string_field = StringField(required=True)
+    int_field = IntField(required=True)
+    enum_field = StringField(
+        max_length=200, required=True, choices=["A", "B", "C", "D"]
+    )
+    string_array_field = ListField(StringField())
+    bool_field = BooleanField()
+
+    def to_serializable_dict(self):
+        entity_dict = self.to_mongo().to_dict()
+        id = entity_dict.pop("_id", None)
+        entity_dict["id"] = str(id)
+        return entity_dict
+
+    meta = {"collection": "entities"}
+
+# } mongodb
