@@ -14,21 +14,21 @@ services:
       - CHOKIDAR_USEPOLLING=true
     env_file:
       - ./.env
-  # ts-backend:
-  #   build:
-  #     context: ./backend/typescript
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - ./backend/typescript:/app
-  #     - /app/node_modules
-  #   ports:
-  #     - 5000:5000
-  #   dns:
-  #     - 8.8.8.8
-  #   depends_on:
-  #     - db
-  #   env_file:
-  #     - ./.env
+  ts-backend:
+    build:
+      context: ./backend/typescript
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/typescript:/app
+      - /app/node_modules
+    ports:
+      - 5000:5000
+    dns:
+      - 8.8.8.8
+    depends_on:
+      - db
+    env_file:
+      - ./.env
   py-backend:
     restart: always
     build:
