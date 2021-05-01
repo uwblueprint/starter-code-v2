@@ -4,7 +4,7 @@ import UpdateForm from "../crud/Update";
 
 const MainPageButton = () => {
   const history = useHistory();
-  const navigateTo = () => history.push("../");
+  const navigateTo = () => history.push("/");
   return (
     <div>
       <button onClick={navigateTo} className="btn btn-primary" type="button">

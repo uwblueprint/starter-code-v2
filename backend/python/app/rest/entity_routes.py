@@ -22,7 +22,7 @@ def get_entities():
     return jsonify(result), 200
 
 
-# POSTGRES
+# # POSTGRES
 # # defines GET endpoint for retrieving a single entity based on a provided id
 # @blueprint.route("/<int:id>", methods=["GET"], strict_slashes=False)
 # @require_authorization_by_role({"User", "Admin"})
@@ -68,7 +68,7 @@ def create_entity():
     return jsonify(entity_service.create_entity(body)), 201
 
 
-# POSTGRES
+# # POSTGRES
 # # defines PUT endpoint for updating the entity with the provided id
 # @blueprint.route("/<int:id>", methods=["PUT"], strict_slashes=False)
 # @require_authorization_by_role({"User", "Admin"})

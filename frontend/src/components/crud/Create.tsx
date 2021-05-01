@@ -25,7 +25,6 @@ const schema: JSONSchema7 = {
   description: "A simple form to test creating an entity",
   type: "object",
   required: [
-    "id",
     "stringField",
     "intField",
     "stringArrayField",
@@ -33,11 +32,6 @@ const schema: JSONSchema7 = {
     "boolField",
   ],
   properties: {
-    id: {
-      type: "string",
-      title: "entity id",
-      default: "2017",
-    },
     stringField: {
       type: "string",
       title: "String Field",

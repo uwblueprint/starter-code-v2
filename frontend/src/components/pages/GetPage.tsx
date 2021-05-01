@@ -4,7 +4,7 @@ import TableWrapper from "../crud/TableWrapper";
 
 const MainPageButton = () => {
   const history = useHistory();
-  const navigateTo = () => history.push("../");
+  const navigateTo = () => history.push("/");
   return (
     <div>
       <button

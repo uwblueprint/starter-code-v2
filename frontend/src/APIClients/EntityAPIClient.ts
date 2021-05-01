@@ -63,7 +63,6 @@ const update = async (
 ): Promise<EntityResponse> => {
   const bearerToken = `Bearer ${localStorage.getItem(USER_ACCESS_TOKEN_KEY)}`;
   try {
-    // should account for it it's for python or typescript
     const { data } = await baseAPIClient.put(`/entities/${id}`, entityData, {
       headers: { Authorization: bearerToken },
     });

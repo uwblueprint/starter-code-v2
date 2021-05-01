@@ -4,7 +4,7 @@ import CreateForm from "../crud/Create";
 
 const MainPageButton = () => {
   const history = useHistory();
-  const navigateTo = () => history.push("../../");
+  const navigateTo = () => history.push("/");
   return (
     <div>
       <button className="btn btn-primary" onClick={navigateTo} type="button">
