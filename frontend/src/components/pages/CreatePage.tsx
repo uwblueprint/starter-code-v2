@@ -1,18 +1,6 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import CreateForm from "../crud/CreateForm";
-
-const MainPageButton = () => {
-  const history = useHistory();
-  const navigateTo = () => history.push("/");
-  return (
-    <div>
-      <button className="btn btn-primary" onClick={navigateTo} type="button">
-        Go Back
-      </button>
-    </div>
-  );
-};
+import MainPageButton from "../common/MainPageButton";
 
 const CreatePage = () => {
   return (
