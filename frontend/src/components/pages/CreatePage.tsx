@@ -7,7 +7,7 @@ const MainPageButton = () => {
   const navigateTo = () => history.push("../../");
   return (
     <div>
-      <button onClick={navigateTo} type="button">
+      <button className="btn btn-primary" onClick={navigateTo} type="button">
         Go Back
       </button>
     </div>

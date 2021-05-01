@@ -1,37 +1,54 @@
 import React, { useState } from "react";
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
-import CrudAPIClient from "../../APIClients/CrudAPIClient";
+import JSONPretty from "react-json-pretty";
+import EntityAPIClient from "../../APIClients/EntityAPIClient";
 
-const pythonSchema: JSONSchema7 = {
-  title: "Update Entity",
+enum EnumField {
+  "A",
+  "B",
+  "C",
+  "D",
+}
+
+type EntityResponse = {
+  id: string | number;
+  stringField: string;
+  intField: number;
+  stringArrayField: string[];
+  enumField: EnumField;
+  boolField: boolean;
+};
+
+const schema: JSONSchema7 = {
+  title: "Create Entity",
   description: "A simple form to test creating an entity",
   type: "object",
   required: [
     "id",
-    "string_field",
-    "int_field",
-    "string_array_field",
-    "enum_field",
-    "bool_field",
+    "stringField",
+    "intField",
+    "stringArrayField",
+    "enumField",
+    "boolField",
   ],
   properties: {
     id: {
       type: "string",
       title: "entity id",
-      default: 2017,
+      default: "2017",
     },
-    string_field: {
+    stringField: {
       type: "string",
       title: "String Field",
       default: "UW Blueprint",
     },
-    int_field: {
+    intField: {
       type: "integer",
       title: "Integer Field",
       default: 2017,
     },
-    string_array_field: {
+    stringArrayField: {
       type: "array",
       items: {
         type: "string",
@@ -39,13 +56,13 @@ const pythonSchema: JSONSchema7 = {
       title: "String Array Field",
       default: [],
     },
-    enum_field: {
+    enumField: {
       type: "string",
       enum: ["A", "B", "C", "D"],
       title: "Enum Field",
-      default: "B",
+      default: "A",
     },
-    bool_field: {
+    boolField: {
       type: "boolean",
       title: "Boolean Field",
       default: true,
@@ -53,66 +70,30 @@ const pythonSchema: JSONSchema7 = {
   },
 };
 
-// const typescriptSchema: JSONSchema7 = {
-//   title: "Create Entity",
-//   description: "A simple form to test creating an entity",
-//   type: "object",
-//   required: [
-//     "id",
-//     "stringField",
-//     "intField",
-//     "stringArrayField",
-//     "enumField",
-//     "boolField",
-//   ],
-//   properties: {
-//     id: {
-//       type: "integer",
-//       title: "entity id",
-//       default: "2017"
-//     },
-//     stringField: {
-//       type: "string",
-//       title: "String Field",
-//     },
-//     intField: {
-//       type: "integer",
-//       title: "Integer Field",
-//     },
-//     stringArrayField: {
-//       type: "array",
-//       items: {
-//         type: "string",
-//       },
-//       title: "String Array Field",
-//       default: [],
-//     },
-//     enumField: {
-//       type: "string",
-//       enum: ["A", "B", "C", "D"],
-//       title: "Enum Field",
-//     },
-//     boolField: {
-//       type: "boolean",
-//       title: "Boolean Field",
-//     },
-//   },
-// };
+const uiSchema = {
+  boolField: {
+    "ui:widget": "select",
+  },
+};
 
 const UpdateForm = () => {
-  const [response, setResponse] = useState(false);
-  const [data, setData] = useState("Hello");
+  const [data, setData] = useState<EntityResponse | undefined>(undefined);
 
-  if (response) {
-    return <div>{data}</div>;
+  if (data) {
+    return (
+      <div>
+        <JSONPretty id="json-pretty" data={data} />
+      </div>
+    );
   }
 
   const onSubmit = async ({ formData }: { formData: any }) => {
-    const result = await CrudAPIClient.update({ formData }).toString();
-    setResponse(true);
+    const entityData: any = JSON.parse(JSON.stringify(formData));
+    delete entityData.id;
+    const result = await EntityAPIClient.update(formData.id, { entityData });
     setData(result);
   };
-  return <Form schema={pythonSchema} onSubmit={onSubmit} />;
+  return <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />;
 };
 
 export default UpdateForm;

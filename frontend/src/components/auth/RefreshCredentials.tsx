@@ -12,7 +12,7 @@ const RefreshCredentials = () => {
   };
 
   return (
-    <button type="button" onClick={onRefreshClick}>
+    <button type="button" className="btn btn-primary" onClick={onRefreshClick}>
       Refresh Credentials
     </button>
   );

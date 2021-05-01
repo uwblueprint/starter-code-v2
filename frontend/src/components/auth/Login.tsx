@@ -39,7 +39,11 @@ const Login = () => {
           />
         </div>
         <div>
-          <button type="button" onClick={onLogInClick}>
+          <button
+            className="btn btn-primary"
+            type="button"
+            onClick={onLogInClick}
+          >
             Log In
           </button>
         </div>

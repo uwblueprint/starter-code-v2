@@ -9,11 +9,9 @@ const CreateButton = () => {
   const navigateTo = () => history.push("/entity/create");
 
   return (
-    <div>
-      <button onClick={navigateTo} type="button">
-        Create Entity
-      </button>
-    </div>
+    <button className="btn btn-primary" onClick={navigateTo} type="button">
+      Create Entity
+    </button>
   );
 };
 
@@ -22,23 +20,34 @@ const UpdateButton = () => {
   const navigateTo = () => history.push("/entity/update");
 
   return (
-    <div>
-      <button onClick={navigateTo} type="button">
-        Update Entity
-      </button>
-    </div>
+    <button className="btn btn-primary" onClick={navigateTo} type="button">
+      Update Entity
+    </button>
+  );
+};
+
+const GetButton = () => {
+  const history = useHistory();
+  const navigateTo = () => history.push("/entity/get");
+  return (
+    <button className="btn btn-primary" onClick={navigateTo} type="button">
+      Get Entities
+    </button>
   );
 };
 
 const Default = () => {
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: "center", paddingTop: "20px" }}>
       <h1>Default Page</h1>
-      <Logout />
-      <RefreshCredentials />
-      <ResetPassword />
-      <CreateButton />
-      <UpdateButton />
+      <div className="btn-group" style={{ paddingRight: "10px" }}>
+        <Logout />
+        <RefreshCredentials />
+        <ResetPassword />
+        <CreateButton />
+        <UpdateButton />
+        <GetButton />
+      </div>
     </div>
   );
 };
