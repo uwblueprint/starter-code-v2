@@ -1,5 +1,6 @@
 /* eslint  react/jsx-props-no-spreading: 0 */ // --> OFF
 import React, { useState, useEffect } from "react";
+import BTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
 import EntityAPIClient from "../../APIClients/EntityAPIClient";
 
@@ -44,6 +45,11 @@ const GetTable = (props: any) => {
   const columns = React.useMemo(
     () => [
       {
+        Header: "id",
+
+        accessor: "id", // accessor is the "key" in the data
+      },
+      {
         Header: "stringField",
 
         accessor: "stringField", // accessor is the "key" in the data
@@ -77,8 +83,6 @@ const GetTable = (props: any) => {
   const {
     getTableProps,
 
-    getTableBodyProps,
-
     headerGroups,
 
     rows,
@@ -87,59 +91,36 @@ const GetTable = (props: any) => {
   } = useTable({ columns, data });
 
   return (
-    <table
+    <BTable
+      striped
+      bordered
+      hover
+      size="sm"
       {...getTableProps()}
-      style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}
+      style={{ marginTop: "20px" }}
     >
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
-              <th
-                {...column.getHeaderProps()}
-                style={{
-                  borderBottom: "solid 3px red",
-
-                  background: "aliceblue",
-
-                  color: "black",
-
-                  fontWeight: "bold",
-                }}
-              >
-                {column.render("Header")}
-              </th>
+              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
             ))}
           </tr>
         ))}
       </thead>
-      <tbody {...getTableBodyProps()}>
+      <tbody>
         {rows.map((row) => {
           prepareRow(row);
-
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    style={{
-                      padding: "10px",
-
-                      border: "solid 1px gray",
-
-                      background: "papayawhip",
-                    }}
-                  >
-                    {cell.render("Cell")}
-                  </td>
-                );
+                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
               })}
             </tr>
           );
         })}
       </tbody>
-    </table>
+    </BTable>
   );
 };
 
