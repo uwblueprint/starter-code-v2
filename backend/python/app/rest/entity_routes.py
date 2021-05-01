@@ -16,7 +16,7 @@ blueprint = Blueprint("entity", __name__, url_prefix="/entities")
 
 # defines GET endpoint for retrieving all entities
 @blueprint.route("/", methods=["GET"], strict_slashes=False)
-@require_authorization_by_role({"User"})
+@require_authorization_by_role({"User", "Admin"})
 def get_entities():
     result = entity_service.get_entities()
     return jsonify(result), 200
@@ -25,7 +25,7 @@ def get_entities():
 # POSTGRES
 # # defines GET endpoint for retrieving a single entity based on a provided id
 # @blueprint.route("/<int:id>", methods=["GET"], strict_slashes=False)
-# @require_authorization_by_role({"User"})
+# @require_authorization_by_role({"User", "Admin"})
 # def get_entity(id):
 #     try:
 #         result = entity_service.get_entity(id)
@@ -39,7 +39,7 @@ def get_entities():
 # MONGO
 # defines GET endpoint for retrieving a single entity based on a provided id
 @blueprint.route("/<string:id>", methods=["GET"], strict_slashes=False)
-@require_authorization_by_role({"User"})
+@require_authorization_by_role({"User", "Admin"})
 def get_entity(id):
     try:
         result = entity_service.get_entity(id)
@@ -53,7 +53,7 @@ def get_entity(id):
 
 # define POST endpoint for creating an entity
 @blueprint.route("/", methods=["POST"], strict_slashes=False)
-@require_authorization_by_role({"User"})
+@require_authorization_by_role({"User", "Admin"})
 def create_entity():
     try:
         # create a EntityResource object instead of using the raw request body
@@ -71,6 +71,7 @@ def create_entity():
 # POSTGRES
 # # defines PUT endpoint for updating the entity with the provided id
 # @blueprint.route("/<int:id>", methods=["PUT"], strict_slashes=False)
+# @require_authorization_by_role({"User", "Admin"})
 # def update_entity(id):
 #     try:
 #         body = EntityDTO(**request.json)
@@ -89,7 +90,7 @@ def create_entity():
 # MONGO
 # defines PUT endpoint for updating the entity with the provided id
 @blueprint.route("/<string:id>", methods=["PUT"], strict_slashes=False)
-@require_authorization_by_role({"User"})
+@require_authorization_by_role({"User", "Admin"})
 def update_entity(id):
     try:
         body = EntityDTO(**request.json)
@@ -109,7 +110,7 @@ def update_entity(id):
 # POSTGRES
 # # defines DELETE endpoint for deleting the entity with the provided id
 # @blueprint.route("/<int:id>", methods=["DELETE"], strict_slashes=False)
-# @require_authorization_by_role({"User"})
+# @require_authorization_by_role({"User", "Admin"})
 # def delete_entity(id):
 #     try:
 #         result = entity_service.delete_entity(id)
@@ -122,7 +123,7 @@ def update_entity(id):
 # MONGO
 # defines DELETE endpoint for deleting the entity with the provided id
 @blueprint.route("/<string:id>", methods=["DELETE"], strict_slashes=False)
-@require_authorization_by_role({"User"})
+@require_authorization_by_role({"User", "Admin"})
 def delete_entity(id):
     try:
         result = entity_service.delete_entity(id)
