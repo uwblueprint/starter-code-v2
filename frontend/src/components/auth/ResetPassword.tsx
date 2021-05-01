@@ -8,7 +8,11 @@ const ResetPassword = () => {
   };
 
   return (
-    <button type="button" onClick={onResetPasswordClick}>
+    <button
+      type="button"
+      className="btn btn-primary"
+      onClick={onResetPasswordClick}
+    >
       Reset Password
     </button>
   );

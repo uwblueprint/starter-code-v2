@@ -34,7 +34,7 @@ class EntityService(IEntityService):
         return new_entity.to_dict()
 
     def update_entity(self, id, entity):
-        Entity.query.filter_by(id=id).update(**entity.__dict__)
+        Entity.query.filter_by(id=id).update(entity.__dict__)
         updated_entity = Entity.query.get(id)
         db.session.commit()
 
