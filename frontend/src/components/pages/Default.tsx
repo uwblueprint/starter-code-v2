@@ -28,7 +28,7 @@ const UpdateButton = () => {
 
 const GetButton = () => {
   const history = useHistory();
-  const navigateTo = () => history.push("/entity/get");
+  const navigateTo = () => history.push("/entity");
   return (
     <button className="btn btn-primary" onClick={navigateTo} type="button">
       Get Entities
