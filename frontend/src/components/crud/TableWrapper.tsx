@@ -2,32 +2,11 @@
 import React, { useState, useEffect } from "react";
 import BTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
-import EntityAPIClient from "../../APIClients/EntityAPIClient";
+import EntityAPIClient, {
+  EntityResponse,
+} from "../../APIClients/EntityAPIClient";
 
-enum EnumField {
-  "A",
-  "B",
-  "C",
-  "D",
-}
-
-type EntityResponse = {
-  id: string | number;
-  stringField: string;
-  intField: number;
-  stringArrayField: string[];
-  enumField: EnumField;
-  boolField: boolean;
-};
-
-type EntityData = {
-  id: string | number;
-  stringField: string;
-  intField: number;
-  stringArrayField: string[];
-  enumField: EnumField;
-  boolField: string;
-};
+type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
 const convert = (entityReponse: EntityResponse) => {
   return {

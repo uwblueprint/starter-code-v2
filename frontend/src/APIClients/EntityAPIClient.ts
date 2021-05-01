@@ -16,7 +16,7 @@ type EntityRequest = {
   boolField: boolean;
 };
 
-type EntityResponse = {
+export type EntityResponse = {
   id: string | number;
   stringField: string;
   intField: number;

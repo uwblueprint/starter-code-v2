@@ -2,23 +2,9 @@ import React, { useState } from "react";
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
 import JSONPretty from "react-json-pretty";
-import EntityAPIClient from "../../APIClients/EntityAPIClient";
-
-enum EnumField {
-  "A",
-  "B",
-  "C",
-  "D",
-}
-
-type EntityResponse = {
-  id: string | number;
-  stringField: string;
-  intField: number;
-  stringArrayField: string[];
-  enumField: EnumField;
-  boolField: boolean;
-};
+import EntityAPIClient, {
+  EntityResponse,
+} from "../../APIClients/EntityAPIClient";
 
 const schema: JSONSchema7 = {
   title: "Create Entity",
