@@ -1,22 +1,34 @@
 import * as firebaseAdmin from "firebase-admin";
 
 import IAuthService from "../interfaces/authService";
+import IEmailService from "../interfaces/emailService";
 import IUserService from "../interfaces/userService";
-import { Token, Role } from "../../types";
+import { AuthDTO, Role, Token } from "../../types";
 import FirebaseRestClient from "../../utilities/firebaseRestClient";
 import Logger from "../../utilities/logger";
 
 class AuthService implements IAuthService {
   userService: IUserService;
 
-  constructor(userService: IUserService) {
+  emailService: IEmailService | null;
+
+  constructor(
+    userService: IUserService,
+    emailService: IEmailService | null = null,
+  ) {
     this.userService = userService;
+    this.emailService = emailService;
   }
 
   /* eslint-disable class-methods-use-this */
-  async generateToken(email: string, password: string): Promise<Token> {
+  async generateToken(email: string, password: string): Promise<AuthDTO> {
     try {
-      return await FirebaseRestClient.signInWithPassword(email, password);
+      const token = await FirebaseRestClient.signInWithPassword(
+        email,
+        password,
+      );
+      const user = await this.userService.getUserByEmail(email);
+      return { ...token, ...user };
     } catch (error) {
       Logger.error(`Failed to generate token for user with email ${email}`);
       throw error;
@@ -50,9 +62,28 @@ class AuthService implements IAuthService {
     }
   }
 
-  async generatePasswordResetLink(email: string): Promise<string> {
+  async resetPassword(email: string): Promise<void> {
+    if (!this.emailService) {
+      const errorMessage =
+        "Attempted to call resetPassword but this instance of AuthService does not have an EmailService instance";
+      Logger.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
     try {
-      return await firebaseAdmin.auth().generatePasswordResetLink(email);
+      const resetLink = await firebaseAdmin
+        .auth()
+        .generatePasswordResetLink(email);
+      const emailBody = `
+      Hello,
+      <br><br>
+      We have received a password reset request for your account.
+      Please click the following link to reset it.
+      <strong>This link is only valid for 1 hour.</strong>
+      <br><br>
+      <a href=${resetLink}>Reset Password</a>`;
+
+      this.emailService.sendEmail(email, "Your Password Reset Link", emailBody);
     } catch (error) {
       Logger.error(
         `Failed to generate password reset link for user with email ${email}`,

@@ -1,29 +1,37 @@
 import { Router } from "express";
 
 import { isAuthorizedByEmail, isAuthorizedByUserId } from "../middlewares/auth";
+import nodemailerConfig from "../nodemailer.config";
 import AuthService from "../services/implementations/authService";
+import EmailService from "../services/implementations/emailService";
 import UserService from "../services/implementations/userService";
 import IAuthService from "../services/interfaces/authService";
+import IEmailService from "../services/interfaces/emailService";
 
 const authRouter: Router = Router();
-const authService: IAuthService = new AuthService(new UserService());
+const emailService: IEmailService = new EmailService(nodemailerConfig);
+const authService: IAuthService = new AuthService(
+  new UserService(),
+  emailService,
+);
 
-/* Returns access token in response body and sets refreshToken as an httpOnly cookie */
+/* Returns access token and user info in response body and sets refreshToken as an httpOnly cookie */
 authRouter.post("/login", async (req, res) => {
   try {
-    const token = await authService.generateToken(
+    const authDTO = await authService.generateToken(
       req.body.email,
       req.body.password,
     );
+    const { refreshToken, ...rest } = authDTO;
 
     res
-      .cookie("refreshToken", token.refreshToken, {
+      .cookie("refreshToken", refreshToken, {
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
       })
       .status(200)
-      .json({ accessToken: token.accessToken });
+      .json(rest);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -61,17 +69,14 @@ authRouter.post(
   },
 );
 
-/* Returns a password reset link for the user with the specified email */
-/* TODO: actually send reset link in an email */
+/* Emails a password reset link to the user with the specified email */
 authRouter.post(
   "/resetPassword/:email",
   isAuthorizedByEmail("email"),
   async (req, res) => {
     try {
-      const resetLink = await authService.generatePasswordResetLink(
-        req.params.email,
-      );
-      res.status(200).json({ resetLink });
+      await authService.resetPassword(req.params.email);
+      res.status(204).send();
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

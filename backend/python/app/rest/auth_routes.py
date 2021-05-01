@@ -33,13 +33,22 @@ def login():
     Returns access token in response body and sets refreshToken as an httpOnly cookie
     """
     try:
-        token = auth_service.generate_token(
+        auth_dto = auth_service.generate_token(
             request.json["email"], request.json["password"]
         )
-        response = jsonify({"access_token": token.access_token})
+        response = jsonify(
+            {
+                "access_token": auth_dto.access_token,
+                "id": auth_dto.id,
+                "first_name": auth_dto.first_name,
+                "last_name": auth_dto.last_name,
+                "email": auth_dto.email,
+                "role": auth_dto.role,
+            }
+        )
         response.set_cookie(
             "refreshToken",
-            value=token.refresh_token,
+            value=auth_dto.refresh_token,
             httponly=True,
             secure=(os.getenv("FLASK_CONFIG") == "production"),
         )
@@ -84,7 +93,7 @@ def logout(user_id):
 
 
 @blueprint.route(
-    "/reset_password/<string:email>", methods=["POST"], strict_slashes=False
+    "/resetPassword/<string:email>", methods=["POST"], strict_slashes=False
 )
 @require_authorization_by_email("email")
 def reset_password(email):
