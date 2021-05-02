@@ -19,7 +19,7 @@ const convert = (entityReponse: EntityResponse) => {
   };
 };
 
-const GetTable = (props: any) => {
+const DisplayTable = (props: any) => {
   const { data } = props;
   const columns = React.useMemo(
     () => [
@@ -104,22 +104,19 @@ const GetTable = (props: any) => {
 };
 
 const DisplayTableContainer = () => {
-  const [data, setData] = useState<EntityResponse[] | null>(null);
-  let newData: EntityData[] | null = null;
+  const [data, setData] = useState<EntityData[] | null>(null);
 
   useEffect(() => {
     const retrieveAndUpdateData = async () => {
       const result = await EntityAPIClient.get();
-      setData(result);
+      if (result) {
+        setData(result.map((r: EntityResponse) => convert(r)));
+      }
     };
     retrieveAndUpdateData();
   }, []);
 
-  if (data) {
-    newData = data.map((x: EntityResponse) => convert(x));
-  }
-
-  return newData && <GetTable data={newData} />;
+  return data && <DisplayTable data={data} />;
 };
 
 export default DisplayTableContainer;
