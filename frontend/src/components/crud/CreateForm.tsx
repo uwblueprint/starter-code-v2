@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
-import JSONPretty from "react-json-pretty";
 import EntityAPIClient, {
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
@@ -60,11 +59,7 @@ const CreateForm = () => {
   const [data, setData] = useState<EntityResponse | null>(null);
 
   if (data) {
-    return (
-      <div>
-        <JSONPretty id="json-pretty" data={data} />
-      </div>
-    );
+    return <p>Created! ✔️</p>;
   }
 
   const onSubmit = async ({ formData }: { formData: any }) => {
