@@ -31,7 +31,7 @@ const GetButton = () => {
   const navigateTo = () => history.push("/entity");
   return (
     <button className="btn btn-primary" onClick={navigateTo} type="button">
-      Get Entities
+      Display Entities
     </button>
   );
 };

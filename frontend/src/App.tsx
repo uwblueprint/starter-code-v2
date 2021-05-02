@@ -6,7 +6,7 @@ import Login from "./components/auth/Login";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import CreatePage from "./components/pages/CreatePage";
 import Default from "./components/pages/Default";
-import GetPage from "./components/pages/GetPage";
+import DisplayPage from "./components/pages/DisplayPage";
 import NotFound from "./components/pages/NotFound";
 import UpdatePage from "./components/pages/UpdatePage";
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
@@ -30,7 +30,7 @@ const App = () => {
           <Route exact path="/login" component={Login} />
           <PrivateRoute exact path="/entity/create" component={CreatePage} />
           <PrivateRoute exact path="/entity/update" component={UpdatePage} />
-          <PrivateRoute exact path="/entity" component={GetPage} />
+          <PrivateRoute exact path="/entity" component={DisplayPage} />
           <Route exact path="*" component={NotFound} />
         </Switch>
       </Router>

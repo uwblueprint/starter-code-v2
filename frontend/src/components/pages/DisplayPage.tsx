@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import TableWrapper from "../crud/TableWrapper";
+import DisplayTableContainer from "../crud/DisplayTableContainer";
 
 const MainPageButton = () => {
   const history = useHistory();
@@ -24,7 +24,7 @@ const GetPage = () => {
     <div style={{ textAlign: "center", width: "25%", margin: "0px auto" }}>
       <h1>Default Page</h1>
       <MainPageButton />
-      <TableWrapper />
+      <DisplayTableContainer />
     </div>
   );
 };

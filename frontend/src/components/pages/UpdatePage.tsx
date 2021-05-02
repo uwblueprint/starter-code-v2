@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import UpdateForm from "../crud/Update";
+import UpdateForm from "../crud/UpdateForm";
 
 const MainPageButton = () => {
   const history = useHistory();

@@ -103,7 +103,7 @@ const GetTable = (props: any) => {
   );
 };
 
-const TableWrapper = () => {
+const DisplayTableContainer = () => {
   const [data, setData] = useState<EntityResponse[] | null>(null);
   let newData: EntityData[] | null = null;
 
@@ -122,4 +122,4 @@ const TableWrapper = () => {
   return newData && <GetTable data={newData} />;
 };
 
-export default TableWrapper;
+export default DisplayTableContainer;
