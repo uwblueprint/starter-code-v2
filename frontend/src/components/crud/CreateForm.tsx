@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
-import EntityAPIClient, {
-  EntityResponse,
-} from "../../APIClients/EntityAPIClient";
+// graphql {
+import { gql, useMutation } from "@apollo/client";
+
+import { EntityResponse } from "../../APIClients/EntityAPIClient";
+// } graphql
+
+// rest {
+// import EntityAPIClient, {
+//   EntityResponse,
+// } from "../../APIClients/EntityAPIClient";
+// } rest
 
 const schema: JSONSchema7 = {
   title: "Create Entity",
@@ -55,15 +63,45 @@ const uiSchema = {
   },
 };
 
+// graphql {
+const CREATE_ENTITY = gql`
+  mutation CreateEntity($entity: EntityRequestDTO!) {
+    createEntity(entity: $entity) {
+      id
+      stringField
+      intField
+      enumField
+      stringArrayField
+      boolField
+    }
+  }
+`;
+// } graphql
+
 const CreateForm = () => {
   const [data, setData] = useState<EntityResponse | null>(null);
+
+  // graphql {
+  const [createEntity] = useMutation<{ createEntity: EntityResponse }>(
+    CREATE_ENTITY,
+  );
+  // } graphql
 
   if (data) {
     return <p>Created! ✔️</p>;
   }
 
   const onSubmit = async ({ formData }: { formData: any }) => {
-    const result = await EntityAPIClient.create({ formData });
+    // graphql {
+    const graphQLResult = await createEntity({
+      variables: { entity: formData },
+    });
+    const result: EntityResponse | null =
+      graphQLResult.data?.createEntity ?? null;
+    // } graphql
+    // rest {
+    // const result = await EntityAPIClient.create({ formData });
+    // } rest
     setData(result);
   };
   return <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />;

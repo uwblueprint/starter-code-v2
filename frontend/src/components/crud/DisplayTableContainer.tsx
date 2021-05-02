@@ -1,10 +1,23 @@
 /* eslint  react/jsx-props-no-spreading: 0 */ // --> OFF
-import React, { useState, useEffect } from "react";
+// graphql {
+import React, { useState } from "react";
+// } graphql
+// rest {
+// import React, { useState, useEffect } from "react";
+// } rest
 import BTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
-import EntityAPIClient, {
-  EntityResponse,
-} from "../../APIClients/EntityAPIClient";
+// graphql {
+import { gql, useQuery } from "@apollo/client";
+
+import { EntityResponse } from "../../APIClients/EntityAPIClient";
+// } graphql
+
+// rest {
+// import EntityAPIClient, {
+//   EntityResponse,
+// } from "../../APIClients/EntityAPIClient";
+// } rest
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
@@ -103,20 +116,43 @@ const DisplayTable = (props: any) => {
   );
 };
 
+// graphql {
+const ENTITIES = gql`
+  {
+    entities {
+      id
+      stringField
+      intField
+      enumField
+      stringArrayField
+      boolField
+    }
+  }
+`;
+// } graphql
+
 const DisplayTableContainer = () => {
-  const [data, setData] = useState<EntityData[] | null>(null);
+  const [entities, setEntities] = useState<EntityData[] | null>(null);
 
-  useEffect(() => {
-    const retrieveAndUpdateData = async () => {
-      const result = await EntityAPIClient.get();
-      if (result) {
-        setData(result.map((r: EntityResponse) => convert(r)));
-      }
-    };
-    retrieveAndUpdateData();
-  }, []);
+  useQuery(ENTITIES, {
+    onCompleted: (data) => {
+      setEntities(data.entities.map((d: EntityResponse) => convert(d)));
+    },
+  });
 
-  return data && <DisplayTable data={data} />;
+  // rest {
+  // useEffect(() => {
+  //   const retrieveAndUpdateData = async () => {
+  //     const result = await EntityAPIClient.get();
+  //     if (result) {
+  //       setData(result.map((r: EntityResponse) => convert(r)));
+  //     }
+  //   };
+  //   retrieveAndUpdateData();
+  // }, []);
+  // } rest
+
+  return entities && <DisplayTable data={entities} />;
 };
 
 export default DisplayTableContainer;
