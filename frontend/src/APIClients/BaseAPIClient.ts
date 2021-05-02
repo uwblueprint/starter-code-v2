@@ -28,8 +28,8 @@ baseAPIClient.interceptors.response.use((response: AxiosResponse) => {
   }
   return response;
 });
-// } python
 
+// } python
 baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
   const newConfig = { ...config };
 
