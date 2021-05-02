@@ -38,7 +38,11 @@ const server = new ApolloServer({
   },
 });
 
-server.applyMiddleware({ app, path: "/graphql" });
+server.applyMiddleware({
+  app,
+  path: "/graphql",
+  cors: { origin: CORS_ALLOW_LIST, credentials: true },
+});
 
 const eraseDatabaseOnSync = false;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
