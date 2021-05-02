@@ -1,5 +1,6 @@
 import baseAPIClient from "./BaseAPIClient";
-import USER_ACCESS_TOKEN_KEY from "../constants/AuthConstants";
+import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
+import { getLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 
 enum EnumField {
   "A",
@@ -30,11 +31,22 @@ const create = async ({
 }: {
   formData: EntityRequest;
 }): Promise<EntityResponse> => {
-  const bearerToken = `Bearer ${localStorage.getItem(USER_ACCESS_TOKEN_KEY)}`;
+  // auth {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  // } auth
   try {
+    // auth {
     const { data } = await baseAPIClient.post("/entities", formData, {
       headers: { Authorization: bearerToken },
     });
+    // } auth
+
+    // no-auth {
+    // const { data } = await baseAPIClient.post("/entities", formData);
+    // } no-auth
     return data;
   } catch (error) {
     return error;
@@ -42,11 +54,22 @@ const create = async ({
 };
 
 const get = async (): Promise<EntityResponse[]> => {
-  const bearerToken = `Bearer ${localStorage.getItem(USER_ACCESS_TOKEN_KEY)}`;
+  // auth {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  // } auth
   try {
+    // auth {
     const { data } = await baseAPIClient.get("/entities", {
       headers: { Authorization: bearerToken },
     });
+    // } auth
+
+    // no-auth {
+    // const { data } = await baseAPIClient.get("/entities");
+    // } no-auth
     return data;
   } catch (error) {
     return error;
@@ -61,11 +84,22 @@ const update = async (
     entityData: EntityRequest;
   },
 ): Promise<EntityResponse> => {
-  const bearerToken = `Bearer ${localStorage.getItem(USER_ACCESS_TOKEN_KEY)}`;
+  // auth {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  // } auth
   try {
+    // auth {
     const { data } = await baseAPIClient.put(`/entities/${id}`, entityData, {
       headers: { Authorization: bearerToken },
     });
+    // } auth
+
+    // no-auth {
+    // const { data } = await baseAPIClient.put(`/entities/${id}`, entityData);
+    // } no-auth
     return data;
   } catch (error) {
     return error;
