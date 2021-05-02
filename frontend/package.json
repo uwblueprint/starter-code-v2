@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.3.16",
     "@rjsf/bootstrap-4": "^2.5.1",
     "@rjsf/core": "^2.5.1",
     "@testing-library/jest-dom": "^5.11.4",
@@ -16,6 +17,7 @@
     "@types/react-table": "^7.0.29",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "graphql": "^15.5.0",
     "humps": "^2.0.1",
     "json-schema": "^0.3.0",
     "jsonwebtoken": "^8.5.1",

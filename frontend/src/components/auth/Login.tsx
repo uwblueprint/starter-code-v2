@@ -1,16 +1,55 @@
 import React, { useContext, useState } from "react";
 import { Redirect } from "react-router-dom";
+// graphql {
+import { gql, useMutation } from "@apollo/client";
+// } graphql
 
-import authAPIClient from "../../APIClients/AuthAPIClient";
-import AuthContext from "../../contexts/AuthContext";
+// rest {
+// import authAPIClient from "../../APIClients/AuthAPIClient";
+// } rest
+// graphql {
+import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
+// } graphql
+import AuthContext, { AuthenticatedUser } from "../../contexts/AuthContext";
+
+// graphql {
+const LOGIN = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      id
+      firstName
+      lastName
+      email
+      role
+      accessToken
+    }
+  }
+`;
+// } graphql
 
 const Login = () => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // graphql {
+  const [login] = useMutation<{ login: AuthenticatedUser }>(LOGIN);
+  // } graphql
+
   const onLogInClick = async () => {
-    const user = await authAPIClient.login(email, password);
+    // graphql {
+    const result = await login({ variables: { email, password } });
+    let user: AuthenticatedUser = null;
+    if (result) {
+      user = result.data?.login ?? null;
+      if (user) {
+        localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(user));
+      }
+    }
+    // } graphql
+    // rest {
+    // const user: AuthenticatedUser = await authAPIClient.login(email, password);
+    // } rest
     setAuthenticatedUser(user);
   };
 
