@@ -1,8 +1,11 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+
+// auth {
 import Logout from "../auth/Logout";
 import RefreshCredentials from "../auth/RefreshCredentials";
 import ResetPassword from "../auth/ResetPassword";
+// } auth
 
 const CreateButton = () => {
   const history = useHistory();
@@ -41,9 +44,11 @@ const Default = () => {
     <div style={{ textAlign: "center", paddingTop: "20px" }}>
       <h1>Default Page</h1>
       <div className="btn-group" style={{ paddingRight: "10px" }}>
+        // auth {
         <Logout />
         <RefreshCredentials />
         <ResetPassword />
+        // } auth
         <CreateButton />
         <UpdateButton />
         <GetButton />

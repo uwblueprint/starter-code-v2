@@ -10,13 +10,13 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 // auth {
 import Login from "./components/auth/Login";
 import PrivateRoute from "./components/auth/PrivateRoute";
+// } auth
 import CreatePage from "./components/pages/CreatePage";
 import Default from "./components/pages/Default";
 import DisplayPage from "./components/pages/DisplayPage";
-// } auth
 import NotFound from "./components/pages/NotFound";
-// auth {
 import UpdatePage from "./components/pages/UpdatePage";
+// auth {
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
 import AuthContext, { AuthenticatedUser } from "./contexts/AuthContext";
 import { getLocalStorageObj } from "./utils/LocalStorageUtils";
@@ -46,6 +46,12 @@ const App = () => {
           <PrivateRoute exact path="/entity/update" component={UpdatePage} />
           <PrivateRoute exact path="/entity" component={DisplayPage} />
           // } auth
+          // no-auth {
+          <Route exact path="/" component={Default} />
+          <Route exact path="/entity/create" component={CreatePage} />
+          <Route exact path="/entity/update" component={UpdatePage} />
+          <Route exact path="/entity" component={DisplayPage} />
+          // } no-auth
           <Route exact path="*" component={NotFound} />
         </Switch>
       </Router>
