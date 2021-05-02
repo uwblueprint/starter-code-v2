@@ -5,16 +5,16 @@ import authAPIClient from "../../APIClients/AuthAPIClient";
 import AuthContext from "../../contexts/AuthContext";
 
 const Login = () => {
-  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const onLogInClick = async () => {
-    const success = await authAPIClient.login(email, password);
-    setIsAuthenticated(success);
+    const user = await authAPIClient.login(email, password);
+    setAuthenticatedUser(user);
   };
 
-  if (isAuthenticated) {
+  if (authenticatedUser) {
     return <Redirect to="/" />;
   }
 

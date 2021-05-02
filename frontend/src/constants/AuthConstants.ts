@@ -1,3 +1,3 @@
-const USER_ACCESS_TOKEN_KEY = `${window.location.hostname}:USER_ACCESS_TOKEN`;
+const AUTHENTICATED_USER_KEY = `${window.location.hostname}:AUTHENTICATED_USER`;
 
-export default USER_ACCESS_TOKEN_KEY;
+export default AUTHENTICATED_USER_KEY;

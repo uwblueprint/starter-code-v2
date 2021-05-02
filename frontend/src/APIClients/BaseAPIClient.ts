@@ -2,7 +2,8 @@ import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { camelizeKeys, decamelizeKeys } from "humps";
 import jwt from "jsonwebtoken";
 
-import USER_ACCESS_TOKEN_KEY from "../constants/AuthConstants";
+import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
+import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 
 const baseAPIClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -45,7 +46,11 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
       );
 
       const accessToken = data.accessToken || data.access_token;
-      localStorage.setItem(USER_ACCESS_TOKEN_KEY, accessToken);
+      setLocalStorageObjProperty(
+        AUTHENTICATED_USER_KEY,
+        "accessToken",
+        accessToken,
+      );
 
       newConfig.headers.Authorization = accessToken;
     }

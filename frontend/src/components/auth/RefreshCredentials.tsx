@@ -4,11 +4,13 @@ import authAPIClient from "../../APIClients/AuthAPIClient";
 import AuthContext from "../../contexts/AuthContext";
 
 const RefreshCredentials = () => {
-  const { setIsAuthenticated } = useContext(AuthContext);
+  const { setAuthenticatedUser } = useContext(AuthContext);
 
   const onRefreshClick = async () => {
     const success = await authAPIClient.refresh();
-    setIsAuthenticated(success);
+    if (!success) {
+      setAuthenticatedUser(null);
+    }
   };
 
   return (

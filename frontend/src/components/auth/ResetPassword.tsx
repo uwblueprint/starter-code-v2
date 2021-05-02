@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import authAPIClient from "../../APIClients/AuthAPIClient";
+import AuthContext from "../../contexts/AuthContext";
 
 const ResetPassword = () => {
+  const { authenticatedUser } = useContext(AuthContext);
+
   const onResetPasswordClick = async () => {
-    await authAPIClient.resetPassword("PLACEHOLDER");
+    await authAPIClient.resetPassword(authenticatedUser?.email);
   };
 
   return (

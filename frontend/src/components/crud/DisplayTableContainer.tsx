@@ -2,32 +2,11 @@
 import React, { useState, useEffect } from "react";
 import BTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
-import EntityAPIClient from "../../APIClients/EntityAPIClient";
+import EntityAPIClient, {
+  EntityResponse,
+} from "../../APIClients/EntityAPIClient";
 
-enum EnumField {
-  "A",
-  "B",
-  "C",
-  "D",
-}
-
-type EntityResponse = {
-  id: string | number;
-  stringField: string;
-  intField: number;
-  stringArrayField: string[];
-  enumField: EnumField;
-  boolField: boolean;
-};
-
-type EntityData = {
-  id: string | number;
-  stringField: string;
-  intField: number;
-  stringArrayField: string[];
-  enumField: EnumField;
-  boolField: string;
-};
+type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
 const convert = (entityReponse: EntityResponse) => {
   return {
@@ -40,7 +19,7 @@ const convert = (entityReponse: EntityResponse) => {
   };
 };
 
-const GetTable = (props: any) => {
+const DisplayTable = (props: any) => {
   const { data } = props;
   const columns = React.useMemo(
     () => [
@@ -124,23 +103,20 @@ const GetTable = (props: any) => {
   );
 };
 
-const TableWrapper = () => {
-  const [data, setData] = useState<EntityResponse[] | null>(null);
-  let newData: EntityData[] | null = null;
+const DisplayTableContainer = () => {
+  const [data, setData] = useState<EntityData[] | null>(null);
 
   useEffect(() => {
     const retrieveAndUpdateData = async () => {
       const result = await EntityAPIClient.get();
-      setData(result);
+      if (result) {
+        setData(result.map((r: EntityResponse) => convert(r)));
+      }
     };
     retrieveAndUpdateData();
   }, []);
 
-  if (data) {
-    newData = data.map((x: EntityResponse) => convert(x));
-  }
-
-  return newData && <GetTable data={newData} />;
+  return data && <DisplayTable data={data} />;
 };
 
-export default TableWrapper;
+export default DisplayTableContainer;

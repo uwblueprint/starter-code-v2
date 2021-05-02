@@ -4,11 +4,13 @@ import authAPIClient from "../../APIClients/AuthAPIClient";
 import AuthContext from "../../contexts/AuthContext";
 
 const Logout = () => {
-  const { setIsAuthenticated } = useContext(AuthContext);
+  const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
 
   const onLogOutClick = async () => {
-    const success = await authAPIClient.logout("PLACEHOLDER");
-    setIsAuthenticated(!success);
+    const success = await authAPIClient.logout(authenticatedUser?.id);
+    if (success) {
+      setAuthenticatedUser(null);
+    }
   };
 
   return (
