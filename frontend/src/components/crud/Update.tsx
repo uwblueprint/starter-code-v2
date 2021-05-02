@@ -63,7 +63,7 @@ const uiSchema = {
 };
 
 const UpdateForm = () => {
-  const [data, setData] = useState<EntityResponse | undefined>(undefined);
+  const [data, setData] = useState<EntityResponse | null>(null);
 
   if (data) {
     return (
