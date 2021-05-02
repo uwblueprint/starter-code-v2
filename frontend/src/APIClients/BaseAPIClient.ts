@@ -10,8 +10,8 @@ import jwt from "jsonwebtoken";
 
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
-
 // } auth
+
 const baseAPIClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
 });

@@ -36,28 +36,29 @@ const App = () => {
   return (
     // auth {
     <AuthContext.Provider value={{ authenticatedUser, setAuthenticatedUser }}>
-    // } auth
       <Router>
         <Switch>
-          // auth {
           <PrivateRoute exact path="/" component={Default} />
           <Route exact path="/login" component={Login} />
           <PrivateRoute exact path="/entity/create" component={CreatePage} />
           <PrivateRoute exact path="/entity/update" component={UpdatePage} />
           <PrivateRoute exact path="/entity" component={DisplayPage} />
-          // } auth
-          // no-auth {
-          <Route exact path="/" component={Default} />
-          <Route exact path="/entity/create" component={CreatePage} />
-          <Route exact path="/entity/update" component={UpdatePage} />
-          <Route exact path="/entity" component={DisplayPage} />
-          // } no-auth
           <Route exact path="*" component={NotFound} />
         </Switch>
       </Router>
-    // auth {
     </AuthContext.Provider>
     // } auth
+    // no-auth {
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Default} />
+        <Route exact path="/entity/create" component={CreatePage} />
+        <Route exact path="/entity/update" component={UpdatePage} />
+        <Route exact path="/entity" component={DisplayPage} />
+        <Route exact path="*" component={NotFound} />
+      </Switch>
+    </Router>
+    // } no-auth
   );
 };
 

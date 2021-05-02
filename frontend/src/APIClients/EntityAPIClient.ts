@@ -1,6 +1,8 @@
 import baseAPIClient from "./BaseAPIClient";
+// auth {
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { getLocalStorageObjProperty } from "../utils/LocalStorageUtils";
+// } auth
 
 enum EnumField {
   "A",
@@ -43,9 +45,8 @@ const create = async ({
       headers: { Authorization: bearerToken },
     });
     // } auth
-
     // no-auth {
-    // const { data } = await baseAPIClient.post("/entities", formData);
+    const { data } = await baseAPIClient.post("/entities", formData);
     // } no-auth
     return data;
   } catch (error) {
@@ -66,9 +67,8 @@ const get = async (): Promise<EntityResponse[]> => {
       headers: { Authorization: bearerToken },
     });
     // } auth
-
     // no-auth {
-    // const { data } = await baseAPIClient.get("/entities");
+    const { data } = await baseAPIClient.get("/entities");
     // } no-auth
     return data;
   } catch (error) {
@@ -96,9 +96,8 @@ const update = async (
       headers: { Authorization: bearerToken },
     });
     // } auth
-
     // no-auth {
-    // const { data } = await baseAPIClient.put(`/entities/${id}`, entityData);
+    const { data } = await baseAPIClient.put(`/entities/${id}`, entityData);
     // } no-auth
     return data;
   } catch (error) {

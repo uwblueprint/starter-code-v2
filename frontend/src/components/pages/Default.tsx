@@ -5,8 +5,8 @@ import { useHistory } from "react-router-dom";
 import Logout from "../auth/Logout";
 import RefreshCredentials from "../auth/RefreshCredentials";
 import ResetPassword from "../auth/ResetPassword";
-// } auth
 
+// } auth
 const CreateButton = () => {
   const history = useHistory();
   const navigateTo = () => history.push("/entity/create");
