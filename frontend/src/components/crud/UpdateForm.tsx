@@ -71,7 +71,7 @@ const uiSchema = {
 
 // graphql {
 const UPDATE_ENTITY = gql`
-  mutation UpdateEntity($id: ID!, $entity: EntityRequestDTO!) {
+  mutation UpdateForm_UpdateEntity($id: ID!, $entity: EntityRequestDTO!) {
     updateEntity(id: $id, entity: $entity) {
       id
       stringField

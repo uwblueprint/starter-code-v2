@@ -65,7 +65,7 @@ const uiSchema = {
 
 // graphql {
 const CREATE_ENTITY = gql`
-  mutation CreateEntity($entity: EntityRequestDTO!) {
+  mutation CreateForm_CreateEntity($entity: EntityRequestDTO!) {
     createEntity(entity: $entity) {
       id
       stringField

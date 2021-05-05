@@ -118,7 +118,7 @@ const DisplayTable = (props: any) => {
 
 // graphql {
 const ENTITIES = gql`
-  {
+  query DisplayTableContainer_Entities {
     entities {
       id
       stringField
@@ -135,6 +135,7 @@ const DisplayTableContainer = () => {
   const [entities, setEntities] = useState<EntityData[] | null>(null);
 
   useQuery(ENTITIES, {
+    fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
       setEntities(data.entities.map((d: EntityResponse) => convert(d)));
     },
