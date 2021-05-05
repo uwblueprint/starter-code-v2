@@ -1,3 +1,7 @@
+// graphql {
+import axios from "axios";
+import jwt from "jsonwebtoken";
+// } graphql
 import React from "react";
 import ReactDOM from "react-dom";
 // graphql {
@@ -10,12 +14,21 @@ import {
 import { setContext } from "@apollo/client/link/context";
 
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
-import { getLocalStorageObjProperty } from "./utils/LocalStorageUtils";
+import {
+  getLocalStorageObjProperty,
+  setLocalStorageObjProperty,
+} from "./utils/LocalStorageUtils";
 // } graphql
 
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+
+const REFRESH_MUTATION = `
+  mutation {
+    refresh
+  }
+`;
 
 // graphql {
 const link = createHttpLink({
@@ -23,12 +36,36 @@ const link = createHttpLink({
   credentials: "include",
 });
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token = getLocalStorageObjProperty(
+  let token: string = getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   );
+
+  if (token) {
+    const decodedToken: any = jwt.decode(token);
+
+    // refresh if decodedToken has expired
+    if (
+      decodedToken &&
+      decodedToken.exp <= Math.round(new Date().getTime() / 1000)
+    ) {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/graphql`,
+        { query: REFRESH_MUTATION },
+        { withCredentials: true },
+      );
+
+      const accessToken: string = data.data.refresh;
+      setLocalStorageObjProperty(
+        AUTHENTICATED_USER_KEY,
+        "accessToken",
+        accessToken,
+      );
+      token = accessToken;
+    }
+  }
   // return the headers to the context so httpLink can read them
   return {
     headers: {
