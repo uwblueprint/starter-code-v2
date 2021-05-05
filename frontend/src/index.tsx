@@ -25,7 +25,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 const REFRESH_MUTATION = `
-  mutation {
+  mutation Index_Refresh {
     refresh
   }
 `;
@@ -49,7 +49,7 @@ const authLink = setContext(async (_, { headers }) => {
     // refresh if decodedToken has expired
     if (
       decodedToken &&
-      decodedToken.exp <= Math.round(new Date().getTime() / 1000)
+      decodedToken.exp > Math.round(new Date().getTime() / 1000)
     ) {
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/graphql`,
