@@ -9,15 +9,33 @@ permalink: /docs/getting-started
 
 ### Prerequisites
 
-- Make sure you have [Docker installed](https://docs.docker.com/get-docker/), and that Docker Desktop is running.
-- If you haven't already, set up vault client by following [these instructions](https://www.notion.so/uwblueprintexecs/Secret-Management-2d5b59ef0987415e93ec951ce05bf03e).
+* Ensure you have Docker installed and that Docker Desktop is running.
+  Installation instructions: [MacOS](https://docs.docker.com/docker-for-mac/install/) | [Windows (Home)](https://docs.docker.com/docker-for-windows/install-windows-home/) | [Windows (Pro, Enterprise, Education)](https://docs.docker.com/docker-for-windows/install/) | [Linux](https://docs.docker.com/engine/install/#server)
+```bash
+# verify your installation by running the following in a terminal
+$ docker --version
+$ docker-compose --version
+```
 
-## Setting up Starter-Code-V2
+* Ensure you have Node.js installed (current LTS version preferred), with `npx` (should be included with Node.js installation), or `yarn`
+```bash
+# (if using npx) verify your installation
+$ npx -v
+# (if using yarn) verify your installation
+$ yarn -v
+```
 
-Skip this if your PL has already set up your project.
+## Setting up Starter Code
 
-_Add CLI setup instructions stuff later_
-_Setting up vault, firebase for team etc_
+1. Run the [`@uwblueprint/create-bp-app`](https://www.npmjs.com/package/@uwblueprint/create-bp-app) CLI
+```bash
+# if you prefer npx:
+$ npx @uwblueprint/create-bp-app@latest
+# if you prefer yarn
+$ yarn create @uwblueprint/bp-app@latest
+```
+2. Answer the prompts in the CLI to specify your stack preferences
+
 
 ## Running an app locally
 
