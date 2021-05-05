@@ -1,13 +1,37 @@
 import React, { useContext } from "react";
+// graphql {
+import { gql, useMutation } from "@apollo/client";
+// } graphql
 
-import authAPIClient from "../../APIClients/AuthAPIClient";
+// rest {
+// import authAPIClient from "../../APIClients/AuthAPIClient";
+// } rest
 import AuthContext from "../../contexts/AuthContext";
+
+// graphql {
+const RESET_PASSWORD = gql`
+  mutation ResetPassword($email: String!) {
+    resetPassword(email: $email)
+  }
+`;
+// } graphql
 
 const ResetPassword = () => {
   const { authenticatedUser } = useContext(AuthContext);
 
+  // graphql {
+  const [resetPassword] = useMutation<{ resetPassword: boolean }>(
+    RESET_PASSWORD,
+  );
+  // } graphql
+
   const onResetPasswordClick = async () => {
-    await authAPIClient.resetPassword(authenticatedUser?.email);
+    // graphql {
+    await resetPassword({ variables: { email: authenticatedUser?.email } });
+    // } graphql
+    // rest {
+    // await authAPIClient.resetPassword(authenticatedUser?.email);
+    // } rest
   };
 
   return (

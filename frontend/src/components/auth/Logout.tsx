@@ -1,13 +1,43 @@
 import React, { useContext } from "react";
+// graphql {
+import { gql, useMutation } from "@apollo/client";
+// } graphql
 
-import authAPIClient from "../../APIClients/AuthAPIClient";
+// rest {
+// import authAPIClient from "../../APIClients/AuthAPIClient";
+// } rest
 import AuthContext from "../../contexts/AuthContext";
+// graphql {
+import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
+
+const LOGOUT = gql`
+  mutation Logout($userId: ID!) {
+    logout(userId: $userId)
+  }
+`;
+// } graphql
 
 const Logout = () => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
 
+  // graphql {
+  const [logout] = useMutation<{ logout: null }>(LOGOUT);
+  // } graphql
+
   const onLogOutClick = async () => {
-    const success = await authAPIClient.logout(authenticatedUser?.id);
+    // graphql {
+    const result = await logout({
+      variables: { userId: String(authenticatedUser?.id) },
+    });
+    let success: boolean = false;
+    if (result.data?.logout === null) {
+      success = true;
+      localStorage.removeItem(AUTHENTICATED_USER_KEY);
+    }
+    // } graphql
+    // rest {
+    // const success = await authAPIClient.logout(authenticatedUser?.id);
+    // } rest
     if (success) {
       setAuthenticatedUser(null);
     }

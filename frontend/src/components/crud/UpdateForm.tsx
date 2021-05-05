@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
-import EntityAPIClient, {
-  EntityResponse,
-} from "../../APIClients/EntityAPIClient";
+// graphql {
+import { gql, useMutation } from "@apollo/client";
+
+import { EntityResponse } from "../../APIClients/EntityAPIClient";
+// } graphql
+
+// rest {
+// import EntityAPIClient, {
+//   EntityResponse,
+// } from "../../APIClients/EntityAPIClient";
+// } rest
 
 const schema: JSONSchema7 = {
   title: "Create Entity",
@@ -61,8 +69,29 @@ const uiSchema = {
   },
 };
 
+// graphql {
+const UPDATE_ENTITY = gql`
+  mutation UpdateForm_UpdateEntity($id: ID!, $entity: EntityRequestDTO!) {
+    updateEntity(id: $id, entity: $entity) {
+      id
+      stringField
+      intField
+      enumField
+      stringArrayField
+      boolField
+    }
+  }
+`;
+// } graphql
+
 const UpdateForm = () => {
   const [data, setData] = useState<EntityResponse | null>(null);
+
+  // graphql {
+  const [updateEntity] = useMutation<{ updateEntity: EntityResponse }>(
+    UPDATE_ENTITY,
+  );
+  // } graphql
 
   if (data) {
     return <p>Updated! ✔️</p>;
@@ -71,7 +100,18 @@ const UpdateForm = () => {
   const onSubmit = async ({ formData }: { formData: any }) => {
     const entityData: any = JSON.parse(JSON.stringify(formData));
     delete entityData.id;
-    const result = await EntityAPIClient.update(formData.id, { entityData });
+
+    // graphql {
+    const graphQLResult = await updateEntity({
+      variables: { id: formData.id, entity: entityData },
+    });
+    const result: EntityResponse | null =
+      graphQLResult.data?.updateEntity ?? null;
+    // } graphql
+
+    // rest {
+    // const result = await EntityAPIClient.update(formData.id, { entityData });
+    // } rest
     setData(result);
   };
   return <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />;
