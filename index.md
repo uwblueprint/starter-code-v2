@@ -47,7 +47,7 @@ Another notable feature of Starter Code is its demonstration of the principle of
 
 At the moment, each service offered by Starter Code is backed by at most 2 different implementations. However, if you would like to add or substitute another implementation, you can easily do so by implementing the provided interfaces. The rest of the application should not require any refactoring and will continue functioning, oblivious to any change that has taken place. For this reason, Starter Code is **flexible**.
 
-| ![Starter Code Architecture Diagram](/assets/images/starter-code-architecture.png) | 
+| ![Starter Code Architecture Diagram]({{ "/assets/images/starter-code-architecture.png" | relative_url }}) | 
 |:--:| 
 | *Starter Code Architecture Diagram*|
 
