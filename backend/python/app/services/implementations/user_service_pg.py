@@ -7,7 +7,17 @@ from ...resources.user_dto import UserDTO
 
 
 class UserService(IUserService):
+    """
+    UserService implementation with user management methods
+    """
+
     def __init__(self, logger):
+        """
+        Create an instance of UserService
+
+        :param logger: application's logger instance
+        :type logger: logger
+        """
         self.logger = logger
 
     def get_user_by_id(self, user_id):
@@ -146,7 +156,7 @@ class UserService(IUserService):
                 except Exception as firebase_error:
                     reason = getattr(firebase_error, "message", None)
                     error_message = [
-                        "Failed to rollback Firebase user creation after MongoDB user creation failed.",
+                        "Failed to rollback Firebase user creation after PostgreSQL user creation failed.",
                         "Reason = {reason},".format(
                             reason=(reason if reason else str(firebase_error))
                         ),
@@ -206,7 +216,7 @@ class UserService(IUserService):
                         "Reason = {reason},".format(
                             reason=(reason if reason else str(postgres_error))
                         ),
-                        "Postgres user id with possibly inconsitent data = {user_id}".format(
+                        "Postgres user id with possibly inconsistent data = {user_id}".format(
                             user_id=user_id
                         ),
                     ]
@@ -217,7 +227,7 @@ class UserService(IUserService):
         except Exception as e:
             reason = getattr(e, "message", None)
             self.logger.error(
-                "failed to update user. Reason = {reason}".format(
+                "Failed to update user. Reason = {reason}".format(
                     reason=(reason if reason else str(e))
                 )
             )
