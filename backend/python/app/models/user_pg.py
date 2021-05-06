@@ -3,7 +3,8 @@ from sqlalchemy.orm.properties import ColumnProperty
 
 from . import db
 
-roles_enum = db.Enum('User', 'Admin', name='roles')
+roles_enum = db.Enum("User", "Admin", name="roles")
+
 
 class User(db.Model):
     __tablename__ = "users"

@@ -5,6 +5,7 @@ from ...models.user_pg import User
 from ...models import db
 from ...resources.user_dto import UserDTO
 
+
 class UserService(IUserService):
     def __init__(self, logger):
         self.logger = logger
@@ -15,7 +16,7 @@ class UserService(IUserService):
 
             if not user:
                 raise Exception("user_id {user_id} not found".format(user_id))
-            
+
             firebase_user = firebase_admin.auth.get_user(user.auth_id)
 
             user_dict = UserService.__user_to_dict_and_remove_auth_id(user)
@@ -115,7 +116,7 @@ class UserService(IUserService):
                     )
                 )
                 raise e
-            
+
         return user_dtos
 
     def create_user(self, user):
@@ -131,7 +132,7 @@ class UserService(IUserService):
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "auth_id": firebase_user.uid,
-                "role": user.role
+                "role": user.role,
             }
 
             try:
@@ -164,10 +165,8 @@ class UserService(IUserService):
                 )
             )
             raise e
-        
-        new_user_dict = UserService.__user_to_dict_and_remove_auth_id(
-            new_user
-        )
+
+        new_user_dict = UserService.__user_to_dict_and_remove_auth_id(new_user)
         new_user_dict["email"] = firebase_user.email
         return UserDTO(**new_user_dict)
 
@@ -182,8 +181,9 @@ class UserService(IUserService):
                 {
                     User.first_name: user.first_name,
                     User.last_name: user.last_name,
-                    User.role: user.role
-                })
+                    User.role: user.role,
+                }
+            )
 
             db.session.commit()
 
@@ -194,7 +194,7 @@ class UserService(IUserService):
                     old_user_dict = {
                         User.first_name: old_user.first_name,
                         User.last_name: old_user.last_name,
-                        User.role: old_user.role
+                        User.role: old_user.role,
                     }
                     User.query.filter_by(id=user_id).update(**old_user_dict)
                     db.session.commit()
@@ -211,9 +211,9 @@ class UserService(IUserService):
                         ),
                     ]
                     self.logger.error(" ".join(error_message))
-                
+
                 raise firebase_error
-        
+
         except Exception as e:
             reason = getattr(e, "message", None)
             self.logger.error(
@@ -225,7 +225,6 @@ class UserService(IUserService):
 
         return UserDTO(user_id, user.first_name, user.last_name, user.email, user.role)
 
-
     def delete_user_by_id(self, user_id):
         try:
             deleted_user = User.query.get(user_id)
@@ -236,10 +235,16 @@ class UserService(IUserService):
             delete_count = User.query.filter_by(id=user_id).delete()
 
             if delete_count < 1:
-                raise Exception("user_id {user_id} was not deleted".format(user_id=user_id))
+                raise Exception(
+                    "user_id {user_id} was not deleted".format(user_id=user_id)
+                )
             elif delete_count > 1:
-                raise Exception("user_id {user_id} had multiple instances. Delete not committed.".format(user_id=user_id))
-            
+                raise Exception(
+                    "user_id {user_id} had multiple instances. Delete not committed.".format(
+                        user_id=user_id
+                    )
+                )
+
             db.session.commit()
 
             try:
@@ -251,7 +256,7 @@ class UserService(IUserService):
                         "first_name": deleted_user.first_name,
                         "last_name": deleted_user.last_name,
                         "auth_id": deleted_user.auth_id,
-                        "role": deleted_user.role
+                        "role": deleted_user.role,
                     }
 
                     new_user = User(**new_user.__dict__)
@@ -270,9 +275,9 @@ class UserService(IUserService):
                         ),
                     ]
                     self.logger.error(" ".join(error_message))
-            
+
             raise firebase_error
-        
+
         except Exception as e:
             reason = getattr(e, "message", None)
             self.logger.error(
@@ -282,12 +287,11 @@ class UserService(IUserService):
             )
             raise e
 
-
     def delete_user_by_email(self, email):
         try:
             firebase_user = firebase_admin.auth.get_user_by_email(email)
             deleted_user = User.query.filter_by(auth_id=firebase_user.uid).first()
-        
+
             if not deleted_user:
                 raise Exception(
                     "auth_id (Firebase uid) {auth_id} not found".format(
@@ -296,14 +300,20 @@ class UserService(IUserService):
                 )
 
             delete_count = User.query.filter_by(auth_id=firebase_user.uid).delete()
-            
+
             if delete_count < 1:
-                raise Exception("user_id {user_id} was not deleted".format(user_id=user_id))
+                raise Exception(
+                    "user_id {user_id} was not deleted".format(user_id=user_id)
+                )
             elif delete_count > 1:
-                raise Exception("user_id {user_id} had multiple instances. Delete not committed.".format(user_id=user_id))
-            
+                raise Exception(
+                    "user_id {user_id} had multiple instances. Delete not committed.".format(
+                        user_id=user_id
+                    )
+                )
+
             db.session.commit()
-            
+
             try:
                 firebase_admin.auth.delete_user(firebase_user.uid)
             except Exception as firebase_error:
@@ -312,7 +322,7 @@ class UserService(IUserService):
                         "first_name": deleted_user.first_name,
                         "last_name": deleted_user.last_name,
                         "auth_id": deleted_user.auth_id,
-                        "role": deleted_user.role
+                        "role": deleted_user.role,
                     }
                     new_user = User(**new_user.__dict__)
                     db.session.add(new_user)
@@ -323,16 +333,16 @@ class UserService(IUserService):
                     error_message = [
                         "Failed to rollback Postgres user deletion after Firebase user deletion failure.",
                         "Reason = {reason},".format(
-                             reason=(reason if reason else str(postgres_error))
+                            reason=(reason if reason else str(postgres_error))
                         ),
                         "Firebase uid with non-existent Postgres record = {auth_id}".format(
                             auth_id=deleted_user.auth_id
-                        )
+                        ),
                     ]
                     self.logger.error(" ".join(error_message))
 
                 raise firebase_error
-        
+
         except Exception as e:
             reason = getattr(e, "message", None)
             self.logger.error(
@@ -355,7 +365,7 @@ class UserService(IUserService):
             raise Exception(
                 "user with auth_id {auth_id} not found".format(auth_id=auth_id)
             )
-        
+
         return user
 
     @staticmethod
