@@ -8,6 +8,8 @@ permalink: /
 # Welcome to the Starter Code V2 Docs
 {:.no_toc}
 
+Unless otherwise specified, we will omit V2 when referring to Starter Code in these documents.
+
 * TOC
 {:toc}
 
