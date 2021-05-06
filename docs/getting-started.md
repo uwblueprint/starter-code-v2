@@ -42,7 +42,7 @@ $ yarn create @uwblueprint/bp-app@latest
 
 3. `cd` into the generated starter-code-v2 directory
 
-3. Create a new `.env` file at the **root** of starter-code-v2
+4. Create a new `.env` file at the **root** of starter-code-v2
     * Add the this value to the `.env`:
     ```
     REACT_APP_BACKEND_URL=http://localhost:5000
@@ -73,6 +73,36 @@ $ yarn create @uwblueprint/bp-app@latest
 ```
 docker-compose up --build
 ```
+
+6. **If using built-in user auth:** Create a seed admin user
+   * Go into your Firebase project > Authentication, choose "Email/Password" as sign-in method if prompted (you can change this for your project later). Create a user and note the uid.
+   * **If using PostgreSQL:**
+   ```bash
+   # get the database container name
+   $ docker ps
+   # run a bash shell in the database container
+   docker exec -it <insert-container-name> /bin/bash
+   # run a psql shell
+   $ psql -U postgres -d starter-code-v2
+   $ INSERT INTO users (first_name, last_name, auth_id, role, "createdAt", "updatedAt") VALUES ('First', 'Last', 'insert-firebase-ui', 'Admin', '2021-04-30', '2021-04-30');
+   ```
+   * **If using MongoDB:** Use the Atlas UI to create a user (please use camelCase for document keys if using TypeScript, and snake_case if using Python):
+   ```jsonc
+   // if using TypeScript backend
+   {
+       "firstName": "First",
+       "lastName": "Last",
+       "authId": "firebase-auth-id-from-above",
+       "role": "Admin"
+   }
+   // if using Python backend:
+   {
+       "first_name": "First",
+       "last_name": "Last",
+       "auth_id": "firebase-auth-id-from-above",
+       "role": "Admin"
+   }
+   ```
 
 ## Common Docker Commands
 
