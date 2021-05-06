@@ -8,6 +8,8 @@ cffi==1.14.5
 chardet==4.0.0
 click==7.1.2
 dnspython==1.16.0
+docspec==0.2.1
+docspec-python==0.1.0
 firebase-admin==4.5.3
 Flask==1.1.2
 Flask-Cors==3.0.10
@@ -34,6 +36,17 @@ MarkupSafe==1.1.1
 mongoengine==0.23.0
 msgpack==1.0.2
 mypy-extensions==0.4.3
+nr.collections==0.0.1
+nr.databind.core==0.0.22
+nr.databind.json==0.0.14
+nr.fs==1.6.3
+nr.interface==0.0.4
+nr.metaclass==0.0.6
+nr.parsing.date==0.6.1
+nr.pylang.utils==0.0.4
+nr.stream==0.0.5
+nr.sumtype==0.0.4
+nr.utils.re==0.1.1
 packaging==20.9
 pathspec==0.8.1
 proto-plus==1.18.1
@@ -42,12 +55,14 @@ psycopg2==2.8.6
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
+pydoc-markdown==3.10.1
 pymongo==3.11.3
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-dotenv==0.15.0
 python-editor==1.0.4
 pytz==2021.1
+PyYAML==5.4.1
 regex==2020.11.13
 requests==2.25.1
 rsa==4.7.2
@@ -58,4 +73,5 @@ typed-ast==1.4.2
 typing-extensions==3.7.4.3
 uritemplate==3.0.1
 urllib3==1.26.4
+watchdog==1.0.2
 Werkzeug==1.0.1
