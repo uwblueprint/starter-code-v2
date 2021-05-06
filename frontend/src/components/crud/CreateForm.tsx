@@ -6,11 +6,10 @@ import { gql, useMutation } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
-
 // rest {
-// import EntityAPIClient, {
-//   EntityResponse,
-// } from "../../APIClients/EntityAPIClient";
+import EntityAPIClient, {
+  EntityResponse,
+} from "../../APIClients/EntityAPIClient";
 // } rest
 
 const schema: JSONSchema7 = {
@@ -76,8 +75,8 @@ const CREATE_ENTITY = gql`
     }
   }
 `;
-// } graphql
 
+// } graphql
 const CreateForm = () => {
   const [data, setData] = useState<EntityResponse | null>(null);
 
@@ -85,8 +84,8 @@ const CreateForm = () => {
   const [createEntity] = useMutation<{ createEntity: EntityResponse }>(
     CREATE_ENTITY,
   );
-  // } graphql
 
+  // } graphql
   if (data) {
     return <p>Created! ✔️</p>;
   }
@@ -100,7 +99,7 @@ const CreateForm = () => {
       graphQLResult.data?.createEntity ?? null;
     // } graphql
     // rest {
-    // const result = await EntityAPIClient.create({ formData });
+    const result = await EntityAPIClient.create({ formData });
     // } rest
     setData(result);
   };

@@ -2,9 +2,8 @@ import React, { useContext } from "react";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 // } graphql
-
 // rest {
-// import authAPIClient from "../../APIClients/AuthAPIClient";
+import authAPIClient from "../../APIClients/AuthAPIClient";
 // } rest
 import AuthContext from "../../contexts/AuthContext";
 // graphql {
@@ -22,8 +21,8 @@ const Logout = () => {
 
   // graphql {
   const [logout] = useMutation<{ logout: null }>(LOGOUT);
-  // } graphql
 
+  // } graphql
   const onLogOutClick = async () => {
     // graphql {
     const result = await logout({
@@ -36,7 +35,7 @@ const Logout = () => {
     }
     // } graphql
     // rest {
-    // const success = await authAPIClient.logout(authenticatedUser?.id);
+    const success = await authAPIClient.logout(authenticatedUser?.id);
     // } rest
     if (success) {
       setAuthenticatedUser(null);

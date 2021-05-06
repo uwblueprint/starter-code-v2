@@ -2,9 +2,8 @@ import React, { useContext } from "react";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 // } graphql
-
 // rest {
-// import authAPIClient from "../../APIClients/AuthAPIClient";
+import authAPIClient from "../../APIClients/AuthAPIClient";
 // } rest
 import AuthContext from "../../contexts/AuthContext";
 // graphql {
@@ -23,8 +22,8 @@ const RefreshCredentials = () => {
 
   // graphql {
   const [refresh] = useMutation<{ refresh: string }>(REFRESH);
-  // } graphql
 
+  // } graphql
   const onRefreshClick = async () => {
     // graphql {
     const result = await refresh();
@@ -36,7 +35,7 @@ const RefreshCredentials = () => {
     }
     // } graphql
     // rest {
-    // const success = await authAPIClient.refresh();
+    const success = await authAPIClient.refresh();
     // } rest
     if (!success) {
       setAuthenticatedUser(null);

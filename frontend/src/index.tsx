@@ -1,6 +1,8 @@
 // graphql {
+// auth {
 import axios from "axios";
 import jwt from "jsonwebtoken";
+// } auth
 // } graphql
 import React from "react";
 import ReactDOM from "react-dom";
@@ -11,6 +13,7 @@ import {
   createHttpLink,
   InMemoryCache,
 } from "@apollo/client";
+// auth {
 import { setContext } from "@apollo/client/link/context";
 
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
@@ -18,24 +21,28 @@ import {
   getLocalStorageObjProperty,
   setLocalStorageObjProperty,
 } from "./utils/LocalStorageUtils";
+// } auth
 // } graphql
 
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+// graphql {
+// auth {
 const REFRESH_MUTATION = `
   mutation Index_Refresh {
     refresh
   }
 `;
 
-// graphql {
+// } auth
 const link = createHttpLink({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql`,
   credentials: "include",
 });
 
+// auth {
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
   let token: string = getLocalStorageObjProperty(
@@ -75,12 +82,18 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
+// } auth
 const apolloClient = new ApolloClient({
+  // auth {
   link: authLink.concat(link),
+  // } auth
+  // no-auth {
+  link,
+  // } no-auth
   cache: new InMemoryCache(),
 });
-// } graphql
 
+// } graphql
 ReactDOM.render(
   // graphql {
   <React.StrictMode>
@@ -89,11 +102,10 @@ ReactDOM.render(
     </ApolloProvider>
   </React.StrictMode>,
   // } graphql
-
   // rest {
-  // <React.StrictMode>
-  //   <App />
-  // </React.StrictMode>,
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
   // } rest
   document.getElementById("root"),
 );

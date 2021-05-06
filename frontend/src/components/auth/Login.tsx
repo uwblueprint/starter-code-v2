@@ -3,9 +3,8 @@ import { Redirect } from "react-router-dom";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 // } graphql
-
 // rest {
-// import authAPIClient from "../../APIClients/AuthAPIClient";
+import authAPIClient from "../../APIClients/AuthAPIClient";
 // } rest
 // graphql {
 import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
@@ -25,8 +24,8 @@ const LOGIN = gql`
     }
   }
 `;
-// } graphql
 
+// } graphql
 const Login = () => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
@@ -34,8 +33,8 @@ const Login = () => {
 
   // graphql {
   const [login] = useMutation<{ login: AuthenticatedUser }>(LOGIN);
-  // } graphql
 
+  // } graphql
   const onLogInClick = async () => {
     // graphql {
     const result = await login({ variables: { email, password } });
@@ -48,7 +47,7 @@ const Login = () => {
     }
     // } graphql
     // rest {
-    // const user: AuthenticatedUser = await authAPIClient.login(email, password);
+    const user: AuthenticatedUser = await authAPIClient.login(email, password);
     // } rest
     setAuthenticatedUser(user);
   };

@@ -6,11 +6,10 @@ import { gql, useMutation } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
-
 // rest {
-// import EntityAPIClient, {
-//   EntityResponse,
-// } from "../../APIClients/EntityAPIClient";
+import EntityAPIClient, {
+  EntityResponse,
+} from "../../APIClients/EntityAPIClient";
 // } rest
 
 const schema: JSONSchema7 = {
@@ -82,8 +81,8 @@ const UPDATE_ENTITY = gql`
     }
   }
 `;
-// } graphql
 
+// } graphql
 const UpdateForm = () => {
   const [data, setData] = useState<EntityResponse | null>(null);
 
@@ -91,8 +90,8 @@ const UpdateForm = () => {
   const [updateEntity] = useMutation<{ updateEntity: EntityResponse }>(
     UPDATE_ENTITY,
   );
-  // } graphql
 
+  // } graphql
   if (data) {
     return <p>Updated! ✔️</p>;
   }
@@ -108,9 +107,8 @@ const UpdateForm = () => {
     const result: EntityResponse | null =
       graphQLResult.data?.updateEntity ?? null;
     // } graphql
-
     // rest {
-    // const result = await EntityAPIClient.update(formData.id, { entityData });
+    const result = await EntityAPIClient.update(formData.id, { entityData });
     // } rest
     setData(result);
   };

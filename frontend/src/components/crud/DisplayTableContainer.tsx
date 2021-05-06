@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 // } graphql
 // rest {
-// import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 // } rest
 import BTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
@@ -12,11 +12,10 @@ import { gql, useQuery } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
-
 // rest {
-// import EntityAPIClient, {
-//   EntityResponse,
-// } from "../../APIClients/EntityAPIClient";
+import EntityAPIClient, {
+  EntityResponse,
+} from "../../APIClients/EntityAPIClient";
 // } rest
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
@@ -129,28 +128,29 @@ const ENTITIES = gql`
     }
   }
 `;
-// } graphql
 
+// } graphql
 const DisplayTableContainer = () => {
   const [entities, setEntities] = useState<EntityData[] | null>(null);
 
+  // graphql {
   useQuery(ENTITIES, {
     fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
       setEntities(data.entities.map((d: EntityResponse) => convert(d)));
     },
   });
-
+  // } graphql
   // rest {
-  // useEffect(() => {
-  //   const retrieveAndUpdateData = async () => {
-  //     const result = await EntityAPIClient.get();
-  //     if (result) {
-  //       setData(result.map((r: EntityResponse) => convert(r)));
-  //     }
-  //   };
-  //   retrieveAndUpdateData();
-  // }, []);
+  useEffect(() => {
+    const retrieveAndUpdateData = async () => {
+      const result = await EntityAPIClient.get();
+      if (result) {
+        setEntities(result.map((r: EntityResponse) => convert(r)));
+      }
+    };
+    retrieveAndUpdateData();
+  }, []);
   // } rest
 
   return entities && <DisplayTable data={entities} />;
