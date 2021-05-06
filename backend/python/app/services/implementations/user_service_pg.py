@@ -95,7 +95,7 @@ class UserService(IUserService):
 
     def get_auth_id_by_user_id(self, user_id):
         try:
-            user = User.query.get(user_id).first()
+            user = User.query.get(user_id)
 
             if not user:
                 raise Exception("user_id {user_id} not found".format(user_id=user_id))
@@ -187,7 +187,7 @@ class UserService(IUserService):
             if not old_user:
                 raise Exception("user_id {user_id} not found".format(user_id=user_id))
 
-            test = User.query.filter_by(id=user_id).update(
+            User.query.filter_by(id=user_id).update(
                 {
                     User.first_name: user.first_name,
                     User.last_name: user.last_name,
@@ -242,7 +242,9 @@ class UserService(IUserService):
             if not deleted_user:
                 raise Exception("user_id {user_id} not found".format(user_id=user_id))
 
-            delete_count = User.query.filter_by(id=user_id).delete()
+            delete_count = User.query.filter_by(id=user_id).delete(
+                synchronize_session="fetch"
+            )
 
             if delete_count < 1:
                 raise Exception(
@@ -269,7 +271,7 @@ class UserService(IUserService):
                         "role": deleted_user.role,
                     }
 
-                    new_user = User(**new_user.__dict__)
+                    new_user = User(**deleted_user_dict)
                     db.session.add(new_user)
                     db.session.commit()
 
@@ -286,7 +288,7 @@ class UserService(IUserService):
                     ]
                     self.logger.error(" ".join(error_message))
 
-            raise firebase_error
+                raise firebase_error
 
         except Exception as e:
             reason = getattr(e, "message", None)
@@ -309,7 +311,9 @@ class UserService(IUserService):
                     )
                 )
 
-            delete_count = User.query.filter_by(auth_id=firebase_user.uid).delete()
+            delete_count = User.query.filter_by(auth_id=firebase_user.uid).delete(
+                synchronize_session="fetch"
+            )
 
             if delete_count < 1:
                 raise Exception(
@@ -334,7 +338,7 @@ class UserService(IUserService):
                         "auth_id": deleted_user.auth_id,
                         "role": deleted_user.role,
                     }
-                    new_user = User(**new_user.__dict__)
+                    new_user = User(**deleted_user_dict)
                     db.session.add(new_user)
                     db.session.commit()
 
