@@ -11,7 +11,7 @@ permalink: /docs/getting-started
 * TOC
 {:toc}
 
-### Prerequisites
+## Prerequisites
 
 * Ensure you have Docker installed and that Docker Desktop is running.
   Installation instructions: [MacOS](https://docs.docker.com/docker-for-mac/install/) | [Windows (Home)](https://docs.docker.com/docker-for-windows/install-windows-home/) | [Windows (Pro, Enterprise, Education)](https://docs.docker.com/docker-for-windows/install/) | [Linux](https://docs.docker.com/engine/install/#server)
@@ -68,14 +68,14 @@ $ yarn create @uwblueprint/bp-app@latest
     ```
     FLASK_CONFIG=development
     ```
-4. Follow instructions [here](email-service/setup.md) to setup credentials for EmailService.
+5. Follow instructions [here](email-service/setup.md) to setup credentials for EmailService.
 
 5. Run the application:
 ```
 docker-compose up --build
 ```
 
-6. **If using built-in user auth:** Create a seed admin user
+7. **If using built-in user auth:** Create a seed admin user
    * Go into your Firebase project > Authentication, choose "Email/Password" as sign-in method if prompted (you can change this for your project later). Create a user and note the uid.
    * **If using PostgreSQL:**
    ```bash
@@ -107,6 +107,7 @@ docker-compose up --build
        "role": "Admin"
    }
    ```
+8. After stopping the application, run `git init` to initialize your repository
 
 ## Common Docker Commands
 
