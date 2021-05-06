@@ -14,8 +14,8 @@ import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } rest
 
 const schema: JSONSchema7 = {
-  title: "Create Entity",
-  description: "A simple form to test creating an entity",
+  title: "Update Entity",
+  description: "A simple form to test updating an entity",
   type: "object",
   required: [
     "id",
@@ -29,7 +29,7 @@ const schema: JSONSchema7 = {
     id: {
       type: "string",
       title: "entity id",
-      default: "2017",
+      default: "123abc456def7890ghij1234",
     },
     stringField: {
       type: "string",
