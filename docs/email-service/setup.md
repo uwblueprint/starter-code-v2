@@ -33,7 +33,7 @@ parent: Email Service
 11. Navigate to the Google Cloud Platform console -> APIs & Services -> Library -> Gmail API, and click Enable.
 <img width="949" alt="image" src="https://user-images.githubusercontent.com/37782734/115963717-a3127680-a4ee-11eb-92ec-07be157be3df.png">
 
-12. **If using Python backend:** Add the refresh token, Client ID, and Client secret from above to the root .env file.
+12. **If using Python backend:** Add the refresh token, Client ID, and Client secret from above to the root .env file. If you are using auth, please update lines 23-24 in `backend/python/app/rest/auth_routes.py` to be your email and display name.
 ```
 EMAIL_REFRESH_TOKEN=<insert-your-token>
 EMAIL_CLIENT_SECRET=<insert-your-secret>
