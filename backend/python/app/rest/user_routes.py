@@ -3,7 +3,7 @@ from flask import Blueprint, current_app, jsonify, request
 from ..middlewares.auth import require_authorization_by_role
 from ..resources.create_user_dto import CreateUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
-from ..services.implementations.user_service_mg import UserService
+from ..services.implementations.user_service import UserService
 
 
 user_service = UserService(current_app.logger)

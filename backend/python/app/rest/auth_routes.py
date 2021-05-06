@@ -8,7 +8,7 @@ from ..middlewares.auth import (
 )
 from ..services.implementations.auth_service import AuthService
 from ..services.implementations.email_service import EmailService
-from ..services.implementations.user_service_mg import UserService
+from ..services.implementations.user_service import UserService
 
 
 user_service = UserService(current_app.logger)
