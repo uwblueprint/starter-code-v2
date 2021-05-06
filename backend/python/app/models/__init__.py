@@ -14,7 +14,9 @@ erase_db_and_sync = True
 # } postgresql
 def init_app(app):
     from .entity import Entity
+    # auth {
     from .user import User
+    # } auth
 
     app.app_context().push()
     # postgresql {
