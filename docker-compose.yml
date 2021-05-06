@@ -26,8 +26,10 @@ services:
       - 5000:5000
     dns:
       - 8.8.8.8
+    postgresql {
     depends_on:
       - db
+    } postgresql
     env_file:
       - ./.env
   } typescript
@@ -43,11 +45,14 @@ services:
       - 8.8.8.8
     volumes:
      - ./backend/python:/app
+    postgresql {
     depends_on:
       - db
+    } postgresql
     env_file:
       - ./.env
   } python 
+  postgresql {
   db:
     image: postgres:12-alpine
     ports:
@@ -56,6 +61,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
+  } postgresql
 
 volumes:
   postgres_data:
