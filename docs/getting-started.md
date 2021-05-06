@@ -28,6 +28,7 @@ $ npx -v
 # (if using yarn) verify your installation
 $ yarn -v
 ```
+* Ensure that you have Git installed (any version)
 
 ## Setting up Starter Code
 
@@ -84,7 +85,10 @@ docker-compose up --build
    docker exec -it <insert-container-name> /bin/bash
    # run a psql shell
    $ psql -U postgres -d starter-code-v2
+   # if using TypeScript backend
    $ INSERT INTO users (first_name, last_name, auth_id, role, "createdAt", "updatedAt") VALUES ('First', 'Last', 'insert-firebase-ui', 'Admin', '2021-04-30', '2021-04-30');
+   # if using Python backend
+   $ INSERT INTO users (first_name, last_name, auth_id, role) VALUES ('First', 'Last', 'insert-firebase-ui', 'Admin');
    ```
    * **If using MongoDB:** Use the Atlas UI to create a user (please use camelCase for document keys if using TypeScript, and snake_case if using Python):
    ```jsonc
