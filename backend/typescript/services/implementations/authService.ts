@@ -122,7 +122,7 @@ class AuthService implements IAuthService {
         decodedIdToken.uid,
       );
 
-      return tokenUserId === requestedUserId;
+      return String(tokenUserId) === requestedUserId;
     } catch (error) {
       return false;
     }
