@@ -21,7 +21,7 @@ $ docker --version
 $ docker-compose --version
 ```
 
-* Ensure you have Node.js installed (current LTS version preferred), with `npx` (should be included with Node.js installation), or `yarn`
+* Ensure you have Node.js installed (please use the current LTS version), with `npx` (should be included with Node.js installation), or `yarn`
 ```bash
 # (if using npx) verify your installation
 $ npx -v
