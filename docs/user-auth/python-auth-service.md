@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Python AuthService Docs
-nav_order: 3
+nav_order: 2
 parent: User Auth
 ---
 

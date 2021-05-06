@@ -1,7 +1,7 @@
 ---
 layout: default
 title: TypeScript UserService Docs
-nav_order: 4
+nav_order: 3
 parent: User Auth
 ---
 
