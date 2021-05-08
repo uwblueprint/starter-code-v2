@@ -11,4 +11,7 @@ The easiest way to test CRUD is to use either the REST or GraphQL entities endpo
 
 Note that an access token must be provided for these endpoints as an Authorization header (either User or Admin roles work).
 
+**Important**: Please use snake_case for all request body field names and URL parameters if using a Python backend, and camelCase if using a TypeScript backend (e.g. `user_id` if using Python and `userId` if using TypeScript)
+{: .banner-info .mb-6 }
+
 API docs coming soon, thank you for your patience! 🙏

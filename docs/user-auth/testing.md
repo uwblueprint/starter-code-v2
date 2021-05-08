@@ -12,6 +12,9 @@ The easiest way to test user auth is to use either the REST or GraphQL endpoints
 
 Note that only Admin users can access user endpoints, and that emails of created users must be unique.
 
+**Important**: Please use snake_case for all request body field names and URL parameters if using a Python backend, and camelCase if using a TypeScript backend (e.g. `user_id` if using Python and `userId` if using TypeScript)
+{: .banner-info .mb-6 }
+
 * TOC
 {:toc}
 
