@@ -17,18 +17,20 @@ permalink: /docs/getting-started
   Installation instructions: [MacOS](https://docs.docker.com/docker-for-mac/install/) | [Windows (Home)](https://docs.docker.com/docker-for-windows/install-windows-home/) | [Windows (Pro, Enterprise, Education)](https://docs.docker.com/docker-for-windows/install/) | [Linux](https://docs.docker.com/engine/install/#server)
 ```bash
 # verify your installation by running the following in a terminal
-$ docker --version
+$ docker info
 $ docker-compose --version
 ```
 
-* Ensure you have Node.js installed (please use the current LTS version), with `npx` (should be included with Node.js installation), or `yarn`
+* Ensure you have Node.js installed. Please use the **current LTS version**, so please upgrade if necessary; at the time of writing, current LTS is v14.16.1. Ensure you have `npx` as well, which should have been included with the Node.js installation
 ```bash
-# (if using npx) verify your installation
+# verify that you have npx
 $ npx -v
-# (if using yarn) verify your installation
-$ yarn -v
 ```
 * Ensure that you have Git installed (any version)
+```bash
+# verify that you have git
+git --version
+```
 
 ## Setting up Starter Code
 
