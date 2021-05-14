@@ -29,17 +29,14 @@ $ npx -v
 * Ensure that you have Git installed (any version)
 ```bash
 # verify that you have git
-git --version
+$ git --version
 ```
 
 ## Setting up Starter Code
 
 1. Run the [`@uwblueprint/create-bp-app`](https://www.npmjs.com/package/@uwblueprint/create-bp-app) CLI
 ```bash
-# if you prefer npx:
 $ npx @uwblueprint/create-bp-app@latest
-# if you prefer yarn
-$ yarn create @uwblueprint/bp-app@latest
 ```
 2. Answer the prompts in the CLI to specify your stack preferences
 
@@ -70,9 +67,23 @@ $ yarn create @uwblueprint/bp-app@latest
     ```
     FLASK_CONFIG=development
     ```
+    <div>
+    <strong>For Bootcamp:</strong> If you're not using the built-in auth service, or if you are using auth but don't foresee the need to use the reset password functionality, please feel free to skip <strong>step 5</strong> below to save some time. However, you will need to make the following changes if user auth was enabled:
+    <ul>
+    <li><strong>If using Python backend:</strong> remove the <code>email_service</code> argument passed into the <code>AuthService</code> constructor call in <code>backend/python/app/rest/auth_routes.py</code> (near line 26). The resulting line should just be <code>auth_service = AuthService(current_app.logger, user_service)</code>.
+    </li>
+    <li><strong>If using TypeScript backend with REST:</strong> remove the <code>emailService</code> argument passed into the <code>AuthService</code> constructor call in <code>backend/typescript/rest/authRoutes.ts</code> (near line 13). The resulting line should just be <code>const authService: IAuthService = new AuthService(new UserService());</code>.
+    </li>
+    <li><strong>If using TypeScript backend with GraphQL:</strong> remove the <code>emailService</code> argument passed into the <code>AuthService</code> constructor call in <code>backend/typescript/graphql/resolvers/authResolvers.ts</code> (near line 11). The resulting line should just be <code>const authService: IAuthService = new AuthService(new UserService());</code>.
+    </li>
+    </ul>
+
+    <p>You should also remove all other variables and imports made unnecessary as a result.</p>
+    </div>
+    {: .banner-info .mb-6 }
 5. Follow instructions [here](email-service/setup.md) to setup credentials for EmailService.
 
-5. Run the application:
+6. Run the application:
 ```
 docker-compose up --build
 ```
@@ -88,9 +99,9 @@ docker-compose up --build
    # run a psql shell
    $ psql -U postgres -d starter-code-v2
    # if using TypeScript backend
-   $ INSERT INTO users (first_name, last_name, auth_id, role, "createdAt", "updatedAt") VALUES ('First', 'Last', 'insert-firebase-ui', 'Admin', '2021-04-30', '2021-04-30');
+   $ INSERT INTO users (first_name, last_name, auth_id, role, "createdAt", "updatedAt") VALUES ('First', 'Last', 'insert-firebase-uid', 'Admin', '2021-04-30', '2021-04-30');
    # if using Python backend
-   $ INSERT INTO users (first_name, last_name, auth_id, role) VALUES ('First', 'Last', 'insert-firebase-ui', 'Admin');
+   $ INSERT INTO users (first_name, last_name, auth_id, role) VALUES ('First', 'Last', 'insert-firebase-uid', 'Admin');
    ```
    * **If using MongoDB:** Use the Atlas UI to create a user (please use camelCase for document keys if using TypeScript, and snake_case if using Python):
    ```jsonc
