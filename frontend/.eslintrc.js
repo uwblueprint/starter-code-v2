@@ -3,6 +3,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2020,
+    tsconfigRootDir: __dirname,
     sourceType: "module",
     ecmaFeatures: {
       jsx: true,
@@ -22,6 +23,8 @@ module.exports = {
     "plugin:prettier/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
   ],
   rules: {
     "prettier/prettier": ["error", { endOfLine: "auto" }],

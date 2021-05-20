@@ -1,5 +1,6 @@
 import { createContext } from "react";
 
+// TODO: move to types
 export type AuthenticatedUser = {
   id: string;
   firstName: string;

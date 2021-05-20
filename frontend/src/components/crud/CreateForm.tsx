@@ -4,7 +4,10 @@ import { Form } from "@rjsf/bootstrap-4";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 
-import { EntityResponse } from "../../APIClients/EntityAPIClient";
+import {
+  EntityRequest,
+  EntityResponse,
+} from "../../APIClients/EntityAPIClient";
 // } graphql
 
 // rest {
@@ -78,7 +81,7 @@ const CREATE_ENTITY = gql`
 `;
 // } graphql
 
-const CreateForm = () => {
+const CreateForm = (): React.ReactElement => {
   const [data, setData] = useState<EntityResponse | null>(null);
 
   // graphql {
@@ -91,7 +94,7 @@ const CreateForm = () => {
     return <p>Created! ✔️</p>;
   }
 
-  const onSubmit = async ({ formData }: { formData: any }) => {
+  const onSubmit = async ({ formData }: { formData: EntityRequest }) => {
     // graphql {
     const graphQLResult = await createEntity({
       variables: { entity: formData },

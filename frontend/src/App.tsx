@@ -19,8 +19,8 @@ import sampleContextReducer from "./reducers/SampleContextReducer";
 import SampleContextDispatcherContext from "./contexts/SampleContextDispatcherContext";
 import EditTeamInfoPage from "./components/pages/EditTeamPage";
 
-const App = () => {
-  const currentUser: AuthenticatedUser = getLocalStorageObj(
+const App = (): React.ReactElement => {
+  const currentUser: AuthenticatedUser = getLocalStorageObj<AuthenticatedUser>(
     AUTHENTICATED_USER_KEY,
   );
 

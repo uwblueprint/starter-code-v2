@@ -14,6 +14,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
+import { AuthenticatedUser } from "./contexts/AuthContext";
 import {
   getLocalStorageObjProperty,
   setLocalStorageObjProperty,
@@ -38,12 +39,13 @@ const link = createHttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
-  let token: string = getLocalStorageObjProperty(
-    AUTHENTICATED_USER_KEY,
-    "accessToken",
-  );
+  let token: string | null = getLocalStorageObjProperty<
+    NonNullable<AuthenticatedUser>,
+    string
+  >(AUTHENTICATED_USER_KEY, "accessToken");
 
   if (token) {
+    // TODO: define expected JWT return type
     const decodedToken: any = jwt.decode(token);
 
     // refresh if decodedToken has expired

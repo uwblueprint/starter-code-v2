@@ -27,7 +27,7 @@ const LOGIN = gql`
 `;
 // } graphql
 
-const Login = () => {
+const Login = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

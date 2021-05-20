@@ -33,6 +33,7 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
     authHeaderParts.length >= 2 &&
     authHeaderParts[0].toLowerCase() === "bearer"
   ) {
+    // TODO: define expected JWT return type
     const decodedToken: any = jwt.decode(authHeaderParts[1]);
 
     if (
