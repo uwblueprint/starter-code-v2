@@ -7,7 +7,7 @@ import {
 export default function sampleContextReducer(
   state: SampleContextType,
   action: SampleContextAction,
-) {
+): SampleContextType {
   switch (action.type) {
     case "EDIT_NAME":
       return {
@@ -17,7 +17,7 @@ export default function sampleContextReducer(
     case "EDIT_NUM_TERMS":
       return {
         ...state,
-        age: action.value,
+        numTerms: action.value,
       };
     case "EDIT_MEMBERS":
       return {
@@ -27,7 +27,7 @@ export default function sampleContextReducer(
     case "EDIT_IS_ACTIVE":
       return {
         ...state,
-        verified: action.value,
+        isActive: action.value,
       };
     default:
       return state;
