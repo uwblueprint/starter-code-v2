@@ -61,7 +61,10 @@ const EditTeamInfoPage = () => {
       <div style={{ marginTop: "1rem" }}>
         Members:
         {members.map((_name, i) => (
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div
+            key={_name}
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
             {_name}
             <DeleteMemberButton index={i} onClick={onMemberDelete} />
           </div>
