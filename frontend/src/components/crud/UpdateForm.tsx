@@ -101,9 +101,7 @@ const UpdateForm = (): React.ReactElement => {
   }
 
   const onSubmit = async ({ formData }: { formData: EntityResponse }) => {
-    const parsedForm: EntityResponse = JSON.parse(JSON.stringify(formData));
-
-    const { id, ...entityData } = parsedForm;
+    const { id, ...entityData } = formData;
 
     // graphql {
     const graphQLResult = await updateEntity({
