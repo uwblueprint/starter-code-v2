@@ -9,6 +9,7 @@ module.exports = {
     },
     project: "./tsconfig.json",
     createDefaultProgram: true,
+    tsconfigRootDir: __dirname,
   },
   settings: {
     react: {
