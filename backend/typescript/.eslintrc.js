@@ -6,6 +6,7 @@ module.exports = {
     project: "./tsconfig.json",
     sourceType: "module",
     createDefaultProgram: true,
+    tsconfigRootDir: __dirname,
   },
   extends: [
     "airbnb-typescript/base",
