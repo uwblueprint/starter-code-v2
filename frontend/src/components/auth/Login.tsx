@@ -38,14 +38,18 @@ const Login = (): React.ReactElement => {
 
   const onLogInClick = async () => {
     // graphql {
-    const result = await login({ variables: { email, password } });
     let user: AuthenticatedUser = null;
-    if (result) {
+    try {
+      const result = await login({ variables: { email, password } });
       user = result.data?.login ?? null;
       if (user) {
         localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(user));
       }
+    } catch (e: unknown) {
+      // eslint-disable-next-line no-alert
+      window.alert("Failed to login");
     }
+
     // } graphql
     // rest {
     // const user: AuthenticatedUser = await authAPIClient.login(email, password);

@@ -91,7 +91,7 @@ const DisplayTable = ({ data }: TableProps) => {
       style={{ marginTop: "20px" }}
     >
       <thead>
-        {headerGroups.map((headerGroup: HeaderGroup) => (
+        {headerGroups.map((headerGroup: HeaderGroup<EntityData>) => (
           // Key is specified in the prop getter functions
           // eslint-disable-next-line react/jsx-key
           <tr {...headerGroup.getHeaderGroupProps()}>
