@@ -1,3 +1,6 @@
+// graphql {
+// import { gql, useMutation } from "@apollo/client";
+// } graphql
 import baseAPIClient from "./BaseAPIClient";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { AuthenticatedUser } from "../contexts/AuthContext";
@@ -5,6 +8,22 @@ import {
   getLocalStorageObjProperty,
   setLocalStorageObjProperty,
 } from "../utils/LocalStorageUtils";
+
+// const login = async (
+//   email: string,
+//   password: string,
+//   loginFunction: Function,
+// ) => {
+//   const result = await loginFunction({ variables: { email, password } });
+//   let user: AuthenticatedUser = null;
+//   if (result) {
+//     user = result.data?.login ?? null;
+//     if (user) {
+//       localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(user));
+//     }
+//   }
+//   return user;
+// };
 
 const login = async (
   email: string,
@@ -78,3 +97,4 @@ const refresh = async (): Promise<boolean> => {
 };
 
 export default { login, logout, resetPassword, refresh };
+// export default { login };

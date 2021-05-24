@@ -46,6 +46,11 @@ const Login = () => {
         localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(user));
       }
     }
+    // const user: AuthenticatedUser = await authAPIClient.login(
+    //   email,
+    //   password,
+    //   login,
+    // );
     // } graphql
     // rest {
     // const user: AuthenticatedUser = await authAPIClient.login(email, password);
