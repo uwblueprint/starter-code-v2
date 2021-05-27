@@ -1,9 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 // auth {
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 // } auth
 // no-auth {
-import React from "react";
+import React, { useReducer } from "react";
 // } no-auth
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -21,6 +21,12 @@ import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
 import AuthContext, { AuthenticatedUser } from "./contexts/AuthContext";
 import { getLocalStorageObj } from "./utils/LocalStorageUtils";
 // } auth
+import SampleContext, {
+  DEFAULT_SAMPLE_CONTEXT,
+} from "./contexts/SampleContext";
+import sampleContextReducer from "./reducers/SampleContextReducer";
+import SampleContextDispatcherContext from "./contexts/SampleContextDispatcherContext";
+import EditTeamInfoPage from "./components/pages/EditTeamPage";
 
 const App = () => {
   // auth {
@@ -33,31 +39,67 @@ const App = () => {
   );
 
   // } auth
+  // Some sort of global state. Context API replaces redux.
+  // Split related states into different contexts as necessary.
+  // Split dispatcher and state into separate contexts as necessary.
+  const [sampleContext, dispatchSampleContextUpdate] = useReducer(
+    sampleContextReducer,
+    DEFAULT_SAMPLE_CONTEXT,
+  );
+
   return (
     // auth {
-    <AuthContext.Provider value={{ authenticatedUser, setAuthenticatedUser }}>
-      <Router>
-        <Switch>
-          <PrivateRoute exact path="/" component={Default} />
-          <Route exact path="/login" component={Login} />
-          <PrivateRoute exact path="/entity/create" component={CreatePage} />
-          <PrivateRoute exact path="/entity/update" component={UpdatePage} />
-          <PrivateRoute exact path="/entity" component={DisplayPage} />
-          <Route exact path="*" component={NotFound} />
-        </Switch>
-      </Router>
-    </AuthContext.Provider>
+    <SampleContext.Provider value={sampleContext}>
+      <SampleContextDispatcherContext.Provider
+        value={dispatchSampleContextUpdate}
+      >
+        <AuthContext.Provider
+          value={{ authenticatedUser, setAuthenticatedUser }}
+        >
+          <Router>
+            <Switch>
+              <PrivateRoute exact path="/" component={Default} />
+              <Route exact path="/login" component={Login} />
+              <PrivateRoute
+                exact
+                path="/entity/create"
+                component={CreatePage}
+              />
+              <PrivateRoute
+                exact
+                path="/entity/update"
+                component={UpdatePage}
+              />
+              <PrivateRoute exact path="/entity" component={DisplayPage} />
+              <PrivateRoute
+                exact
+                path="/edit-team"
+                component={EditTeamInfoPage}
+              />
+              <Route exact path="*" component={NotFound} />
+            </Switch>
+          </Router>
+        </AuthContext.Provider>
+      </SampleContextDispatcherContext.Provider>
+    </SampleContext.Provider>
     // } auth
     // no-auth {
-    <Router>
-      <Switch>
-        <Route exact path="/" component={Default} />
-        <Route exact path="/entity/create" component={CreatePage} />
-        <Route exact path="/entity/update" component={UpdatePage} />
-        <Route exact path="/entity" component={DisplayPage} />
-        <Route exact path="*" component={NotFound} />
-      </Switch>
-    </Router>
+    <SampleContext.Provider value={sampleContext}>
+      <SampleContextDispatcherContext.Provider
+        value={dispatchSampleContextUpdate}
+      >
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Default} />
+            <Route exact path="/entity/create" component={CreatePage} />
+            <Route exact path="/entity/update" component={UpdatePage} />
+            <Route exact path="/entity" component={DisplayPage} />
+            <Route exact path="/edit-team" component={EditTeamInfoPage} />
+            <Route exact path="*" component={NotFound} />
+          </Switch>
+        </Router>
+      </SampleContextDispatcherContext.Provider>
+    </SampleContext.Provider>
     // } no-auth
   );
 };

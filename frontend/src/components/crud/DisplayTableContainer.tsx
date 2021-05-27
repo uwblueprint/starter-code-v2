@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import React, { useState, useEffect } from "react";
 // } rest
 import BTable from "react-bootstrap/Table";
-import { useTable } from "react-table";
+import { HeaderGroup, useTable } from "react-table";
 // graphql {
 import { gql, useQuery } from "@apollo/client";
 
@@ -91,9 +91,12 @@ const DisplayTable = (props: any) => {
       style={{ marginTop: "20px" }}
     >
       <thead>
-        {headerGroups.map((headerGroup) => (
+        {headerGroups.map((headerGroup: HeaderGroup) => (
+          // Key is specified in the prop getter functions
+          // eslint-disable-next-line react/jsx-key
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
+              // eslint-disable-next-line react/jsx-key
               <th {...column.getHeaderProps()}>{column.render("Header")}</th>
             ))}
           </tr>
@@ -103,8 +106,10 @@ const DisplayTable = (props: any) => {
         {rows.map((row) => {
           prepareRow(row);
           return (
+            // eslint-disable-next-line react/jsx-key
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => {
+                // eslint-disable-next-line react/jsx-key
                 return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
               })}
             </tr>

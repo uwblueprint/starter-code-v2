@@ -9,13 +9,20 @@ module.exports = {
     },
     project: "./tsconfig.json",
     createDefaultProgram: true,
+    tsconfigRootDir: __dirname,
   },
   settings: {
     react: {
       version: "detect",
     },
   },
-  extends: ["airbnb-typescript", "prettier", "plugin:prettier/recommended"],
+  extends: [
+    "airbnb-typescript",
+    "prettier",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+  ],
   rules: {
     "prettier/prettier": ["error", { endOfLine: "auto" }],
   },
