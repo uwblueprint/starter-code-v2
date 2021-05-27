@@ -6,8 +6,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-     - ./frontend:/app
-     - /app/node_modules
+      - ./frontend:/app
+      - /app/node_modules
     ports:
       - 3000:3000
     environment:
@@ -29,21 +29,21 @@ services:
       - db
     env_file:
       - ./.env
-  py-backend:
-    restart: always
-    build:
-      context: ./backend/python
-      dockerfile: Dockerfile
-    ports:
-      - 5000:5000
-    dns:
-      - 8.8.8.8
-    volumes:
-     - ./backend/python:/app
-    depends_on:
-      - db
-    env_file:
-      - ./.env
+  # py-backend:
+  #   restart: always
+  #   build:
+  #     context: ./backend/python
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 5000:5000
+  #   dns:
+  #     - 8.8.8.8
+  #   volumes:
+  #    - ./backend/python:/app
+  #   depends_on:
+  #     - db
+  #   env_file:
+  #     - ./.env
   db:
     image: postgres:12-alpine
     ports:

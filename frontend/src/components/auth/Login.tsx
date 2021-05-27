@@ -10,7 +10,9 @@ import { gql, useMutation } from "@apollo/client";
 // graphql {
 import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
 // } graphql
-import AuthContext, { AuthenticatedUser } from "../../contexts/AuthContext";
+import AuthContext from "../../contexts/AuthContext";
+
+import { AuthenticatedUser } from "../../types/AuthTypes";
 
 // graphql {
 const LOGIN = gql`

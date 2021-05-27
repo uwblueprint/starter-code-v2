@@ -14,7 +14,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
-import { AuthenticatedUser } from "./contexts/AuthContext";
+import { AuthenticatedUser, DecodedJWT } from "./types/AuthTypes";
 import {
   getLocalStorageObjProperty,
   setLocalStorageObjProperty,
@@ -45,13 +45,13 @@ const authLink = setContext(async (_, { headers }) => {
   >(AUTHENTICATED_USER_KEY, "accessToken");
 
   if (token) {
-    // TODO: define expected JWT return type
-    const decodedToken: any = jwt.decode(token);
+    const decodedToken = jwt.decode(token) as DecodedJWT;
 
     // refresh if decodedToken has expired
     if (
       decodedToken &&
-      decodedToken.exp > Math.round(new Date().getTime() / 1000)
+      (typeof decodedToken === "string" ||
+        decodedToken.exp > Math.round(new Date().getTime() / 1000))
     ) {
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/graphql`,

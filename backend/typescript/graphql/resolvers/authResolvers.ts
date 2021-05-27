@@ -1,17 +1,14 @@
 import { CookieOptions, Request, Response } from "express";
 
-import nodemailerConfig from "../../nodemailer.config";
+// import nodemailerConfig from "../../nodemailer.config";
 import AuthService from "../../services/implementations/authService";
 import EmailService from "../../services/implementations/emailService";
 import UserService from "../../services/implementations/userService";
 import IAuthService from "../../services/interfaces/authService";
 import IEmailService from "../../services/interfaces/emailService";
 
-const emailService: IEmailService = new EmailService(nodemailerConfig);
-const authService: IAuthService = new AuthService(
-  new UserService(),
-  emailService,
-);
+// const emailService: IEmailService = new EmailService(nodemailerConfig);
+const authService: IAuthService = new AuthService(new UserService(), null);
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
