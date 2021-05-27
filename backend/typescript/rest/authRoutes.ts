@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { isAuthorizedByEmail, isAuthorizedByUserId } from "../middlewares/auth";
-// import nodemailerConfig from "../nodemailer.config";
+import nodemailerConfig from "../nodemailer.config";
 import AuthService from "../services/implementations/authService";
 import EmailService from "../services/implementations/emailService";
 import UserService from "../services/implementations/userService";
@@ -9,8 +9,11 @@ import IAuthService from "../services/interfaces/authService";
 import IEmailService from "../services/interfaces/emailService";
 
 const authRouter: Router = Router();
-// const emailService: IEmailService = new EmailService(nodemailerConfig);
-const authService: IAuthService = new AuthService(new UserService(), null);
+const emailService: IEmailService = new EmailService(nodemailerConfig);
+const authService: IAuthService = new AuthService(
+  new UserService(),
+  emailService,
+);
 
 /* Returns access token and user info in response body and sets refreshToken as an httpOnly cookie */
 authRouter.post("/login", async (req, res) => {
