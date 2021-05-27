@@ -3,14 +3,10 @@ import React, { useContext } from "react";
 import { gql, useMutation } from "@apollo/client";
 // } graphql
 
-// rest {
-// import authAPIClient from "../../APIClients/AuthAPIClient";
-// } rest
+import authAPIClient from "../../APIClients/AuthAPIClient";
 import AuthContext from "../../contexts/AuthContext";
-// graphql {
-import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
-import { setLocalStorageObjProperty } from "../../utils/LocalStorageUtils";
 
+// graphql {
 const REFRESH = gql`
   mutation Refresh {
     refresh
@@ -27,13 +23,7 @@ const RefreshCredentials = () => {
 
   const onRefreshClick = async () => {
     // graphql {
-    const result = await refresh();
-    let success: boolean = false;
-    const token = result.data?.refresh;
-    if (token) {
-      success = true;
-      setLocalStorageObjProperty(AUTHENTICATED_USER_KEY, "accessToken", token);
-    }
+    const success = await authAPIClient.refresh(refresh);
     // } graphql
     // rest {
     // const success = await authAPIClient.refresh();

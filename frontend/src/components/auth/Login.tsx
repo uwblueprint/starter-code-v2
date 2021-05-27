@@ -4,12 +4,7 @@ import { Redirect } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 // } graphql
 
-// rest {
-// import authAPIClient from "../../APIClients/AuthAPIClient";
-// } rest
-// graphql {
-import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
-// } graphql
+import authAPIClient from "../../APIClients/AuthAPIClient";
 import AuthContext, { AuthenticatedUser } from "../../contexts/AuthContext";
 
 // graphql {
@@ -38,19 +33,11 @@ const Login = () => {
 
   const onLogInClick = async () => {
     // graphql {
-    const result = await login({ variables: { email, password } });
-    let user: AuthenticatedUser = null;
-    if (result) {
-      user = result.data?.login ?? null;
-      if (user) {
-        localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(user));
-      }
-    }
-    // const user: AuthenticatedUser = await authAPIClient.login(
-    //   email,
-    //   password,
-    //   login,
-    // );
+    const user: AuthenticatedUser = await authAPIClient.login(
+      email,
+      password,
+      login,
+    );
     // } graphql
     // rest {
     // const user: AuthenticatedUser = await authAPIClient.login(email, password);
