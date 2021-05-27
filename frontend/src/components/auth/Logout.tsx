@@ -3,9 +3,7 @@ import React, { useContext } from "react";
 import { gql, useMutation } from "@apollo/client";
 // } graphql
 
-// rest {
 import authAPIClient from "../../APIClients/AuthAPIClient";
-// } rest
 import AuthContext from "../../contexts/AuthContext";
 // graphql {
 const LOGOUT = gql`
