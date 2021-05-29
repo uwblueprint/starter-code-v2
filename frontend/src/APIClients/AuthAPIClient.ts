@@ -1,3 +1,8 @@
+import {
+  FetchResult,
+  MutationFunctionOptions,
+  OperationVariables,
+} from "@apollo/client";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { AuthenticatedUser } from "../contexts/AuthContext";
 // rest {
@@ -15,7 +20,20 @@ import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 const login = async (
   email: string,
   password: string,
-  loginFunction: Function,
+  loginFunction: (
+    options?:
+      | MutationFunctionOptions<
+          { login: AuthenticatedUser },
+          OperationVariables
+        >
+      | undefined,
+  ) => Promise<
+    FetchResult<
+      { login: AuthenticatedUser },
+      Record<string, any>,
+      Record<string, any>
+    >
+  >,
 ) => {
   const result = await loginFunction({ variables: { email, password } });
   let user: AuthenticatedUser = null;
@@ -30,7 +48,24 @@ const login = async (
 
 const logout = async (
   authenticatedUserId: string,
-  logoutFunction: Function,
+  logoutFunction: (
+    options?:
+      | MutationFunctionOptions<
+          {
+            logout: null;
+          },
+          OperationVariables
+        >
+      | undefined,
+  ) => Promise<
+    FetchResult<
+      {
+        logout: null;
+      },
+      Record<string, any>,
+      Record<string, any>
+    >
+  >,
 ) => {
   const result = await logoutFunction({
     variables: { userId: authenticatedUserId },
@@ -43,7 +78,26 @@ const logout = async (
   return success;
 };
 
-const refresh = async (refreshFunction: Function) => {
+const refresh = async (
+  refreshFunction: (
+    options?:
+      | MutationFunctionOptions<
+          {
+            refresh: string;
+          },
+          OperationVariables
+        >
+      | undefined,
+  ) => Promise<
+    FetchResult<
+      {
+        refresh: string;
+      },
+      Record<string, any>,
+      Record<string, any>
+    >
+  >,
+) => {
   const result = await refreshFunction();
   let success: boolean = false;
   const token = result.data?.refresh;
