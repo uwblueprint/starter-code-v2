@@ -1,10 +1,11 @@
 import baseAPIClient from "./BaseAPIClient";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
-import { AuthenticatedUser } from "../contexts/AuthContext";
 import {
   getLocalStorageObjProperty,
   setLocalStorageObjProperty,
 } from "../utils/LocalStorageUtils";
+
+import { AuthenticatedUser } from "../types/AuthTypes";
 
 const login = async (
   email: string,

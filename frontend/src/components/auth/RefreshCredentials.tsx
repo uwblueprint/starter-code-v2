@@ -18,7 +18,7 @@ const REFRESH = gql`
 `;
 // } graphql
 
-const RefreshCredentials = () => {
+const RefreshCredentials = (): React.ReactElement => {
   const { setAuthenticatedUser } = useContext(AuthContext);
 
   // graphql {
@@ -28,7 +28,7 @@ const RefreshCredentials = () => {
   const onRefreshClick = async () => {
     // graphql {
     const result = await refresh();
-    let success: boolean = false;
+    let success = false;
     const token = result.data?.refresh;
     if (token) {
       success = true;

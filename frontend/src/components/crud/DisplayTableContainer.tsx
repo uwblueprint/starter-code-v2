@@ -6,7 +6,7 @@ import React, { useState } from "react";
 // import React, { useState, useEffect } from "react";
 // } rest
 import BTable from "react-bootstrap/Table";
-import { HeaderGroup, useTable } from "react-table";
+import { HeaderGroup, useTable, Column } from "react-table";
 // graphql {
 import { gql, useQuery } from "@apollo/client";
 
@@ -21,7 +21,7 @@ import { EntityResponse } from "../../APIClients/EntityAPIClient";
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
-const convert = (entityReponse: EntityResponse) => {
+const convert = (entityReponse: EntityResponse): EntityData => {
   return {
     id: entityReponse.id,
     stringField: entityReponse.stringField,
@@ -32,46 +32,45 @@ const convert = (entityReponse: EntityResponse) => {
   };
 };
 
-const DisplayTable = (props: any) => {
-  const { data } = props;
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "id",
+type TableProps = {
+  data: EntityData[];
+};
 
-        accessor: "id", // accessor is the "key" in the data
-      },
-      {
-        Header: "stringField",
+const columns: Column<EntityData>[] = [
+  {
+    Header: "id",
 
-        accessor: "stringField", // accessor is the "key" in the data
-      },
+    accessor: "id", // accessor is the "key" in the data
+  },
+  {
+    Header: "stringField",
 
-      {
-        Header: "integerField",
+    accessor: "stringField", // accessor is the "key" in the data
+  },
 
-        accessor: "intField",
-      },
-      {
-        Header: "stringArrayField",
+  {
+    Header: "integerField",
 
-        accessor: "stringArrayField",
-      },
-      {
-        Header: "enumField",
+    accessor: "intField",
+  },
+  {
+    Header: "stringArrayField",
 
-        accessor: "enumField",
-      },
-      {
-        Header: "boolField",
+    accessor: "stringArrayField",
+  },
+  {
+    Header: "enumField",
 
-        accessor: "boolField",
-      },
-    ],
+    accessor: "enumField",
+  },
+  {
+    Header: "boolField",
 
-    [],
-  );
+    accessor: "boolField",
+  },
+];
 
+const DisplayTable = ({ data }: TableProps) => {
   const {
     getTableProps,
 
@@ -80,7 +79,7 @@ const DisplayTable = (props: any) => {
     rows,
 
     prepareRow,
-  } = useTable({ columns, data });
+  } = useTable<EntityData>({ columns, data });
 
   return (
     <BTable
@@ -92,7 +91,7 @@ const DisplayTable = (props: any) => {
       style={{ marginTop: "20px" }}
     >
       <thead>
-        {headerGroups.map((headerGroup: HeaderGroup) => (
+        {headerGroups.map((headerGroup: HeaderGroup<EntityData>) => (
           // Key is specified in the prop getter functions
           // eslint-disable-next-line react/jsx-key
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -136,7 +135,7 @@ const ENTITIES = gql`
 `;
 // } graphql
 
-const DisplayTableContainer = () => {
+const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   const [entities, setEntities] = useState<EntityData[] | null>(null);
 
   useQuery(ENTITIES, {

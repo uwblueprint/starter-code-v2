@@ -9,7 +9,11 @@ type PrivateRouteProps = {
   exact: boolean;
 };
 
-const PrivateRoute = ({ component, exact, path }: PrivateRouteProps) => {
+const PrivateRoute: React.FC<PrivateRouteProps> = ({
+  component,
+  exact,
+  path,
+}: PrivateRouteProps) => {
   const { authenticatedUser } = useContext(AuthContext);
 
   return authenticatedUser ? (

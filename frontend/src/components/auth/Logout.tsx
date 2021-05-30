@@ -17,7 +17,7 @@ const LOGOUT = gql`
 `;
 // } graphql
 
-const Logout = () => {
+const Logout = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
 
   // graphql {
@@ -29,7 +29,7 @@ const Logout = () => {
     const result = await logout({
       variables: { userId: String(authenticatedUser?.id) },
     });
-    let success: boolean = false;
+    let success = false;
     if (result.data?.logout === null) {
       success = true;
       localStorage.removeItem(AUTHENTICATED_USER_KEY);
