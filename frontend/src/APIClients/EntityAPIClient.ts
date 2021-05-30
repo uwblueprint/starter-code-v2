@@ -9,7 +9,7 @@ enum EnumField {
   "D",
 }
 
-type EntityRequest = {
+export type EntityRequest = {
   stringField: string;
   intField: number;
   stringArrayField: string[];

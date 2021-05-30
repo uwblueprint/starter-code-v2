@@ -5,7 +5,8 @@ import { gql, useMutation } from "@apollo/client";
 // } graphql
 
 import authAPIClient from "../../APIClients/AuthAPIClient";
-import AuthContext, { AuthenticatedUser } from "../../contexts/AuthContext";
+import AuthContext from "../../contexts/AuthContext";
+import { AuthenticatedUser } from "../../types/AuthTypes";
 
 // graphql {
 const LOGIN = gql`
@@ -22,7 +23,7 @@ const LOGIN = gql`
 `;
 // } graphql
 
-const Login = () => {
+const Login = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

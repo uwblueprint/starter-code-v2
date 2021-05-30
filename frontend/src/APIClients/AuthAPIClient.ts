@@ -4,7 +4,7 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
-import { AuthenticatedUser } from "../contexts/AuthContext";
+import { AuthenticatedUser } from "../types/AuthTypes";
 // rest {
 // import baseAPIClient from "./BaseAPIClient";
 // import {
@@ -17,60 +17,64 @@ import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 // } graphql
 
 // graphql {
+type LoginFunction = (
+  options?:
+    | MutationFunctionOptions<{ login: AuthenticatedUser }, OperationVariables>
+    | undefined,
+) => Promise<
+  FetchResult<
+    { login: AuthenticatedUser },
+    Record<string, unknown>,
+    Record<string, unknown>
+  >
+>;
+
 const login = async (
   email: string,
   password: string,
-  loginFunction: (
-    options?:
-      | MutationFunctionOptions<
-          { login: AuthenticatedUser },
-          OperationVariables
-        >
-      | undefined,
-  ) => Promise<
-    FetchResult<
-      { login: AuthenticatedUser },
-      Record<string, any>,
-      Record<string, any>
-    >
-  >,
-) => {
-  const result = await loginFunction({ variables: { email, password } });
+  loginFunction: LoginFunction,
+): Promise<AuthenticatedUser | null> => {
   let user: AuthenticatedUser = null;
-  if (result) {
+  try {
+    const result = await loginFunction({ variables: { email, password } });
     user = result.data?.login ?? null;
     if (user) {
       localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(user));
     }
+  } catch (e: unknown) {
+    // eslint-disable-next-line no-alert
+    window.alert("Failed to login");
   }
   return user;
 };
 
+type LogoutFunction = (
+  options?:
+    | MutationFunctionOptions<
+        {
+          logout: null;
+        },
+        OperationVariables
+      >
+    | undefined,
+) => Promise<
+  FetchResult<
+    {
+      logout: null;
+    },
+    Record<string, unknown>,
+    Record<string, unknown>
+  >
+>;
+
 const logout = async (
   authenticatedUserId: string,
-  logoutFunction: (
-    options?:
-      | MutationFunctionOptions<
-          {
-            logout: null;
-          },
-          OperationVariables
-        >
-      | undefined,
-  ) => Promise<
-    FetchResult<
-      {
-        logout: null;
-      },
-      Record<string, any>,
-      Record<string, any>
-    >
-  >,
-) => {
+  logoutFunction: LogoutFunction,
+): Promise<boolean> => {
   const result = await logoutFunction({
     variables: { userId: authenticatedUserId },
   });
-  let success: boolean = false;
+  let success = false;
   if (result.data?.logout === null) {
     success = true;
     localStorage.removeItem(AUTHENTICATED_USER_KEY);
@@ -78,28 +82,28 @@ const logout = async (
   return success;
 };
 
-const refresh = async (
-  refreshFunction: (
-    options?:
-      | MutationFunctionOptions<
-          {
-            refresh: string;
-          },
-          OperationVariables
-        >
-      | undefined,
-  ) => Promise<
-    FetchResult<
-      {
-        refresh: string;
-      },
-      Record<string, any>,
-      Record<string, any>
-    >
-  >,
-) => {
+type RefreshFunction = (
+  options?:
+    | MutationFunctionOptions<
+        {
+          refresh: string;
+        },
+        OperationVariables
+      >
+    | undefined,
+) => Promise<
+  FetchResult<
+    {
+      refresh: string;
+    },
+    Record<string, unknown>,
+    Record<string, unknown>
+  >
+>;
+
+const refresh = async (refreshFunction: RefreshFunction): Promise<boolean> => {
   const result = await refreshFunction();
-  let success: boolean = false;
+  let success = false;
   const token = result.data?.refresh;
   if (token) {
     success = true;

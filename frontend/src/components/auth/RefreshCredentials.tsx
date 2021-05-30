@@ -14,7 +14,7 @@ const REFRESH = gql`
 `;
 // } graphql
 
-const RefreshCredentials = () => {
+const RefreshCredentials = (): React.ReactElement => {
   const { setAuthenticatedUser } = useContext(AuthContext);
 
   // graphql {

@@ -13,7 +13,7 @@ const LOGOUT = gql`
 `;
 // } graphql
 
-const Logout = () => {
+const Logout = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
 
   // graphql {

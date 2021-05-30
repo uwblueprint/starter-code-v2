@@ -10,7 +10,7 @@ import DisplayPage from "./components/pages/DisplayPage";
 import NotFound from "./components/pages/NotFound";
 import UpdatePage from "./components/pages/UpdatePage";
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
-import AuthContext, { AuthenticatedUser } from "./contexts/AuthContext";
+import AuthContext from "./contexts/AuthContext";
 import { getLocalStorageObj } from "./utils/LocalStorageUtils";
 import SampleContext, {
   DEFAULT_SAMPLE_CONTEXT,
@@ -19,8 +19,10 @@ import sampleContextReducer from "./reducers/SampleContextReducer";
 import SampleContextDispatcherContext from "./contexts/SampleContextDispatcherContext";
 import EditTeamInfoPage from "./components/pages/EditTeamPage";
 
-const App = () => {
-  const currentUser: AuthenticatedUser = getLocalStorageObj(
+import { AuthenticatedUser } from "./types/AuthTypes";
+
+const App = (): React.ReactElement => {
+  const currentUser: AuthenticatedUser = getLocalStorageObj<AuthenticatedUser>(
     AUTHENTICATED_USER_KEY,
   );
 

@@ -1,13 +1,5 @@
 import { createContext } from "react";
-
-export type AuthenticatedUser = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: "Admin" | "User";
-  accessToken: string;
-} | null;
+import { AuthenticatedUser } from "../types/AuthTypes";
 
 type AuthContextType = {
   authenticatedUser: AuthenticatedUser;
