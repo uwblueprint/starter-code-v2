@@ -23,7 +23,7 @@
     "graphql": "^15.5.0",
     "graphql-middleware": "^6.0.6",
     "lodash": "^4.17.21",
-    "mongoose": "^5.11.17",
+    "mongoose": "^5.12.12",
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.5.0",
     "pg": "^8.5.1",
