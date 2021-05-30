@@ -51,7 +51,7 @@ const authLink = setContext(async (_, { headers }) => {
     if (
       decodedToken &&
       (typeof decodedToken === "string" ||
-        decodedToken.exp > Math.round(new Date().getTime() / 1000))
+        decodedToken.exp <= Math.round(new Date().getTime() / 1000))
     ) {
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/graphql`,
