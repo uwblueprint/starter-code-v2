@@ -12,6 +12,8 @@ Teams should adopt Starter Code and use it as a foundation to get their projects
 **Database:** PostgreSQL or MongoDB<br>
 **User Auth:** Opt-in or opt-out<br>
 
+The provided frontend is a React application written in TypeScript.
+
 ## Table of Contents
 * 📝 [Documentation](#documentation)
 * ❗❗ [Reporting Issues](#reporting-issues)
