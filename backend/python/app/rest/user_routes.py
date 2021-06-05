@@ -1,3 +1,4 @@
+from backend.python.app.middlewares.user import validate_request_user
 from flask import Blueprint, current_app, jsonify, request
 
 from ..middlewares.auth import require_authorization_by_role
@@ -61,6 +62,7 @@ def get_users():
 
 @blueprint.route("/", methods=["POST"], strict_slashes=False)
 @require_authorization_by_role({"User", "Admin"})
+@validate_request_user("CreateUserDTO")
 def create_user():
     """
     Create a user
@@ -76,6 +78,7 @@ def create_user():
 
 @blueprint.route("/<string:user_id>", methods=["PUT"], strict_slashes=False)
 @require_authorization_by_role({"User", "Admin"})
+@validate_request_user("UpdateUserDTO")
 def update_user(user_id):
     """
     Update the user with the specified user_id
