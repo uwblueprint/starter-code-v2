@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { validateArray, validatePrimitive } from "./util";
+import {
+  getApiValidationError,
+  validateArray,
+  validatePrimitive,
+} from "./util";
 
 /* eslint-disable-next-line import/prefer-default-export */
 export const entityRequestDtoValidator = async (
@@ -8,19 +12,21 @@ export const entityRequestDtoValidator = async (
   next: NextFunction,
 ) => {
   if (!validatePrimitive(req.body.stringField, "string")) {
-    return res.sendStatus(400);
+    return res.status(400).send(getApiValidationError("stringField", "string"));
   }
   if (!validatePrimitive(req.body.intField, "integer")) {
-    return res.sendStatus(400);
+    return res.status(400).send(getApiValidationError("intField", "integer"));
   }
   if (!validatePrimitive(req.body.enumField, "string")) {
-    return res.sendStatus(400);
+    return res.status(400).send(getApiValidationError("enumField", "string"));
   }
   if (!validateArray(req.body.stringArrayField, "string")) {
-    return res.sendStatus(400);
+    return res
+      .status(400)
+      .send(getApiValidationError("stringArrayField", "string", true));
   }
   if (!validatePrimitive(req.body.boolField, "boolean")) {
-    return res.sendStatus(400);
+    return res.status(400).send(getApiValidationError("boolField", "boolean"));
   }
   return next();
 };

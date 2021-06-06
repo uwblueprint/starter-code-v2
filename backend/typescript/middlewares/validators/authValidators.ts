@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { validatePrimitive } from "./util";
+import { getApiValidationError, validatePrimitive } from "./util";
 
 /* eslint-disable-next-line import/prefer-default-export */
 export const loginRequestValidator = async (
@@ -8,10 +8,10 @@ export const loginRequestValidator = async (
   next: NextFunction,
 ) => {
   if (!validatePrimitive(req.body.email, "string")) {
-    return res.sendStatus(400);
+    return res.status(400).send(getApiValidationError("email", "string"));
   }
   if (!validatePrimitive(req.body.password, "string")) {
-    return res.sendStatus(400);
+    return res.status(400).send(getApiValidationError("password", "string"));
   }
   return next();
 };

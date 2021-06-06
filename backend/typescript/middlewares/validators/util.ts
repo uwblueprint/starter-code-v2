@@ -28,3 +28,11 @@ export const validateArray = (value: any, type: Type): boolean => {
     value.every((item) => validatePrimitive(item, type))
   );
 };
+
+export const getApiValidationError = (
+  fieldName: string,
+  type: Type,
+  isArray: boolean = false,
+): string => {
+  return `The ${fieldName} is not a ${type}${isArray ? " Array" : ""}`;
+};
