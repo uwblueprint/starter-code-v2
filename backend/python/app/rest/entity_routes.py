@@ -4,6 +4,7 @@ from flask import jsonify
 from ..resources.entity_dto import EntityDTO
 
 from ..middlewares.auth import require_authorization_by_role
+from ..middlewares.validate import validate_request
 
 # from ..services.implementations.entity_service import EntityService
 from ..services.implementations.entity_service_mg import EntityService
@@ -54,6 +55,7 @@ def get_entity(id):
 # define POST endpoint for creating an entity
 @blueprint.route("/", methods=["POST"], strict_slashes=False)
 @require_authorization_by_role({"User", "Admin"})
+@validate_request("EntityDTO")
 def create_entity():
     try:
         # create a EntityResource object instead of using the raw request body
@@ -91,6 +93,7 @@ def create_entity():
 # defines PUT endpoint for updating the entity with the provided id
 @blueprint.route("/<string:id>", methods=["PUT"], strict_slashes=False)
 @require_authorization_by_role({"User", "Admin"})
+@validate_request("EntityDTO")
 def update_entity(id):
     try:
         body = EntityDTO(**request.json)
