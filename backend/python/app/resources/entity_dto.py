@@ -14,7 +14,7 @@ class EntityDTO(object):
         error_list = []
         if not self.string_field or type(self.string_field) is not str:
             error_list.append("The string_field supplied is not a string.")
-        if not self.int_field or not type(self.int_field) is not int:
+        if not self.int_field or type(self.int_field) is not int:
             error_list.append("The int_field supplied is not an integer.")
         if not self.string_array_field or type(self.string_array_field) is not list:
             error_list.append("The string_array_field supplied is not a list.")
