@@ -1,24 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import isValid from "./isValid";
+import { validatePrimitive } from "./util";
 
 export const createUserDtoValidator = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  if (!isValid(req.body.firstName, "string")) {
+  if (!validatePrimitive(req.body.firstName, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.lastName, "string")) {
+  if (!validatePrimitive(req.body.lastName, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.email, "string")) {
+  if (!validatePrimitive(req.body.email, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.role, "string")) {
+  if (!validatePrimitive(req.body.role, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.password, "string")) {
+  if (!validatePrimitive(req.body.password, "string")) {
     return res.sendStatus(400);
   }
   return next();
@@ -29,16 +29,16 @@ export const updateUserDtoValidator = async (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!isValid(req.body.firstName, "string")) {
+  if (!validatePrimitive(req.body.firstName, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.lastName, "string")) {
+  if (!validatePrimitive(req.body.lastName, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.email, "string")) {
+  if (!validatePrimitive(req.body.email, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.role, "string")) {
+  if (!validatePrimitive(req.body.role, "string")) {
     return res.sendStatus(400);
   }
   return next();

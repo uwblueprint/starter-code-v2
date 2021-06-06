@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import isValid from "./isValid";
+import { validatePrimitive } from "./util";
 
 /* eslint-disable-next-line import/prefer-default-export */
 export const loginRequestValidator = async (
@@ -7,10 +7,10 @@ export const loginRequestValidator = async (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!isValid(req.body.email, "string")) {
+  if (!validatePrimitive(req.body.email, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.password, "string")) {
+  if (!validatePrimitive(req.body.password, "string")) {
     return res.sendStatus(400);
   }
   return next();

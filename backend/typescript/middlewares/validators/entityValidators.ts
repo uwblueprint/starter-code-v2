@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import isValid from "./isValid";
+import { validateArray, validatePrimitive } from "./util";
 
 /* eslint-disable-next-line import/prefer-default-export */
 export const entityRequestDtoValidator = async (
@@ -7,19 +7,19 @@ export const entityRequestDtoValidator = async (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!isValid(req.body.stringField, "string")) {
+  if (!validatePrimitive(req.body.stringField, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.intField, "integer")) {
+  if (!validatePrimitive(req.body.intField, "integer")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.enumField, "string")) {
+  if (!validatePrimitive(req.body.enumField, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.stringArrayField, "string-array")) {
+  if (!validateArray(req.body.stringArrayField, "string")) {
     return res.sendStatus(400);
   }
-  if (!isValid(req.body.boolField, "boolean")) {
+  if (!validatePrimitive(req.body.boolField, "boolean")) {
     return res.sendStatus(400);
   }
   return next();
