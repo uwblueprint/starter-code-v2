@@ -1,10 +1,10 @@
 # Starter Code V2
 
-Starter Code for our projects, brought to you by the UW Blueprint Internal Tools team! 🏗️
+Starter Code for Blueprint projects, brought to you by the UW Blueprint Internal Tools team! 🏗️
 
 Starter Code is an easy to set up, flexible, and customizable bootstrap that aims to encourage best development practices and provide baseline implementations of features common to UW Blueprint projects. 12 different stack combinations are supported, allowing "mix and match" between our most commonly used technologies. For more information on the motivation and design decisions behind Starter Code, please check out the home page of our [documentation site](https://uwblueprint.github.io/starter-code-v2)!
 
-Teams should adopt Starter Code and use it as a foundation to get their projects off the ground faster, and as a guideline for how to structure their applications. We hope Starter Code will help project teams output higher quality and maintainable code, so we can deliver the most value to our NPO partners.
+Teams should adopt Starter Code and use it as a foundation to get their projects off the ground faster, and as a guideline for how to structure their applications. We hope Starter Code will help project teams output higher quality and maintainable code, and allow them to focus on building cool, interesting features instead of setting up and doing boilerplate work. Put simply, Starter Code is here to help us deliver more value to our NPO partners.
 
 ## Stack Choices
 **Backend Language:** TypeScript (Express.js on Node.js) or Python (with Flask)<br>
