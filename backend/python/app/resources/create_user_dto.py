@@ -3,13 +3,13 @@ from logging import error
 
 class CreateUserDTO:
     def __init__(
-        self, first_name=None, last_name=None, email=None, role=None, password=None
+        self, **kwargs
     ):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.role = role
-        self.password = password
+        self.first_name = kwargs.get("first_name")
+        self.last_name = kwargs.get("last_name")
+        self.email = kwargs.get("email")
+        self.role = kwargs.get("role")
+        self.password = kwargs.get("password")
 
     def validate(self):
         error_list = []
