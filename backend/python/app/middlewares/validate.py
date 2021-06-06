@@ -2,11 +2,11 @@ from flask import jsonify, request
 from functools import wraps
 
 
-def validate_request_user(dto_class_name):
+def validate_request(dto_class_name):
     """
-    Determine if request is valid based on the types of the arguments passed in to create or update a user
+    Determine if request is valid based on the types of the arguments passed in to create or update a dto
 
-    :param dto_class_name: the class name to create or update user dto
+    :param dto_class_name: the class name to create or update dto
     :type dto_class_name: str
     """
 

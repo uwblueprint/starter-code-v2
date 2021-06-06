@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, jsonify, request
 
 from ..middlewares.auth import require_authorization_by_role
-from ..middlewares.user import validate_request_user
+from ..middlewares.validate import validate_request
 from ..resources.create_user_dto import CreateUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
 from ..services.implementations.user_service_mg import UserService
@@ -62,7 +62,7 @@ def get_users():
 
 @blueprint.route("/", methods=["POST"], strict_slashes=False)
 @require_authorization_by_role({"User", "Admin"})
-@validate_request_user("CreateUserDTO")
+@validate_request("CreateUserDTO")
 def create_user():
     """
     Create a user
@@ -78,7 +78,7 @@ def create_user():
 
 @blueprint.route("/<string:user_id>", methods=["PUT"], strict_slashes=False)
 @require_authorization_by_role({"User", "Admin"})
-@validate_request_user("UpdateUserDTO")
+@validate_request("UpdateUserDTO")
 def update_user(user_id):
     """
     Update the user with the specified user_id

@@ -7,12 +7,12 @@ class UpdateUserDTO:
 
     def validate(self):
         error_list = []
-        if not self.first_name or type(self.first_name) != str:
+        if not self.first_name or type(self.first_name) is not str:
             error_list.append("There is an error with the first name in this request.")
-        if not self.last_name or type(self.last_name) != str:
+        if not self.last_name or type(self.last_name) is not str:
             error_list.append("There is an error with the last name in this request.")
-        if not self.email or type(self.email) != str:
+        if not self.email or type(self.email) is not str:
             error_list.append("There is an error with the email in this request.")
-        if not self.role or type(self.role) != str:
+        if not self.role or type(self.role) is not str:
             error_list.append("There is an error with the role in this request.")
         return error_list
