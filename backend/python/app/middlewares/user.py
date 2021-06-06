@@ -1,8 +1,5 @@
-from flask import current_app, jsonify, request
+from flask import jsonify, request
 from functools import wraps
-
-from ..resources.create_user_dto import CreateUserDTO
-from ..resources.update_user_dto import UpdateUserDTO
 
 
 def validate_request_user(dto_class_name):

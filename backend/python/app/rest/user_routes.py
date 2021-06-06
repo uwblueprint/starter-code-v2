@@ -1,7 +1,7 @@
-from backend.python.app.middlewares.user import validate_request_user
 from flask import Blueprint, current_app, jsonify, request
 
 from ..middlewares.auth import require_authorization_by_role
+from ..middlewares.user import validate_request_user
 from ..resources.create_user_dto import CreateUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
 from ..services.implementations.user_service_mg import UserService
