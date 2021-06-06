@@ -39,7 +39,9 @@ paths:
                     stringField:
                       type: string
                     stringArrayField:
-                      type: string
+                      type: array
+                      items:
+                        type: string
                     enumField:
                       type: string
                       enum: ["A", "B", "C", "D"]
@@ -71,7 +73,9 @@ paths:
                 stringField:
                   type: string
                 stringArrayField:
-                  type: string
+                  type: array
+                  items:
+                    type: string
                 enumField:
                   type: string
                   enum: ["A", "B", "C", "D"]
@@ -92,7 +96,9 @@ paths:
                   stringField:
                     type: string
                   stringArrayField:
-                    type: string
+                    type: array
+                    items:
+                      type: string
                   enumField:
                     type: string
                     enum: ["A", "B", "C", "D"]
@@ -135,7 +141,9 @@ paths:
                   stringField:
                     type: string
                   stringArrayField:
-                    type: string
+                    type: array
+                    items:
+                      type: string
                   enumField:
                     type: string
                     enum: ["A", "B", "C", "D"]
@@ -176,7 +184,9 @@ paths:
                 stringField:
                   type: string
                 stringArrayField:
-                  type: string
+                  type: array
+                  items:
+                    type: string
                 enumField:
                   type: string
                   enum: ["A", "B", "C", "D"]

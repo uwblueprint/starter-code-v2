@@ -2,8 +2,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import * as firebaseAdmin from "firebase-admin";
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
 
 import { ApolloServer } from "apollo-server-express";
 import { mongo, sequelize } from "./models";
@@ -20,7 +20,7 @@ const CORS_OPTIONS: cors.CorsOptions = {
   credentials: true,
 };
 
-const swaggerDocument = YAML.load('swagger.yml');
+const swaggerDocument = YAML.load("swagger.yml");
 
 const app = express();
 app.use(cookieParser());
@@ -31,7 +31,7 @@ app.use(express.urlencoded());
 app.use("/auth", authRouter);
 app.use("/entities", entityRouter);
 app.use("/users", userRouter);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const server = new ApolloServer({
   schema,
