@@ -1,6 +1,10 @@
 import { Router } from "express";
 
 import { isAuthorizedByRole } from "../middlewares/auth";
+import {
+  createUserDtoValidator,
+  updateUserDtoValidator,
+} from "../middlewares/validators/userValidators";
 import UserService from "../services/implementations/userService";
 import IUserService from "../services/interfaces/userService";
 
@@ -61,7 +65,7 @@ userRouter.get("/", async (req, res) => {
 });
 
 /* Create a user */
-userRouter.post("/", async (req, res) => {
+userRouter.post("/", createUserDtoValidator, async (req, res) => {
   try {
     const newUser = await userService.createUser({
       firstName: req.body.firstName,
@@ -77,7 +81,7 @@ userRouter.post("/", async (req, res) => {
 });
 
 /* Update the user with the specified userId */
-userRouter.put("/:userId", async (req, res) => {
+userRouter.put("/:userId", updateUserDtoValidator, async (req, res) => {
   try {
     const updatedUser = await userService.updateUserById(req.params.userId, {
       firstName: req.body.firstName,

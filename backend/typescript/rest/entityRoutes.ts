@@ -3,6 +3,7 @@ import { Router } from "express";
 import EntityServicePg from "../services/implementations/EntityServicePg";
 import { isAuthorizedByRole } from "../middlewares/auth";
 import { IEntityService } from "../services/interfaces/IEntityService";
+import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
 
 const entityRouter: Router = Router();
 entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
@@ -10,7 +11,7 @@ entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
 const entityService: IEntityService = new EntityServicePg();
 
 /* Create entity */
-entityRouter.post("/", async (req, res) => {
+entityRouter.post("/", entityRequestDtoValidator, async (req, res) => {
   try {
     const newEntity = await entityService.createEntity({
       stringField: req.body.stringField,
@@ -48,7 +49,7 @@ entityRouter.get("/:id", async (req, res) => {
 });
 
 /* Update entity by id */
-entityRouter.put("/:id", async (req, res) => {
+entityRouter.put("/:id", entityRequestDtoValidator, async (req, res) => {
   const { id } = req.params;
   try {
     const entity = await entityService.updateEntity(id, {
