@@ -1,8 +1,10 @@
 import * as firebaseAdmin from "firebase-admin";
 import IUserService from "../interfaces/userService";
 import { CreateUserDTO, Role, UpdateUserDTO, UserDTO } from "../../types";
-import Logger from "../../utilities/logger";
+import logger from "../../utilities/logger";
 import User from "../../models/user.pgmodel";
+
+const Logger = logger(__filename);
 
 class PGUserService implements IUserService {
   /* eslint-disable class-methods-use-this */

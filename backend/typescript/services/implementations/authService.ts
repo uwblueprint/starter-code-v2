@@ -5,7 +5,9 @@ import IEmailService from "../interfaces/emailService";
 import IUserService from "../interfaces/userService";
 import { AuthDTO, Role, Token } from "../../types";
 import FirebaseRestClient from "../../utilities/firebaseRestClient";
-import Logger from "../../utilities/logger";
+import logger from "../../utilities/logger";
+
+const Logger = logger(__filename);
 
 class AuthService implements IAuthService {
   userService: IUserService;
