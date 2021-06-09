@@ -9,7 +9,7 @@ export const sequelize = new Sequelize(
 );
 
 export const mongo = {
-  connect: () => {
+  connect: (): void => {
     mongoose.connect(
       encodeURI(process.env.MG_DATABASE_URL!),
       {
