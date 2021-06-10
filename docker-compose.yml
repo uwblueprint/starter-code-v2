@@ -6,8 +6,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-     - ./frontend:/app
-     - /app/node_modules
+      - ./frontend:/app
+      - /app/node_modules
     ports:
       - 3000:3000
     environment:
@@ -27,8 +27,9 @@ services:
       - 8.8.8.8
     depends_on:
       - db
-    env_file:
-      - ./.env
+      - db-test
+  env_file:
+    - ./.env
   py-backend:
     restart: always
     build:
@@ -39,9 +40,10 @@ services:
     dns:
       - 8.8.8.8
     volumes:
-     - ./backend/python:/app
+      - ./backend/python:/app
     depends_on:
       - db
+      - db-test
     env_file:
       - ./.env
   db:
@@ -52,6 +54,15 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
+  db-test:
+    image: postgres:12-alpine
+    ports:
+      - 5430:5432
+    volumes:
+      - postgres_data_test:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
 
 volumes:
   postgres_data:
+  postgres_data_test:
