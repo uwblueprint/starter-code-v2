@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
-    "title": "UW Blueprint Starter Code TypeScript API",
+    "title": "UW Blueprint Starter Code Python API",
     "description": "An API for the Python Backend of Starter Code"
   },
   "components": {
