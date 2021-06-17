@@ -28,8 +28,8 @@ services:
     depends_on:
       - db
       - db-test
-  env_file:
-    - ./.env
+    env_file:
+      - ./.env
   py-backend:
     restart: always
     build:

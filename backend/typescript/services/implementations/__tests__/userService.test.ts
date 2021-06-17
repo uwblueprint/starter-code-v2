@@ -1,10 +1,28 @@
+import { snakeCase } from "lodash";
+
 import MgUser from "../../../models/user.mgmodel";
 import PgUser from "../../../models/user.pgmodel";
 import UserService from "../userService";
+import UserServicePg from "../userServicepg";
 
 import { UserDTO } from "../../../types";
 
 import db, { testSql } from "../../../testUtils/testDb";
+
+const testUsers = [
+  {
+    firstName: "Peter",
+    lastName: "Pan",
+    authId: "123",
+    role: "Admin",
+  },
+  {
+    firstName: "Wendy",
+    lastName: "Darling",
+    authId: "321",
+    role: "User",
+  },
+];
 
 jest.mock("firebase-admin", () => {
   const auth = jest.fn().mockReturnValue({
@@ -17,11 +35,11 @@ describe("mongo userService", (): void => {
   let userService: UserService;
 
   beforeAll(async () => {
-    db.connect();
+    await db.connect();
   });
 
   afterAll(async () => {
-    db.disconnect();
+    await db.disconnect();
   });
 
   beforeEach(async () => {
@@ -29,25 +47,10 @@ describe("mongo userService", (): void => {
   });
 
   afterEach(async () => {
-    db.clear();
+    await db.clear();
   });
 
   it("getUsers", async () => {
-    const testUsers = [
-      {
-        firstName: "Peter",
-        lastName: "Pan",
-        authId: "123",
-        role: "Admin",
-      },
-      {
-        firstName: "Wendy",
-        lastName: "Darling",
-        authId: "321",
-        role: "User",
-      },
-    ];
-
     await MgUser.insertMany(testUsers);
 
     const res = await userService.getUsers();
@@ -61,8 +64,11 @@ describe("mongo userService", (): void => {
 });
 
 describe("pg userService", () => {
+  let userService: UserServicePg;
+
   beforeEach(async () => {
     await testSql.sync({ force: true });
+    userService = new UserServicePg();
   });
 
   afterAll(async () => {
@@ -71,15 +77,22 @@ describe("pg userService", () => {
   });
 
   it("getUsers", async () => {
-    await PgUser.bulkCreate([
-      {
-        first_name: "Peter",
-        last_name: "Pan",
-        auth_id: "123",
-        role: "Admin",
-      },
-    ]);
-    const res = await PgUser.findAll();
-    console.log(res);
+    const users = testUsers.map((user) => {
+      const userSnakeCase: Record<string, string> = {};
+      Object.entries(user).forEach(([key, value]) => {
+        userSnakeCase[snakeCase(key)] = value;
+      });
+      return userSnakeCase;
+    });
+
+    await PgUser.bulkCreate(users);
+
+    const res = await userService.getUsers();
+
+    res.forEach((user: UserDTO, i) => {
+      expect(user.firstName).toEqual(testUsers[i].firstName);
+      expect(user.lastName).toEqual(testUsers[i].lastName);
+      expect(user.role).toEqual(testUsers[i].role);
+    });
   });
 });
