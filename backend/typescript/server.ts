@@ -12,6 +12,7 @@ import entityRouter from "./rest/entityRoutes";
 import userRouter from "./rest/userRoutes";
 
 import schema from "./graphql";
+import FileStorageService from "./services/implementations/storageService";
 
 const CORS_ALLOW_LIST = ["http://localhost:3000"];
 
@@ -55,7 +56,11 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
 
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.applicationDefault(),
+    storageBucket: "uw-blueprint-starter-code.appspot.com",
   });
+
+  const file: FileStorageService = new FileStorageService();
+  file.getFile("pepeHmm.png");
 
   app.listen({ port: 5000 }, () => {
     /* eslint-disable-next-line no-console */
