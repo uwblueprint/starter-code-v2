@@ -3,7 +3,9 @@ import * as firebaseAdmin from "firebase-admin";
 import IUserService from "../interfaces/userService";
 import MgUser, { User } from "../../models/user.mgmodel";
 import { CreateUserDTO, Role, UpdateUserDTO, UserDTO } from "../../types";
-import Logger from "../../utilities/logger";
+import logger from "../../utilities/logger";
+
+const Logger = logger(__filename);
 
 const getMongoUserByAuthId = async (authId: string): Promise<User> => {
   const user: User | null = await MgUser.findOne({ authId });

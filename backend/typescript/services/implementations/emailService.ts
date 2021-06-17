@@ -1,7 +1,9 @@
 import nodemailer, { Transporter } from "nodemailer";
 import IEmailService from "../interfaces/emailService";
 import { NodemailerConfig } from "../../types";
-import Logger from "../../utilities/logger";
+import logger from "../../utilities/logger";
+
+const Logger = logger(__filename);
 
 class EmailService implements IEmailService {
   transporter: Transporter;
