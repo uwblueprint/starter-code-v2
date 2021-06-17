@@ -13,13 +13,8 @@ class LocalStorageMock {
     return this.store[key] || null;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  key(): string | null {
-    return null;
-  }
-
-  setItem(key: string, value: unknown) {
-    this.store[key] = String(value);
+  setItem(key: string, value: string) {
+    this.store[key] = value;
   }
 
   removeItem(key: string) {
