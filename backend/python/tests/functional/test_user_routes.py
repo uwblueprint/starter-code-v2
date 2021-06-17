@@ -60,8 +60,7 @@ def client(mocker):
 
 def test_get_users(client):
     res = client.get("/users")
-    users_with_email = map(get_expected_user, TEST_USERS)
-    expected = list(users_with_email)
-    for user_1, user_2 in zip(expected, res.json):
-        for key in expected[0].keys():
-            assert user_1[key] == user_2[key]
+    users_with_email = list(map(get_expected_user, TEST_USERS))
+    for expected_user, actual_user in zip(users_with_email, res.json):
+        for key in users_with_email[0].keys():
+            assert expected_user[key] == actual_user[key]
