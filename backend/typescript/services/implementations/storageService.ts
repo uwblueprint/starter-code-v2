@@ -1,31 +1,27 @@
 import { storage } from "firebase-admin";
+import { Bucket } from "@google-cloud/storage";
 import IFileStorageService from "../interfaces/storageService";
 
 class FileStorageService implements IFileStorageService {
-  bucket: any;
+  bucket: Bucket;
+
+  private expirationTimeMinutes = 60;
 
   constructor() {
-    this.bucket = storage();
+    // TODO: Store the bucket url somewhere else, maybe in a config
+    this.bucket = storage().bucket(
+      "gs://uw-blueprint-starter-code.appspot.com",
+    );
   }
 
-  async getFile(fileName: string): Promise<File | null> {
+  async getFile(fileName: string): Promise<string | null> {
     try {
-      this.bucket
-        .child(fileName)
-        .getDownloadURL()
-        .then((url: string) => {
-          // eslint-disable-next-line no-console
-          console.log(url);
-
-          // // Or inserted into an <img> element
-          // var img = document.getElementById("myimg");
-          // img.setAttribute("src", url);
-        })
-        .catch((error: any) => {
-          // Handle any errors
-          // eslint-disable-next-line no-console
-          console.log(error);
-        });
+      const res = await this.bucket.file(fileName).getSignedUrl({
+        action: "read",
+        expires: Date.now() + this.expirationTimeMinutes * 1000,
+      });
+      // TODO: Is it guarenteed to return a list of one string always?
+      return res[0];
     } catch (error: any) {
       // eslint-disable-next-line no-console
       console.log(error);
