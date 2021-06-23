@@ -15,6 +15,7 @@ class StorageService(IStorageService):
         expiration = datetime(2021, 9, 1)
         url = blob.generate_signed_url(expiration)
         print(url)
+        return url
 
     def create_file(self, file_name, file):
         pass 
@@ -23,6 +24,7 @@ class StorageService(IStorageService):
         pass 
 
     def delete_file(self, file_name):
+        self.bucket.delete_blob(file_name)
         pass 
 
 
