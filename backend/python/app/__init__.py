@@ -1,5 +1,6 @@
 import os
 import firebase_admin
+
 from firebase_admin import credentials
 from flask import Flask
 from flask_cors import CORS
@@ -50,23 +51,14 @@ def create_app(config_name):
     app.config["MONGODB_URL"] = os.getenv("MG_DATABASE_URL")
 
     # required for auth
-    cred = credentials.Certificate('./firebaseServiceAccount.json')
-    firebase_admin.initialize_app(cred, {
-    'storageBucket': 'uw-blueprint-starter-code.appspot.com'
-    })
+    cred = credentials.Certificate("./firebaseServiceAccount.json")
+    firebase_admin.initialize_app(
+        cred, {"storageBucket": os.getenv("DEFAULT_BUCKET")}
+    )
 
     from . import models, rest
 
     models.init_app(app)
     rest.init_app(app)
-
-    from .services.implementations.storage_service import StorageService
-    service = StorageService()
-    script_dir = os.path.dirname(__file__)
-    rel_path = "\test.jpg"
-    abs_file_path = os.path.join(script_dir, rel_path)
-    # service.get_file('pepeHmm.png')
-    with open(abs_file_path, 'rb') as file:
-       service.create_file('test.jpg', file)
 
     return app
