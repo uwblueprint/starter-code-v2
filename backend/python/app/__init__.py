@@ -62,7 +62,11 @@ def create_app(config_name):
 
     from .services.implementations.storage_service import StorageService
     service = StorageService()
-    service.get_file('pepeHmm.png')
-
+    script_dir = os.path.dirname(__file__)
+    rel_path = "\test.jpg"
+    abs_file_path = os.path.join(script_dir, rel_path)
+    # service.get_file('pepeHmm.png')
+    with open(abs_file_path, 'rb') as file:
+       service.create_file('test.jpg', file)
 
     return app

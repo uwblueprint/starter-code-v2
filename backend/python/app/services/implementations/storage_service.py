@@ -1,5 +1,6 @@
 import firebase_admin
 from firebase_admin import storage
+from google.cloud.storage import Blob
 from datetime import datetime
 
 from ..interfaces.storage_service import IStorageService
@@ -18,10 +19,14 @@ class StorageService(IStorageService):
         return url
 
     def create_file(self, file_name, file):
-        pass 
+        blob = Blob(name=file_name, bucket=self.bucket)
+        blob.upload_from_file(file)
+        pass
 
     def update_file(self, file_name, file):
-        pass 
+        blob = Blob(name=file_name, bucket=self.bucket)
+        blob.upload_from_file(file)
+        pass
 
     def delete_file(self, file_name):
         self.bucket.delete_blob(file_name)
