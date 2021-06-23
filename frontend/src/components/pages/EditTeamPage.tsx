@@ -5,7 +5,10 @@ import SampleContextDispatcherContext from "../../contexts/SampleContextDispatch
 
 type DeleteButtonProps = { index: number; onClick: (index: number) => void };
 
-const DeleteMemberButton = ({ index, onClick }: DeleteButtonProps) => {
+const DeleteMemberButton: React.FC<DeleteButtonProps> = ({
+  index,
+  onClick,
+}: DeleteButtonProps) => {
   return (
     <button
       type="button"
@@ -18,7 +21,7 @@ const DeleteMemberButton = ({ index, onClick }: DeleteButtonProps) => {
   );
 };
 
-const EditTeamInfoPage = () => {
+const EditTeamInfoPage = (): React.ReactElement => {
   const { teamName, numTerms, members } = useContext(SampleContext);
   const dispatchTeamUpdate = useContext(SampleContextDispatcherContext);
   const [newMember, setNewMember] = useState<string>("");

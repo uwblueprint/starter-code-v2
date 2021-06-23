@@ -33,7 +33,7 @@ def create_app(config_name):
         }
     )
 
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder="templates", static_folder="static")
     app.config.from_object(app_config[config_name])
 
     app.config["CORS_ORIGINS"] = ["http://localhost:3000"]

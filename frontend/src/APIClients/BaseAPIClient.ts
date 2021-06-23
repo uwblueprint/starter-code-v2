@@ -12,6 +12,8 @@ import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 // } auth
 
+import { DecodedJWT } from "../types/AuthTypes";
+
 const baseAPIClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
 });
@@ -41,11 +43,12 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
     authHeaderParts.length >= 2 &&
     authHeaderParts[0].toLowerCase() === "bearer"
   ) {
-    const decodedToken: any = jwt.decode(authHeaderParts[1]);
+    const decodedToken = jwt.decode(authHeaderParts[1]) as DecodedJWT;
 
     if (
       decodedToken &&
-      decodedToken.exp <= Math.round(new Date().getTime() / 1000)
+      (typeof decodedToken === "string" ||
+        decodedToken.exp <= Math.round(new Date().getTime() / 1000))
     ) {
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/auth/refresh`,

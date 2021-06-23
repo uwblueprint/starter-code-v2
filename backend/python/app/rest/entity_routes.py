@@ -6,6 +6,7 @@ from ..resources.entity_dto import EntityDTO
 # auth {
 from ..middlewares.auth import require_authorization_by_role
 # } auth
+from ..middlewares.validate import validate_request
 from ..services.implementations.entity_service import EntityService
 
 # define instance of EntityService
@@ -46,6 +47,7 @@ def get_entity(id):
 # auth {
 @require_authorization_by_role({"User", "Admin"})
 # } auth
+@validate_request("EntityDTO")
 def create_entity():
     try:
         # create a EntityResource object instead of using the raw request body
@@ -65,6 +67,7 @@ def create_entity():
 # auth {
 @require_authorization_by_role({"User", "Admin"})
 # } auth
+@validate_request("EntityDTO")
 def update_entity(id):
     try:
         body = EntityDTO(**request.json)
@@ -118,6 +121,7 @@ def get_entity(id):
 # auth {
 @require_authorization_by_role({"User", "Admin"})
 # } auth
+@validate_request("EntityDTO")
 def create_entity():
     try:
         # create a EntityResource object instead of using the raw request body
@@ -137,6 +141,7 @@ def create_entity():
 # auth {
 @require_authorization_by_role({"User", "Admin"})
 # } auth
+@validate_request("EntityDTO")
 def update_entity(id):
     try:
         body = EntityDTO(**request.json)

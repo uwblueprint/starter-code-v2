@@ -1,7 +1,9 @@
 import fetch, { Response } from "node-fetch";
 
 import { Token } from "../types";
-import Logger from "./logger";
+import logger from "./logger";
+
+const Logger = logger(__filename);
 
 const FIREBASE_SIGN_IN_URL =
   "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";

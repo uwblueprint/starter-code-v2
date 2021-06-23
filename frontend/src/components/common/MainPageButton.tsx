@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-const MainPageButton = () => {
+const MainPageButton = (): React.ReactElement => {
   const history = useHistory();
   const navigateTo = () => history.push("/");
   return (
