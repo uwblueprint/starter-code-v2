@@ -5,6 +5,7 @@
     "title": "UW Blueprint Starter Code Python API",
     "description": "An API for the Python Backend of Starter Code"
   },
+  // auth {
   "components": {
     "securitySchemes": {
       "bearerAuth": {
@@ -14,14 +15,17 @@
       }
     }
   },
+  // } auth
   "paths": {
     "/entities": {
       "get": {
+        // auth {
         "security": [
           {
             "bearerAuth": []
           }
         ],
+        // } auth
         "tags": [
           "Entity"
         ],
@@ -78,11 +82,13 @@
         }
       },
       "post": {
+        // auth {
         "security": [
           {
             "bearerAuth": []
           }
         ],
+        // } auth
         "tags": [
           "Entity"
         ],
@@ -177,11 +183,13 @@
     },
     "/entities/{id}": {
       "get": {
+        // auth {
         "security": [
           {
             "bearerAuth": []
           }
         ],
+        // } auth
         "parameters": [
           {
             "in": "path",
@@ -246,11 +254,13 @@
         }
       },
       "put": {
+        // auth {
         "security": [
           {
             "bearerAuth": []
           }
         ],
+        // } auth
         "parameters": [
           {
             "in": "path",
@@ -318,11 +328,13 @@
         }
       },
       "delete": {
+        // auth {
         "security": [
           {
             "bearerAuth": []
           }
         ],
+        // } auth
         "parameters": [
           {
             "in": "path",
@@ -351,6 +363,7 @@
         }
       }
     },
+    // auth {
     "/auth/login": {
       "post": {
         "tags": [
@@ -811,5 +824,6 @@
         }
       }
     }
+    // } auth
   }
 }

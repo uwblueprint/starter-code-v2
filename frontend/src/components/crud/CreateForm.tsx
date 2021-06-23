@@ -11,6 +11,7 @@ import {
 // } graphql
 // rest {
 import EntityAPIClient, {
+  EntityRequest,
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
 // } rest

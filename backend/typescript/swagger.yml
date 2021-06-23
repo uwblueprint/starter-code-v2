@@ -5,6 +5,7 @@ info:
   description: An API for the TypeScript Backend of Starter Code
 
 
+auth {
 # Authentication 
 components:
   securitySchemes:
@@ -12,13 +13,16 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+} auth
 
 
 paths:
   /entities:
     get:
+      auth {
       security:
         - bearerAuth: []
+      } auth
       tags:
         - Entity
       description: Returns a list of entities
@@ -54,8 +58,10 @@ paths:
 
 
     post:
+      auth {
       security:
         - bearerAuth: []
+      } auth
       tags:
         - Entity
       description: Create a new entity
@@ -112,8 +118,10 @@ paths:
   
   /entities/{id}:
     get:
+      auth {
       security:
         - bearerAuth: []
+      } auth
       parameters:
         - in: path
           name: id
@@ -156,8 +164,10 @@ paths:
 
 
     put:
+      auth {
       security:
         - bearerAuth: []
+      } auth
       parameters:
         - in: path
           name: id
@@ -202,8 +212,10 @@ paths:
 
 
     delete:
+      auth {
       security:
         - bearerAuth: []
+      } auth
       parameters:
         - in: path
           name: id
@@ -224,7 +236,8 @@ paths:
         '500':
           description: Invalid ID
 
-    
+
+auth {    
   /auth/login:
     post:
       tags:
@@ -525,3 +538,4 @@ paths:
           description: Unauthorized
         '500':
           description: Invalid request
+} auth

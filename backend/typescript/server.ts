@@ -4,8 +4,10 @@ import express from "express";
 // auth {
 import * as firebaseAdmin from "firebase-admin";
 // } auth
+// rest {
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
+// } rest
 
 // graphql {
 import { ApolloServer } from "apollo-server-express";
@@ -37,7 +39,9 @@ const CORS_OPTIONS: cors.CorsOptions = {
   credentials: true,
 };
 
+// rest {
 const swaggerDocument = YAML.load("swagger.yml");
+// } rest
 
 const app = express();
 app.use(cookieParser());

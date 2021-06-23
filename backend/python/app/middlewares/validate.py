@@ -1,14 +1,22 @@
 from flask import jsonify, request
 from functools import wraps
 
+# auth {
 from ..resources.create_user_dto import CreateUserDTO
+# } auth
 from ..resources.entity_dto import EntityDTO
+# auth {
 from ..resources.update_user_dto import UpdateUserDTO
+# } auth
 
 dtos = {
+    # auth {
     "CreateUserDTO": CreateUserDTO,
+    # } auth
     "EntityDTO": EntityDTO,
+    # auth {
     "UpdateUserDTO": UpdateUserDTO,
+    # } auth
 }
 
 
