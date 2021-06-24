@@ -1,9 +1,10 @@
 import { storage } from "firebase-admin";
-import { Bucket } from "@google-cloud/storage";
 import IFileStorageService from "../interfaces/storageService";
+import logger from "../../utilities/logger";
 
+const Logger = logger(__filename);
 class FileStorageService implements IFileStorageService {
-  bucket: Bucket;
+  bucket: any;
 
   private expirationTimeMinutes = 60;
 
@@ -22,14 +23,29 @@ class FileStorageService implements IFileStorageService {
       });
       // TODO: Is it guarenteed to return a list of one string always?
       return res[0];
-    } catch (error: any) {
-      // eslint-disable-next-line no-console
-      console.log(error);
+    } catch (error) {
+      Logger.error(`Failed to get entity. Reason = ${error.message}`);
     }
     return null;
   }
 
-  //   async createFile(fileName: string, file: File): Promise<void> {}
+  async createFile(fileName: string, filePath: string): Promise<string | null> {
+    const currentBlob = await this.getFile(fileName);
+    if (currentBlob) {
+      throw new Error(`File name ${fileName} already exists`);
+    } else {
+      try {
+        const res = await this.bucket.upload(filePath, {
+          destination: fileName,
+        });
+        return res[0];
+      } catch (error) {
+        Logger.error(`Failed to upload file. Reason = ${error.message}`);
+        throw error;
+      }
+    }
+    return null;
+  }
 
   //   async updateFile(fileName: string, file: File): Promise<void> {}
 
