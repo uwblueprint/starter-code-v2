@@ -28,9 +28,9 @@ class FileStorageService implements IFileStorageService {
   }
 
   async createFile(fileName: string, filePath: string): Promise<void> {
-    const currentBlob = await this.getFile(fileName);
     try {
-      if (currentBlob) {
+      const currentBlob = await this.bucket.file(fileName);
+      if ((await currentBlob.exists())[0]) {
         throw new Error(`File name ${fileName} already exists`);
       }
       await this.bucket.upload(filePath, {

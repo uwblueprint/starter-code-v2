@@ -59,9 +59,6 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
     storageBucket: "uw-blueprint-starter-code.appspot.com",
   });
 
-  const file: FileStorageService = new FileStorageService();
-  file.getFile("pepeHmm.png");
-
   app.listen({ port: 5000 }, () => {
     /* eslint-disable-next-line no-console */
     console.info("Server is listening on port 5000!");
