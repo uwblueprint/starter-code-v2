@@ -12,7 +12,6 @@ import entityRouter from "./rest/entityRoutes";
 import userRouter from "./rest/userRoutes";
 
 import schema from "./graphql";
-import FileStorageService from "./services/implementations/storageService";
 
 const CORS_ALLOW_LIST = ["http://localhost:3000"];
 
