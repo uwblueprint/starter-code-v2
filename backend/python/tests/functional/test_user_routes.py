@@ -49,16 +49,14 @@ def insert_users():
     User.objects.insert(user_instances, load_bulk=False)
 
 
-@pytest.fixture
-def client(mocker):
-    mocker.patch("app.services.implementations.auth_service.AuthService.is_authorized_by_role", return_value=True)
-    mocker.patch("firebase_admin.auth.get_user", return_value=FirebaseUser())
-    test_client = create_app("testing").test_client()
-    insert_users()
-    yield test_client
+@pytest.fixture(scope="module", autouse=True)
+def setup(module_mocker):
+    module_mocker.patch("app.services.implementations.auth_service.AuthService.is_authorized_by_role", return_value=True)
+    module_mocker.patch("firebase_admin.auth.get_user", return_value=FirebaseUser())
 
 
 def test_get_users(client):
+    insert_users()
     res = client.get("/users")
     users_with_email = list(map(get_expected_user, TEST_USERS))
     for expected_user, actual_user in zip(users_with_email, res.json):
