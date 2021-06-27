@@ -2,10 +2,11 @@ interface IFileStorageService {
   /**
    * Retrieves file
    * @param fileName name of file
-   * @returns response
+   * @param expirationTimeMinutes expiration time in minutes for generated URL
+   * @returns Signed URL to file
    * @throws Error if file is not retrieved
    */
-  getFile(fileName: string): Promise<string>;
+  getFile(fileName: string, expirationTimeMinutes?: number): Promise<string>;
 
   /**
    * Creates file
@@ -21,7 +22,7 @@ interface IFileStorageService {
    * @param fileName name of file
    * @param filePath path to file
    * @throws Error if name of file does not exist
-   * @throws Error if file is not retrieved
+   * @throws Error if file is not updated
    */
   updateFile(fileName: string, filePath: string): Promise<void>;
 
@@ -29,7 +30,7 @@ interface IFileStorageService {
    * Deletes file
    * @param fileName name of file
    * @throws Error if name of file does not exist
-   * @throws Error if file is not retrieved
+   * @throws Error if file is not deleted
    */
   deleteFile(fileName: string): Promise<void>;
 }

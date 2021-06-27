@@ -6,19 +6,24 @@ const Logger = logger(__filename);
 class FileStorageService implements IFileStorageService {
   bucket: any;
 
-  private expirationTimeMinutes = 60;
-
   constructor() {
     this.bucket = storage().bucket(
       "gs://uw-blueprint-starter-code.appspot.com",
     );
   }
 
-  async getFile(fileName: string): Promise<string> {
+  async getFile(
+    fileName: string,
+    expirationTimeMinutes: number = 60,
+  ): Promise<string> {
+    const expirationDate = new Date();
+    expirationDate.setMinutes(
+      expirationDate.getMinutes() + expirationTimeMinutes,
+    );
     try {
       const res = await this.bucket.file(fileName).getSignedUrl({
         action: "read",
-        expires: Date.now() + this.expirationTimeMinutes * 1000,
+        expires: expirationDate,
       });
       return res[0];
     } catch (error) {
