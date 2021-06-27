@@ -8,10 +8,11 @@ interface IFileStorageService {
   getFile(fileName: string): Promise<string>;
 
   /**
-   * Retrieves file
+   * Creates file
    * @param fileName name of file
+   * @param filePath path of file
    * @throws Error if name of file already exists
-   * @throws Error if file is not retrieved
+   * @throws Error if file is not uploaded
    */
   createFile(fileName: string, filePath: string): Promise<void>;
 
