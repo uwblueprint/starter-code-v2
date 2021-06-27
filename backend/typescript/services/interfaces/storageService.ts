@@ -14,8 +14,23 @@ interface IFileStorageService {
    * @throws Error if file is not retrieved
    */
   createFile(fileName: string, filePath: string): Promise<void>;
-  //   updateFile(fileName: string, file: File): Promise<void>;
-  //   deleteFile(fileName: string): Promise<void>;
+
+  /**
+   * Updates file
+   * @param fileName name of file
+   * @param filePath path to file
+   * @throws Error if name of file does not exist
+   * @throws Error if file is not retrieved
+   */
+  updateFile(fileName: string, filePath: string): Promise<void>;
+
+  /**
+   * Deletes file
+   * @param fileName name of file
+   * @throws Error if name of file does not exist
+   * @throws Error if file is not retrieved
+   */
+  deleteFile(fileName: string): Promise<void>;
 }
 
 export default IFileStorageService;

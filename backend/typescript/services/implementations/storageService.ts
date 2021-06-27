@@ -42,9 +42,33 @@ class FileStorageService implements IFileStorageService {
     }
   }
 
-  //   async updateFile(fileName: string, file: File): Promise<void> {}
+  async updateFile(fileName: string, filePath: string): Promise<void> {
+    try {
+      const currentBlob = await this.bucket.file(fileName);
+      if (!(await currentBlob.exists())[0]) {
+        throw new Error(`File name ${fileName} does not exist`);
+      }
+      await this.bucket.upload(filePath, {
+        destination: fileName,
+      });
+    } catch (error) {
+      Logger.error(`Failed to update file. Reason = ${error.message}`);
+      throw error;
+    }
+  }
 
-  //   async deleteFile(fileName: string): Promise<void> {}
+  async deleteFile(fileName: string): Promise<void> {
+    try {
+      const currentBlob = await this.bucket.file(fileName);
+      if (!currentBlob) {
+        throw new Error(`File name ${fileName} does not exist`);
+      }
+      await currentBlob.delete();
+    } catch (error) {
+      Logger.error(`Failed to delete file. Reason = ${error.message}`);
+      throw error;
+    }
+  }
 }
 
 export default FileStorageService;
