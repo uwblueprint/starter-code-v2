@@ -15,6 +15,26 @@ https://docs.pytest.org/en/6.2.x/reference.html
 '''
 
 
+@pytest.fixture(scope="module", autouse=True)
+def setup(module_mocker):
+    module_mocker.patch("app.services.implementations.auth_service.AuthService.is_authorized_by_role", return_value=True)
+    module_mocker.patch("firebase_admin.auth.get_user", return_value=FirebaseUser())
+
+
+@pytest.fixture
+def mg_user_service():
+    user_service = UserServiceMg(current_app.logger)
+    yield user_service
+    User.objects.delete()
+
+
+@pytest.fixture
+def pg_user_service():
+    user_service = UserServicePg(current_app.logger)
+    yield user_service
+    UserPg.query.delete()
+
+
 TEST_USERS = (
     {
         "auth_id": "A",
@@ -59,26 +79,6 @@ def insert_users_pg():
     user_instances = [UserPg(**data) for data in TEST_USERS]
     db.session.bulk_save_objects(user_instances)
     db.session.commit()
-
-
-@pytest.fixture(scope="module", autouse=True)
-def setup(module_mocker):
-    module_mocker.patch("app.services.implementations.auth_service.AuthService.is_authorized_by_role", return_value=True)
-    module_mocker.patch("firebase_admin.auth.get_user", return_value=FirebaseUser())
-
-
-@pytest.fixture
-def mg_user_service():
-    user_service = UserServiceMg(current_app.logger)
-    yield user_service
-    User.objects.delete()
-
-
-@pytest.fixture
-def pg_user_service():
-    user_service = UserServicePg(current_app.logger)
-    yield user_service
-    UserPg.query.delete()
 
 
 def assert_returned_users(users, expected):
