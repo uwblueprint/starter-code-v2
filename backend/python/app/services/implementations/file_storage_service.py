@@ -18,14 +18,13 @@ class FileStorageService(IFileStorageService):
         :type logger: logger
         """
         self.logger = logger
-        self.expiration_time = timedelta(minutes=60)
         self.bucket = storage.bucket()
 
-    def get_file(self, file_name):
+    def get_file(self, file_name, expiration_time=timedelta(minutes=60)):
         blob = self.bucket.get_blob(file_name)
         if not blob:
             return None
-        expiration = datetime.now() + self.expiration_time
+        expiration = datetime.now() + expiration_time
         url = blob.generate_signed_url(expiration)
         return url
 
@@ -44,9 +43,6 @@ class FileStorageService(IFileStorageService):
                 )
             )
             raise e
-        expiration = datetime.now() + self.expiration_time
-        url = blob.generate_signed_url(expiration)
-        return url
 
     def update_file(self, file_name, file):
         current_blob = self.bucket.get_blob(file_name)
@@ -63,9 +59,6 @@ class FileStorageService(IFileStorageService):
                 )
             )
             raise e
-        expiration = datetime.now() + self.expiration_time
-        url = blob.generate_signed_url(expiration)
-        return url
 
     def delete_file(self, file_name):
         try:

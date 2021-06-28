@@ -1,7 +1,6 @@
 import os
 import firebase_admin
 
-from firebase_admin import credentials
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -51,10 +50,7 @@ def create_app(config_name):
     app.config["MONGODB_URL"] = os.getenv("MG_DATABASE_URL")
 
     # required for auth
-    cred = credentials.Certificate("./firebaseServiceAccount.json")
-    firebase_admin.initialize_app(
-        cred, {"storageBucket": os.getenv("DEFAULT_BUCKET")}
-    )
+    firebase_admin.initialize_app(None, {"storageBucket": os.getenv("DEFAULT_BUCKET")})
 
     from . import models, rest
 
