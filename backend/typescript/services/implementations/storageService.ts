@@ -8,10 +8,8 @@ const Logger = logger(__filename);
 class FileStorageService implements IFileStorageService {
   bucket: any;
 
-  constructor() {
-    this.bucket = storage().bucket(
-      "gs://uw-blueprint-starter-code.appspot.com",
-    );
+  constructor(bucketName: string) {
+    this.bucket = storage().bucket(`gs://${bucketName}}`);
   }
 
   async getFile(

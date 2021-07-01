@@ -55,7 +55,6 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
 
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.applicationDefault(),
-    storageBucket: "uw-blueprint-starter-code.appspot.com",
   });
 
   app.listen({ port: 5000 }, () => {
