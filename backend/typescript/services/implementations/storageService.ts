@@ -27,7 +27,7 @@ class FileStorageService implements IFileStorageService {
       });
       return res[0];
     } catch (error) {
-      Logger.error(`Failed to get entity. Reason = ${error.message}`);
+      Logger.error(`Failed to retrieve file. Reason = ${error.message}`);
       throw error;
     }
   }
