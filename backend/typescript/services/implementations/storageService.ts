@@ -1,8 +1,10 @@
 import { storage } from "firebase-admin";
+
 import IFileStorageService from "../interfaces/storageService";
 import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
+
 class FileStorageService implements IFileStorageService {
   bucket: any;
 
