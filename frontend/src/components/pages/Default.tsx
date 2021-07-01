@@ -38,7 +38,7 @@ const TeamInfoDisplay = () => {
   );
 };
 
-const Default = () => {
+const Default = (): React.ReactElement => {
   return (
     <div style={{ textAlign: "center", paddingTop: "20px" }}>
       <h1>Default Page</h1>

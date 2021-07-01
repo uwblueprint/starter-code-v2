@@ -1,5 +1,5 @@
 // Get a string value from localStorage as an object
-export const getLocalStorageObj = (localStorageKey: string) => {
+export const getLocalStorageObj = <O>(localStorageKey: string): O | null => {
   const stringifiedObj = localStorage.getItem(localStorageKey);
   let object = null;
 
@@ -15,23 +15,28 @@ export const getLocalStorageObj = (localStorageKey: string) => {
 };
 
 // Get a property of an object value from localStorage
-export const getLocalStorageObjProperty = (
+export const getLocalStorageObjProperty = <O extends Record<string, P>, P>(
   localStorageKey: string,
   property: string,
-) => {
-  const object = getLocalStorageObj(localStorageKey);
-  if (!object) return object;
+): P | null => {
+  const object = getLocalStorageObj<O>(localStorageKey);
+  if (!object) return null;
 
   return object[property];
 };
 
 // Set a property of an object value in localStorage
-export const setLocalStorageObjProperty = (
+export const setLocalStorageObjProperty = <O extends Record<string, string>>(
   localStorageKey: string,
   property: string,
   value: string,
-) => {
-  const object = getLocalStorageObj(localStorageKey);
+): void => {
+  const object: Record<string, string> | null = getLocalStorageObj<O>(
+    localStorageKey,
+  );
+
+  if (!object) return;
+
   object[property] = value;
   localStorage.setItem(localStorageKey, JSON.stringify(object));
 };

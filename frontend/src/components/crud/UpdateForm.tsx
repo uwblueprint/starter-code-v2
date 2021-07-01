@@ -4,7 +4,10 @@ import { Form } from "@rjsf/bootstrap-4";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 
-import { EntityResponse } from "../../APIClients/EntityAPIClient";
+import {
+  EntityRequest,
+  EntityResponse,
+} from "../../APIClients/EntityAPIClient";
 // } graphql
 // rest {
 import EntityAPIClient, {
@@ -83,7 +86,7 @@ const UPDATE_ENTITY = gql`
 `;
 
 // } graphql
-const UpdateForm = () => {
+const UpdateForm = (): React.ReactElement => {
   const [data, setData] = useState<EntityResponse | null>(null);
 
   // graphql {
@@ -96,13 +99,12 @@ const UpdateForm = () => {
     return <p>Updated! ✔️</p>;
   }
 
-  const onSubmit = async ({ formData }: { formData: any }) => {
-    const entityData: any = JSON.parse(JSON.stringify(formData));
-    delete entityData.id;
+  const onSubmit = async ({ formData }: { formData: EntityResponse }) => {
+    const { id, ...entityData } = formData;
 
     // graphql {
     const graphQLResult = await updateEntity({
-      variables: { id: formData.id, entity: entityData },
+      variables: { id: formData.id, entity: entityData as EntityRequest },
     });
     const result: EntityResponse | null =
       graphQLResult.data?.updateEntity ?? null;

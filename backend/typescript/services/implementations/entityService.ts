@@ -5,7 +5,9 @@ import {
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
-import Logger from "../../utilities/logger";
+import logger from "../../utilities/logger";
+
+const Logger = logger(__filename);
 
 class EntityService implements IEntityService {
   /* eslint-disable class-methods-use-this */
@@ -116,7 +118,9 @@ import {
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
-import Logger from "../../utilities/logger";
+import logger from "../../utilities/logger";
+
+const Logger = logger(__filename);
 
 class EntityService implements IEntityService {
   /* eslint-disable class-methods-use-this */

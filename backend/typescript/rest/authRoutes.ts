@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { isAuthorizedByEmail, isAuthorizedByUserId } from "../middlewares/auth";
+import { loginRequestValidator } from "../middlewares/validators/authValidators";
 import nodemailerConfig from "../nodemailer.config";
 import AuthService from "../services/implementations/authService";
 import EmailService from "../services/implementations/emailService";
@@ -16,7 +17,7 @@ const authService: IAuthService = new AuthService(
 );
 
 /* Returns access token and user info in response body and sets refreshToken as an httpOnly cookie */
-authRouter.post("/login", async (req, res) => {
+authRouter.post("/login", loginRequestValidator, async (req, res) => {
   try {
     const authDTO = await authService.generateToken(
       req.body.email,

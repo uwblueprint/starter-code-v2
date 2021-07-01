@@ -1,6 +1,18 @@
 class UpdateUserDTO:
-    def __init__(self, first_name, last_name, email, role):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.role = role
+    def __init__(self, **kwargs):
+        self.first_name = kwargs.get("first_name")
+        self.last_name = kwargs.get("last_name")
+        self.email = kwargs.get("email")
+        self.role = kwargs.get("role")
+
+    def validate(self):
+        error_list = []
+        if not self.first_name or type(self.first_name) is not str:
+            error_list.append("The first_name supplied is not a string.")
+        if not self.last_name or type(self.last_name) is not str:
+            error_list.append("The last_name supplied is not a string.")
+        if not self.email or type(self.email) is not str:
+            error_list.append("The email supplied is not a string.")
+        if not self.role or type(self.role) is not str:
+            error_list.append("The role supplied is not a string.")
+        return error_list
