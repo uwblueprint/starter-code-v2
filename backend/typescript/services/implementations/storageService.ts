@@ -32,7 +32,11 @@ class FileStorageService implements IFileStorageService {
     }
   }
 
-  async createFile(fileName: string, filePath: string): Promise<void> {
+  async createFile(
+    fileName: string,
+    filePath: string,
+    contentType: string | null = null,
+  ): Promise<void> {
     try {
       const currentBlob = await this.bucket.file(fileName);
       if ((await currentBlob.exists())[0]) {
@@ -40,6 +44,7 @@ class FileStorageService implements IFileStorageService {
       }
       await this.bucket.upload(filePath, {
         destination: fileName,
+        metadata: { contentType },
       });
     } catch (error) {
       Logger.error(`Failed to upload file. Reason = ${error.message}`);
@@ -47,7 +52,11 @@ class FileStorageService implements IFileStorageService {
     }
   }
 
-  async updateFile(fileName: string, filePath: string): Promise<void> {
+  async updateFile(
+    fileName: string,
+    filePath: string,
+    contentType: string | null = null,
+  ): Promise<void> {
     try {
       const currentBlob = await this.bucket.file(fileName);
       if (!(await currentBlob.exists())[0]) {
@@ -55,6 +64,7 @@ class FileStorageService implements IFileStorageService {
       }
       await this.bucket.upload(filePath, {
         destination: fileName,
+        metadata: { contentType },
       });
     } catch (error) {
       Logger.error(`Failed to update file. Reason = ${error.message}`);
