@@ -50,7 +50,7 @@ def create_app(config_name):
     app.config["MONGODB_URL"] = os.getenv("MG_DATABASE_URL")
 
     # required for auth
-    firebase_admin.initialize_app()
+    firebase_admin.initialize_app(None, {"storageBucket": os.getenv("DEFAULT_BUCKET")})
 
     from . import models, rest
 
