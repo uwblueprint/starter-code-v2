@@ -9,7 +9,7 @@ class FileStorageService implements IFileStorageService {
   bucket: any;
 
   constructor(bucketName: string) {
-    this.bucket = storage().bucket(`gs://${bucketName}}`);
+    this.bucket = storage().bucket(bucketName);
   }
 
   async getFile(
