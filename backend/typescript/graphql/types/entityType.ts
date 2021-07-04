@@ -15,6 +15,7 @@ const entityType = gql`
     enumField: Enum!
     stringArrayField: [String]!
     boolField: Boolean!
+    fileField: String!
   }
 
   input EntityRequestDTO {
@@ -23,6 +24,7 @@ const entityType = gql`
     enumField: Enum!
     stringArrayField: [String]!
     boolField: Boolean!
+    fileField: String!
   }
 
   extend type Query {

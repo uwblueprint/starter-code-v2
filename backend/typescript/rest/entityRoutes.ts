@@ -5,6 +5,8 @@ import { isAuthorizedByRole } from "../middlewares/auth";
 import { IEntityService } from "../services/interfaces/IEntityService";
 import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
 
+const tmp = require('tmp');
+
 const entityRouter: Router = Router();
 entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
 
@@ -19,6 +21,7 @@ entityRouter.post("/", entityRequestDtoValidator, async (req, res) => {
       enumField: req.body.enumField,
       stringArrayField: req.body.stringArrayField,
       boolField: req.body.boolField,
+      fileField: req.body.fileFIeld,
     });
     res.status(201).json(newEntity);
   } catch (e) {
@@ -58,6 +61,7 @@ entityRouter.put("/:id", entityRequestDtoValidator, async (req, res) => {
       enumField: req.body.enumField,
       stringArrayField: req.body.stringArrayField,
       boolField: req.body.boolField,
+      fileField: req.body.fileField,
     });
     res.status(200).json(entity);
   } catch (e) {

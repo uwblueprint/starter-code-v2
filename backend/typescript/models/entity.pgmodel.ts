@@ -18,4 +18,7 @@ export default class Entity extends Model {
 
   @Column
   bool_field!: boolean;
+
+  @Column
+  file_field!: string;
 }

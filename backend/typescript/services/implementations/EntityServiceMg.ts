@@ -4,6 +4,7 @@ import {
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
+import FileStorageService from "../implementations/storageService";
 import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
@@ -29,6 +30,7 @@ class EntityService implements IEntityService {
       enumField: entity.enumField,
       stringArrayField: entity.stringArrayField,
       boolField: entity.boolField,
+      fileField: entity.fileField,
     };
   }
 
@@ -42,6 +44,7 @@ class EntityService implements IEntityService {
         enumField: entity.enumField,
         stringArrayField: entity.stringArrayField,
         boolField: entity.boolField,
+        fileField: entity.fileField,
       }));
     } catch (error) {
       Logger.error(`Failed to get entities. Reason = ${error.message}`);
@@ -64,6 +67,7 @@ class EntityService implements IEntityService {
       enumField: newEntity.enumField,
       stringArrayField: newEntity.stringArrayField,
       boolField: newEntity.boolField,
+      fileField: newEntity.fileField,
     };
   }
 
@@ -91,6 +95,7 @@ class EntityService implements IEntityService {
       enumField: updatedEntity.enumField,
       stringArrayField: updatedEntity.stringArrayField,
       boolField: updatedEntity.boolField,
+      fileField: updatedEntity.fileField,
     };
   }
 

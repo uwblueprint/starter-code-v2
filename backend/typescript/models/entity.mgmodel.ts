@@ -7,6 +7,7 @@ export interface Entity extends Document {
   enumField: string;
   stringArrayField: [string];
   boolField: boolean;
+  fileField: string;
 }
 
 const EntitySchema: Schema = new Schema({
@@ -29,6 +30,10 @@ const EntitySchema: Schema = new Schema({
   },
   boolField: {
     type: Boolean,
+    required: true,
+  },
+  fileField: {
+    type: String,
     required: true,
   },
 });
