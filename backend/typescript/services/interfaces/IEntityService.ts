@@ -4,7 +4,7 @@ export interface EntityRequestDTO {
   enumField: string;
   stringArrayField: string[];
   boolField: boolean;
-  fileField: string;
+  filePath?: string;
 }
 
 export interface EntityResponseDTO {
@@ -14,7 +14,7 @@ export interface EntityResponseDTO {
   enumField: string;
   stringArrayField: string[];
   boolField: boolean;
-  fileField: string;
+  fileName: string;
 }
 
 export interface IEntityService {

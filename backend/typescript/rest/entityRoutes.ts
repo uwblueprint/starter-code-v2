@@ -1,11 +1,12 @@
 import { Router } from "express";
+import multer from "multer";
 // import EntityServiceMg from "../services/implementations/EntityServiceMg";
 import EntityServicePg from "../services/implementations/EntityServicePg";
 import { isAuthorizedByRole } from "../middlewares/auth";
 import { IEntityService } from "../services/interfaces/IEntityService";
 import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
 
-const tmp = require('tmp');
+const upload = multer({ dest: "uploads/" });
 
 const entityRouter: Router = Router();
 entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
@@ -13,21 +14,26 @@ entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
 const entityService: IEntityService = new EntityServicePg();
 
 /* Create entity */
-entityRouter.post("/", entityRequestDtoValidator, async (req, res) => {
-  try {
-    const newEntity = await entityService.createEntity({
-      stringField: req.body.stringField,
-      intField: req.body.intField,
-      enumField: req.body.enumField,
-      stringArrayField: req.body.stringArrayField,
-      boolField: req.body.boolField,
-      fileField: req.body.fileFIeld,
-    });
-    res.status(201).json(newEntity);
-  } catch (e) {
-    res.status(500).send(e.message);
-  }
-});
+entityRouter.post(
+  "/",
+  upload.single("file"),
+  entityRequestDtoValidator,
+  async (req, res) => {
+    try {
+      const newEntity = await entityService.createEntity({
+        stringField: req.body.stringField,
+        intField: req.body.intField,
+        enumField: req.body.enumField,
+        stringArrayField: req.body.stringArrayField,
+        boolField: req.body.boolField,
+        filePath: req.file?.path,
+      });
+      res.status(201).json(newEntity);
+    } catch (e) {
+      res.status(500).send(e.message);
+    }
+  },
+);
 
 /* Get all entities */
 entityRouter.get("/", async (_req, res) => {
@@ -61,7 +67,7 @@ entityRouter.put("/:id", entityRequestDtoValidator, async (req, res) => {
       enumField: req.body.enumField,
       stringArrayField: req.body.stringArrayField,
       boolField: req.body.boolField,
-      fileField: req.body.fileField,
+      filePath: req.body.filePath,
     });
     res.status(200).json(entity);
   } catch (e) {

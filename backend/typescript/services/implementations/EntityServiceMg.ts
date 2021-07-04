@@ -1,15 +1,23 @@
+import { v4 as uuidv4 } from "uuid";
+
 import MgEntity, { Entity } from "../../models/entity.mgmodel";
 import {
   IEntityService,
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
-import FileStorageService from "../implementations/storageService";
 import logger from "../../utilities/logger";
+import IFileStorageService from "../interfaces/storageService";
 
 const Logger = logger(__filename);
 
 class EntityService implements IEntityService {
+  storageService: IFileStorageService;
+
+  constructor(storageService: IFileStorageService) {
+    this.storageService = storageService;
+  }
+
   /* eslint-disable class-methods-use-this */
   async getEntity(id: string): Promise<EntityResponseDTO> {
     let entity: Entity | null;
@@ -30,7 +38,7 @@ class EntityService implements IEntityService {
       enumField: entity.enumField,
       stringArrayField: entity.stringArrayField,
       boolField: entity.boolField,
-      fileField: entity.fileField,
+      fileName: entity.fileName,
     };
   }
 
@@ -44,7 +52,7 @@ class EntityService implements IEntityService {
         enumField: entity.enumField,
         stringArrayField: entity.stringArrayField,
         boolField: entity.boolField,
-        fileField: entity.fileField,
+        fileName: entity.fileName,
       }));
     } catch (error) {
       Logger.error(`Failed to get entities. Reason = ${error.message}`);
@@ -54,8 +62,13 @@ class EntityService implements IEntityService {
 
   async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
     let newEntity: Entity | null;
+    let fileName = "";
     try {
       newEntity = await MgEntity.create(entity);
+      if (entity.filePath) {
+        fileName = uuidv4();
+        this.storageService.createFile(fileName, entity.filePath);
+      }
     } catch (error) {
       Logger.error(`Failed to create entity. Reason = ${error.message}`);
       throw error;
@@ -67,7 +80,7 @@ class EntityService implements IEntityService {
       enumField: newEntity.enumField,
       stringArrayField: newEntity.stringArrayField,
       boolField: newEntity.boolField,
-      fileField: newEntity.fileField,
+      fileName,
     };
   }
 
@@ -76,6 +89,7 @@ class EntityService implements IEntityService {
     entity: EntityRequestDTO,
   ): Promise<EntityResponseDTO | null> {
     let updatedEntity: Entity | null;
+    let fileName = "";
     try {
       updatedEntity = await MgEntity.findByIdAndUpdate(id, entity, {
         new: true,
@@ -83,6 +97,11 @@ class EntityService implements IEntityService {
       });
       if (!updatedEntity) {
         throw new Error(`Entity id ${id} not found`);
+      }
+      fileName = updatedEntity.fileName;
+      if (entity.filePath) {
+        fileName = uuidv4();
+        this.storageService.updateFile(fileName, entity.filePath);
       }
     } catch (error) {
       Logger.error(`Failed to update entity. Reason = ${error.message}`);
@@ -95,7 +114,7 @@ class EntityService implements IEntityService {
       enumField: updatedEntity.enumField,
       stringArrayField: updatedEntity.stringArrayField,
       boolField: updatedEntity.boolField,
-      fileField: updatedEntity.fileField,
+      fileName,
     };
   }
 
@@ -105,6 +124,7 @@ class EntityService implements IEntityService {
       if (!deletedEntity) {
         throw new Error(`Entity id ${id} not found`);
       }
+      this.storageService.deleteFile(deletedEntity.fileName);
     } catch (error) {
       Logger.error(`Failed to delete entity. Reason = ${error.message}`);
       throw error;
