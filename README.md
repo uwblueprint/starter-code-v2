@@ -14,6 +14,16 @@ Teams should adopt Starter Code and use it as a foundation to get their projects
 
 The provided frontend is a React application written in TypeScript.
 
+## Key Features & Benefits
+* Many stack combinations, with seperation of concerns making it easy to swap out layers of the codebase as needed
+* Prebuilt Authentication
+* Basic CRUD services via PostgresSQL and MongoDB ORMs
+* Email service 
+* (WIP) Out of the box support for deployment to common platforms via CI/CD piplelines
+* (WIP) File storage + CSV exports
+* Lots of examples of programming best practices in both the Frontend and Backend
+
+
 ## Table of Contents
 * 📝 [Documentation](#documentation)
 * ❗❗ [Reporting Issues](#reporting-issues)
