@@ -8,9 +8,10 @@ from ..middlewares.validate import validate_request
 
 # from ..services.implementations.entity_service import EntityService
 from ..services.implementations.entity_service_mg import EntityService
+from ..services.implementations.file_storage_service import FileStorageService
 
 # define instance of EntityService
-entity_service = EntityService(current_app.logger)
+entity_service = EntityService(current_app.logger, FileStorageService(current_app.logger))
 
 # defines a shared URL prefix for all routes
 blueprint = Blueprint("entity", __name__, url_prefix="/entities")
