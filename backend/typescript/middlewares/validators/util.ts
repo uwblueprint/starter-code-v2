@@ -29,10 +29,32 @@ export const validateArray = (value: any, type: Type): boolean => {
   );
 };
 
+export const validateFileType = (mimetype: string): boolean => {
+  const allowableFileExtenstions = [
+    "text/plain",
+    "application/pdf",
+    "image/png",
+    "image/jpeg",
+    "image/gif",
+  ];
+  return allowableFileExtenstions.includes(mimetype);
+};
+
 export const getApiValidationError = (
   fieldName: string,
   type: Type,
   isArray: boolean = false,
 ): string => {
   return `The ${fieldName} is not a ${type}${isArray ? " Array" : ""}`;
+};
+
+export const getFileTypeValidationError = (mimetype: string): string => {
+  const allowableFileExtenstions = [
+    "text/plain",
+    "application/pdf",
+    "image/png",
+    "image/jpeg",
+    "image/gif",
+  ];
+  return `The file type ${mimetype} is not one of ${allowableFileExtenstions}`;
 };

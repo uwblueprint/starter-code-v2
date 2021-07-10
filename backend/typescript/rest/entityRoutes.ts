@@ -5,13 +5,19 @@ import EntityServicePg from "../services/implementations/EntityServicePg";
 import { isAuthorizedByRole } from "../middlewares/auth";
 import { IEntityService } from "../services/interfaces/IEntityService";
 import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
+import IFileStorageService from "../services/interfaces/storageService";
+import FileStorageService from "../services/implementations/storageService";
 
 const upload = multer({ dest: "uploads/" });
 
 const entityRouter: Router = Router();
 entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
 
-const entityService: IEntityService = new EntityServicePg();
+const defaultBucket = process.env.DEFAULT_BUCKET || "";
+const fileStorageService: IFileStorageService = new FileStorageService(
+  defaultBucket,
+);
+const entityService: IEntityService = new EntityServicePg(fileStorageService);
 
 /* Create entity */
 entityRouter.post(

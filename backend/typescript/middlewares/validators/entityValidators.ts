@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import {
   getApiValidationError,
+  getFileTypeValidationError,
   validateArray,
+  validateFileType,
   validatePrimitive,
 } from "./util";
 
@@ -27,6 +29,9 @@ export const entityRequestDtoValidator = async (
   }
   if (!validatePrimitive(req.body.boolField, "boolean")) {
     return res.status(400).send(getApiValidationError("boolField", "boolean"));
+  }
+  if (req.file && !validateFileType(req.file.mimetype)) {
+    return res.status(400).send(getFileTypeValidationError(req.file.mimetype));
   }
   return next();
 };
