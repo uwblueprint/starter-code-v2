@@ -100,7 +100,6 @@ class EntityService implements IEntityService {
       }
       fileName = updatedEntity.fileName;
       if (entity.filePath) {
-        fileName = uuidv4();
         this.storageService.updateFile(fileName, entity.filePath);
       }
     } catch (error) {
