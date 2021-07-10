@@ -62,7 +62,7 @@ class EntityService implements IEntityService {
 
   async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
     let newEntity: PgEntity | null;
-    let fileName = "";
+    let fileName = entity.filePath ? uuidv4() : "";
     try {
       newEntity = await PgEntity.create({
         string_field: entity.stringField,
@@ -70,9 +70,9 @@ class EntityService implements IEntityService {
         enum_field: entity.enumField,
         string_array_field: entity.stringArrayField,
         bool_field: entity.boolField,
+        file_name: fileName,
       });
       if (entity.filePath) {
-        fileName = uuidv4();
         this.storageService.createFile(fileName, entity.filePath);
       }
     } catch (error) {
