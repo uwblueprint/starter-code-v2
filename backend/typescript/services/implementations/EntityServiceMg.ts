@@ -6,8 +6,8 @@ import {
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
-import logger from "../../utilities/logger";
 import IFileStorageService from "../interfaces/storageService";
+import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
 

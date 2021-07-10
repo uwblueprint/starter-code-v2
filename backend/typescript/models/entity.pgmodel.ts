@@ -20,5 +20,5 @@ export default class Entity extends Model {
   bool_field!: boolean;
 
   @Column
-  file_field!: string;
+  file_name!: string;
 }
