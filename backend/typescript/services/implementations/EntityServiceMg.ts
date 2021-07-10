@@ -62,9 +62,9 @@ class EntityService implements IEntityService {
 
   async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
     let newEntity: Entity | null;
-    let fileName = entity.filePath ? uuidv4() : "";
+    const fileName = entity.filePath ? uuidv4() : "";
     try {
-      newEntity = await MgEntity.create({...entity, fileName});
+      newEntity = await MgEntity.create({ ...entity, fileName });
       if (entity.filePath) {
         this.storageService.createFile(fileName, entity.filePath);
       }

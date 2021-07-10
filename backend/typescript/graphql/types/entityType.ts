@@ -33,8 +33,12 @@ const entityType = gql`
   }
 
   extend type Mutation {
-    createEntity(entity: EntityRequestDTO!): EntityResponseDTO!
-    updateEntity(id: ID!, entity: EntityRequestDTO!): EntityResponseDTO!
+    createEntity(entity: EntityRequestDTO!, file: Upload): EntityResponseDTO!
+    updateEntity(
+      id: ID!
+      entity: EntityRequestDTO!
+      file: Upload
+    ): EntityResponseDTO!
     deleteEntity(id: ID!): ID
   }
 `;

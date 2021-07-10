@@ -62,7 +62,7 @@ class EntityService implements IEntityService {
 
   async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
     let newEntity: PgEntity | null;
-    let fileName = entity.filePath ? uuidv4() : "";
+    const fileName = entity.filePath ? uuidv4() : "";
     try {
       newEntity = await PgEntity.create({
         string_field: entity.stringField,
