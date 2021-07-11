@@ -8,6 +8,8 @@ const entityType = gql`
     D
   }
 
+  scalar Upload
+
   type EntityResponseDTO {
     id: ID!
     stringField: String!

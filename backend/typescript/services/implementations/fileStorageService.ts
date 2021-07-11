@@ -6,22 +6,23 @@ import logger from "../../utilities/logger";
 const Logger = logger(__filename);
 
 class FileStorageService implements IFileStorageService {
-  bucket: any;
+  bucketName: string;
 
   constructor(bucketName: string) {
-    this.bucket = storage().bucket(bucketName);
+    this.bucketName = bucketName;
   }
 
   async getFile(
     fileName: string,
     expirationTimeMinutes: number = 60,
   ): Promise<string> {
+    const bucket = storage().bucket(this.bucketName);
     const expirationDate = new Date();
     expirationDate.setMinutes(
       expirationDate.getMinutes() + expirationTimeMinutes,
     );
     try {
-      const res = await this.bucket.file(fileName).getSignedUrl({
+      const res = await bucket.file(fileName).getSignedUrl({
         action: "read",
         expires: expirationDate,
       });
@@ -38,11 +39,12 @@ class FileStorageService implements IFileStorageService {
     contentType: string | null = null,
   ): Promise<void> {
     try {
-      const currentBlob = await this.bucket.file(fileName);
+      const bucket = storage().bucket(this.bucketName);
+      const currentBlob = await bucket.file(fileName);
       if ((await currentBlob.exists())[0]) {
         throw new Error(`File name ${fileName} already exists`);
       }
-      await this.bucket.upload(filePath, {
+      await bucket.upload(filePath, {
         destination: fileName,
         metadata: { contentType },
       });
@@ -58,11 +60,12 @@ class FileStorageService implements IFileStorageService {
     contentType: string | null = null,
   ): Promise<void> {
     try {
-      const currentBlob = await this.bucket.file(fileName);
+      const bucket = storage().bucket(this.bucketName);
+      const currentBlob = await bucket.file(fileName);
       if (!(await currentBlob.exists())[0]) {
         throw new Error(`File name ${fileName} does not exist`);
       }
-      await this.bucket.upload(filePath, {
+      await bucket.upload(filePath, {
         destination: fileName,
         metadata: { contentType },
       });
@@ -74,7 +77,8 @@ class FileStorageService implements IFileStorageService {
 
   async deleteFile(fileName: string): Promise<void> {
     try {
-      const currentBlob = await this.bucket.file(fileName);
+      const bucket = storage().bucket(this.bucketName);
+      const currentBlob = await bucket.file(fileName);
       if (!currentBlob) {
         throw new Error(`File name ${fileName} does not exist`);
       }

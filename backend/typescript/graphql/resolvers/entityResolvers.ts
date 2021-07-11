@@ -1,5 +1,5 @@
 import fs from "fs";
-import { FileUpload } from "graphql-upload";
+import { FileUpload, GraphQLUpload } from "graphql-upload";
 import EntityService from "../../services/implementations/EntityServiceMg";
 import FileStorageService from "../../services/implementations/storageService";
 import { EntityRequestDTO } from "../../services/interfaces/IEntityService";
@@ -69,6 +69,7 @@ const entityResolvers = {
       return entityService.deleteEntity(id);
     },
   },
+  Upload: GraphQLUpload,
 };
 
 export default entityResolvers;
