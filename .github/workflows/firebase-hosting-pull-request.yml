@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: echo "REACT_APP_BACKEND_URL=${{ secrets.REACT_APP_BACKEND_URL }}" > .env
+      - run: echo "REACT_APP_BACKEND_URL=${{ secrets.REACT_APP_BACKEND_URL_PREVIEW }}" > .env
       - run: rm -rf node_modules && yarn install --frozen-lockfile && yarn build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
