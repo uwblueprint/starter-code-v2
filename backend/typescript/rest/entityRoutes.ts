@@ -93,4 +93,15 @@ entityRouter.delete("/:id", async (req, res) => {
   }
 });
 
+/* Get entity by id */
+entityRouter.get("/entities/files/:fileUUID", async (req, res) => {
+  const { fileUUID } = req.params;
+  try {
+    const fileURL = await fileStorageService.getFile(fileUUID);
+    res.status(200).json(fileURL);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
 export default entityRouter;

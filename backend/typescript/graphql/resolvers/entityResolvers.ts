@@ -16,6 +16,9 @@ const entityResolvers = {
     entities: async () => {
       return entityService.getEntities();
     },
+    file: async (_req: any, { fileUUID }: { fileUUID: string }) => {
+      return fileStorageService.getFile(fileUUID);
+    },
   },
   Mutation: {
     createEntity: async (
