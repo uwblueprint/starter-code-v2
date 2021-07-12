@@ -43,11 +43,10 @@ def create_app(config_name):
     ] = "postgres://{username}:{password}@{host}:5432/{db}".format(
         username=os.getenv("POSTGRES_USER"),
         password=os.getenv("POSTGRES_PASSWORD"),
-        host=os.getenv("DB_HOST"),
+        host=os.getenv("DB_TEST_HOST") if app.config["TESTING"] else os.getenv("DB_HOST"),
         db=os.getenv("POSTGRES_DB"),
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["MONGODB_URL"] = os.getenv("MG_DATABASE_URL")
 
     # required for auth
     firebase_admin.initialize_app(None, {"storageBucket": os.getenv("DEFAULT_BUCKET")})

@@ -9,8 +9,9 @@ export const sequelize = new Sequelize(
 );
 
 export const mongo = {
-  connect: () => {
+  connect: (): void => {
     mongoose.connect(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       encodeURI(process.env.MG_DATABASE_URL!),
       {
         useUnifiedTopology: true,
