@@ -26,12 +26,13 @@ entityRouter.post(
   entityRequestDtoValidator,
   async (req, res) => {
     try {
+      const body = JSON.parse(req.body.body);
       const newEntity = await entityService.createEntity({
-        stringField: req.body.stringField,
-        intField: req.body.intField,
-        enumField: req.body.enumField,
-        stringArrayField: req.body.stringArrayField,
-        boolField: req.body.boolField,
+        stringField: body.stringField,
+        intField: body.intField,
+        enumField: body.enumField,
+        stringArrayField: body.stringArrayField,
+        boolField: body.boolField,
         filePath: req.file?.path,
       });
       res.status(201).json(newEntity);
@@ -64,22 +65,28 @@ entityRouter.get("/:id", async (req, res) => {
 });
 
 /* Update entity by id */
-entityRouter.put("/:id", entityRequestDtoValidator, async (req, res) => {
-  const { id } = req.params;
-  try {
-    const entity = await entityService.updateEntity(id, {
-      stringField: req.body.stringField,
-      intField: req.body.intField,
-      enumField: req.body.enumField,
-      stringArrayField: req.body.stringArrayField,
-      boolField: req.body.boolField,
-      filePath: req.body.filePath,
-    });
-    res.status(200).json(entity);
-  } catch (e) {
-    res.status(500).send(e.message);
-  }
-});
+entityRouter.put(
+  "/:id",
+  upload.single("file"),
+  entityRequestDtoValidator,
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const body = JSON.parse(req.body.body);
+      const entity = await entityService.updateEntity(id, {
+        stringField: body.stringField,
+        intField: body.intField,
+        enumField: body.enumField,
+        stringArrayField: body.stringArrayField,
+        boolField: body.boolField,
+        filePath: req.file?.path,
+      });
+      res.status(200).json(entity);
+    } catch (e) {
+      res.status(500).send(e.message);
+    }
+  },
+);
 
 /* Delete entity by id */
 entityRouter.delete("/:id", async (req, res) => {
@@ -94,7 +101,7 @@ entityRouter.delete("/:id", async (req, res) => {
 });
 
 /* Get entity by id */
-entityRouter.get("/entities/files/:fileUUID", async (req, res) => {
+entityRouter.get("/files/:fileUUID", async (req, res) => {
   const { fileUUID } = req.params;
   try {
     const fileURL = await fileStorageService.getFile(fileUUID);
