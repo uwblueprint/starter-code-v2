@@ -1,6 +1,6 @@
 type Type = "string" | "integer" | "boolean";
 
-const allowableFileExtenstions = [
+const allowableContentTypes = [
   "text/plain",
   "application/pdf",
   "image/png",
@@ -38,7 +38,7 @@ export const validateArray = (value: any, type: Type): boolean => {
 };
 
 export const validateFileType = (mimetype: string): boolean => {
-  return allowableFileExtenstions.includes(mimetype);
+  return allowableContentTypes.includes(mimetype);
 };
 
 export const getApiValidationError = (
@@ -50,7 +50,6 @@ export const getApiValidationError = (
 };
 
 export const getFileTypeValidationError = (mimetype: string): string => {
-  return `The file type ${mimetype} is not one of ${allowableFileExtenstions.join(
-    ", ",
-  )}`;
+  const allowableContentTypesString = allowableContentTypes.join(", ");
+  return `The file type ${mimetype} is not one of ${allowableContentTypesString}`;
 };
