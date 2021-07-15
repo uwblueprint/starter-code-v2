@@ -12,11 +12,11 @@ class EntityDTO(object):
 
     def validate(self):
         error_list = []
-        if not self.string_field or type(self.string_field) is not str:
+        if type(self.string_field) is not str:
             error_list.append("The string_field supplied is not a string.")
-        if not self.int_field or type(self.int_field) is not int:
+        if type(self.int_field) is not int:
             error_list.append("The int_field supplied is not an integer.")
-        if not self.string_array_field or type(self.string_array_field) is not list:
+        if type(self.string_array_field) is not list:
             error_list.append("The string_array_field supplied is not a list.")
         else:
             for item in self.string_array_field:
@@ -25,6 +25,8 @@ class EntityDTO(object):
                         "The items supplied string_array_field are not a string."
                     )
         enum_values = {"A", "B", "C", "D"}
-        if not self.enum_field or self.enum_field.upper() not in enum_values:
+        if self.enum_field.upper() not in enum_values:
             error_list.append("The enum_field supplied is not an enum.")
+        if type(self.bool_field) is not bool:
+            error_list.append("The bool_field supplied is not a boolean.")
         return error_list
