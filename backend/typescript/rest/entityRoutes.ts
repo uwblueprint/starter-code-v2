@@ -34,6 +34,7 @@ entityRouter.post(
         stringArrayField: body.stringArrayField,
         boolField: body.boolField,
         filePath: req.file?.path,
+        fileContentType: req.file?.mimetype,
       });
       res.status(201).json(newEntity);
     } catch (e) {
@@ -80,6 +81,7 @@ entityRouter.put(
         stringArrayField: body.stringArrayField,
         boolField: body.boolField,
         filePath: req.file?.path,
+        fileContentType: req.file?.mimetype,
       });
       res.status(200).json(entity);
     } catch (e) {

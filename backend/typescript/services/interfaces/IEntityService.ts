@@ -5,6 +5,7 @@ export interface EntityRequestDTO {
   stringArrayField: string[];
   boolField: boolean;
   filePath?: string;
+  fileContentType?: string;
 }
 
 export interface EntityResponseDTO {

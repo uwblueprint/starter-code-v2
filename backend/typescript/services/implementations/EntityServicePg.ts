@@ -73,7 +73,11 @@ class EntityService implements IEntityService {
         file_name: fileName,
       });
       if (entity.filePath) {
-        this.storageService.createFile(fileName, entity.filePath);
+        this.storageService.createFile(
+          fileName,
+          entity.filePath,
+          entity.fileContentType,
+        );
       }
     } catch (error) {
       Logger.error(`Failed to create entity. Reason = ${error.message}`);
@@ -124,9 +128,17 @@ class EntityService implements IEntityService {
       [, [resultingEntity]] = updateResult;
       if (entity.filePath) {
         if (currentFileName) {
-          this.storageService.updateFile(fileName, entity.filePath);
+          this.storageService.updateFile(
+            fileName,
+            entity.filePath,
+            entity.fileContentType,
+          );
         } else {
-          this.storageService.createFile(fileName, entity.filePath);
+          this.storageService.createFile(
+            fileName,
+            entity.filePath,
+            entity.fileContentType,
+          );
         }
       } else if (currentFileName) {
         this.storageService.deleteFile(currentFileName);
