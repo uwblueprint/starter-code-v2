@@ -1,10 +1,12 @@
+from ..interfaces.file_storage_service import IFileStorageService
 from ...models.entity_mg import Entity
 from ..interfaces.entity_service import IEntityService
 
 
 class EntityService(IEntityService):
-    def __init__(self, logger):
+    def __init__(self, logger, file_storage_service: IFileStorageService):
         self.logger = logger
+        self.file_storage_service = file_storage_service
 
     def get_entities(self):
         entities = []
@@ -24,8 +26,9 @@ class EntityService(IEntityService):
 
         return entity.to_serializable_dict()
 
-    def create_entity(self, entity):
+    def create_entity(self, entity, file, content_type):
         try:
+            self.file_storage_service.create_file(entity.file_name, file, content_type)
             new_entity = Entity(**entity.__dict__)
             new_entity.save()
         except Exception as error:
@@ -34,7 +37,9 @@ class EntityService(IEntityService):
 
         return new_entity.to_serializable_dict()
 
-    def update_entity(self, id, entity):
+    def update_entity(self, id, entity, file, content_type):
+        if file:
+            self.file_storage_service.update_file(entity.file_name, file, content_type)
         updated_entity = Entity.objects(id=id).modify(new=True, **entity.__dict__)
 
         if updated_entity is None:
@@ -45,7 +50,10 @@ class EntityService(IEntityService):
 
     def delete_entity(self, id):
         try:
+            file_name = Entity.objects.get(id=id).file_name
             deleted = Entity.objects(id=id).modify(remove=True)
+            if deleted:
+                self.file_storage_service.delete_file(file_name)
             return id
         except Exception as error:
             self.logger.error(str(error))

@@ -9,6 +9,7 @@ class Entity(Document):
     )
     string_array_field = ListField(StringField())
     bool_field = BooleanField()
+    file_name = StringField()
 
     def to_serializable_dict(self):
         entity_dict = self.to_mongo().to_dict()
