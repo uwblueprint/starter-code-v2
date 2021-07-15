@@ -90,16 +90,30 @@ class EntityService implements IEntityService {
     let updatedEntity: Entity | null;
     let fileName = "";
     try {
-      updatedEntity = await MgEntity.findByIdAndUpdate(id, entity, {
-        new: true,
-        runValidators: true,
-      });
+      const currentEntity = await MgEntity.findById(id, "fileName");
+      const currentFileName = currentEntity?.fileName;
+      if (entity.filePath) {
+        fileName = currentFileName || uuidv4();
+      }
+      updatedEntity = await MgEntity.findByIdAndUpdate(
+        id,
+        { ...entity, fileName },
+        {
+          new: true,
+          runValidators: true,
+        },
+      );
       if (!updatedEntity) {
         throw new Error(`Entity id ${id} not found`);
       }
-      fileName = updatedEntity.fileName;
       if (entity.filePath) {
-        this.storageService.updateFile(fileName, entity.filePath);
+        if (currentFileName) {
+          this.storageService.updateFile(fileName, entity.filePath);
+        } else {
+          this.storageService.createFile(fileName, entity.filePath);
+        }
+      } else if (currentFileName) {
+        this.storageService.deleteFile(currentFileName);
       }
     } catch (error) {
       Logger.error(`Failed to update entity. Reason = ${error.message}`);

@@ -98,6 +98,14 @@ class EntityService implements IEntityService {
     let updateResult: [number, PgEntity[]] | null;
     let fileName = "";
     try {
+      const currentEntity = await PgEntity.findByPk(id, {
+        raw: true,
+        attributes: ["file_name"],
+      });
+      const currentFileName = currentEntity?.file_name;
+      if (entity.filePath) {
+        fileName = currentFileName || uuidv4();
+      }
       updateResult = await PgEntity.update(
         {
           string_field: entity.stringField,
@@ -105,6 +113,7 @@ class EntityService implements IEntityService {
           enum_field: entity.enumField,
           string_array_field: entity.stringArrayField,
           bool_field: entity.boolField,
+          file_name: fileName,
         },
         { where: { id }, returning: true },
       );
@@ -113,9 +122,14 @@ class EntityService implements IEntityService {
         throw new Error(`Entity id ${id} not found`);
       }
       [, [resultingEntity]] = updateResult;
-      fileName = resultingEntity.file_name;
       if (entity.filePath) {
-        this.storageService.updateFile(fileName, entity.filePath);
+        if (currentFileName) {
+          this.storageService.updateFile(fileName, entity.filePath);
+        } else {
+          this.storageService.createFile(fileName, entity.filePath);
+        }
+      } else if (currentFileName) {
+        this.storageService.deleteFile(currentFileName);
       }
     } catch (error) {
       Logger.error(`Failed to update entity. Reason = ${error.message}`);

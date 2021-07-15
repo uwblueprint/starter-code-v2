@@ -50,5 +50,7 @@ export const getApiValidationError = (
 };
 
 export const getFileTypeValidationError = (mimetype: string): string => {
-  return `The file type ${mimetype} is not one of ${allowableFileExtenstions.join(", ")}`;
+  return `The file type ${mimetype} is not one of ${allowableFileExtenstions.join(
+    ", ",
+  )}`;
 };
