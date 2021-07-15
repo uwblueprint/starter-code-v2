@@ -2,6 +2,7 @@ import os
 import firebase_admin
 
 from flask import Flask
+from flask.cli import ScriptInfo
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from logging.config import dictConfig
@@ -32,7 +33,9 @@ def create_app(config_name):
     )
 
     app = Flask(__name__, template_folder="templates", static_folder="static")
-    app.config.from_object(app_config[config_name])
+    # do not read config object if creating app from Flask CLI (e.g. flask db migrate)
+    if type(config_name) is not ScriptInfo:
+        app.config.from_object(app_config[config_name])
 
     app.config["CORS_ORIGINS"] = ["http://localhost:3000"]
     app.config["CORS_SUPPORTS_CREDENTIALS"] = True
