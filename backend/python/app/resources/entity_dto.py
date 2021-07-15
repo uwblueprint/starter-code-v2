@@ -8,8 +8,8 @@ class EntityDTO(object):
             if kwargs.get("enum_field") is not None
             else kwargs.get("enum_field")
         )
-        self.file_name = kwargs.get("file_name")
         self.bool_field = kwargs.get("bool_field")
+        self.file_name = kwargs.get("file_name")
 
     def validate(self):
         error_list = []
