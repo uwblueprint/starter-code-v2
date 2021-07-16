@@ -1,7 +1,7 @@
 import fs from "fs";
 import { FileUpload } from "graphql-upload";
 import EntityService from "../../services/implementations/EntityServiceMg";
-import FileStorageService from "../../services/implementations/storageService";
+import FileStorageService from "../../services/implementations/fileStorageService";
 import { EntityRequestDTO } from "../../services/interfaces/IEntityService";
 
 const defaultBucket = process.env.DEFAULT_BUCKET || "";

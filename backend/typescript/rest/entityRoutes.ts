@@ -5,8 +5,8 @@ import EntityServicePg from "../services/implementations/EntityServicePg";
 import { isAuthorizedByRole } from "../middlewares/auth";
 import { IEntityService } from "../services/interfaces/IEntityService";
 import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
-import IFileStorageService from "../services/interfaces/storageService";
-import FileStorageService from "../services/implementations/storageService";
+import IFileStorageService from "../services/interfaces/fileStorageService";
+import FileStorageService from "../services/implementations/fileStorageService";
 
 const upload = multer({ dest: "uploads/" });
 
