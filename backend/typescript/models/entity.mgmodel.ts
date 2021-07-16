@@ -34,7 +34,6 @@ const EntitySchema: Schema = new Schema({
   },
   fileName: {
     type: String,
-    required: true,
   },
 });
 

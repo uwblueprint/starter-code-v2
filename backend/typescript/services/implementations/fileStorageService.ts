@@ -22,7 +22,11 @@ class FileStorageService implements IFileStorageService {
       expirationDate.getMinutes() + expirationTimeMinutes,
     );
     try {
-      const res = await bucket.file(fileName).getSignedUrl({
+      const currentBlob = await bucket.file(fileName);
+      if (!(await currentBlob.exists())[0]) {
+        throw new Error(`File name ${fileName} does not exist`);
+      }
+      const res = await currentBlob.getSignedUrl({
         action: "read",
         expires: expirationDate,
       });
