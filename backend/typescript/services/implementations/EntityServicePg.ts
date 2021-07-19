@@ -64,6 +64,13 @@ class EntityService implements IEntityService {
     let newEntity: PgEntity | null;
     const fileName = entity.filePath ? uuidv4() : "";
     try {
+      if (entity.filePath) {
+        this.storageService.createFile(
+          fileName,
+          entity.filePath,
+          entity.fileContentType,
+        );
+      }
       newEntity = await PgEntity.create({
         string_field: entity.stringField,
         int_field: entity.intField,
@@ -72,13 +79,6 @@ class EntityService implements IEntityService {
         bool_field: entity.boolField,
         file_name: fileName,
       });
-      if (entity.filePath) {
-        this.storageService.createFile(
-          fileName,
-          entity.filePath,
-          entity.fileContentType,
-        );
-      }
     } catch (error) {
       Logger.error(`Failed to create entity. Reason = ${error.message}`);
       throw error;
@@ -109,6 +109,21 @@ class EntityService implements IEntityService {
       const currentFileName = currentEntity?.file_name;
       if (entity.filePath) {
         fileName = currentFileName || uuidv4();
+        if (currentFileName) {
+          this.storageService.updateFile(
+            fileName,
+            entity.filePath,
+            entity.fileContentType,
+          );
+        } else {
+          this.storageService.createFile(
+            fileName,
+            entity.filePath,
+            entity.fileContentType,
+          );
+        }
+      } else if (currentFileName) {
+        this.storageService.deleteFile(currentFileName);
       }
       updateResult = await PgEntity.update(
         {
@@ -126,23 +141,6 @@ class EntityService implements IEntityService {
         throw new Error(`Entity id ${id} not found`);
       }
       [, [resultingEntity]] = updateResult;
-      if (entity.filePath) {
-        if (currentFileName) {
-          this.storageService.updateFile(
-            fileName,
-            entity.filePath,
-            entity.fileContentType,
-          );
-        } else {
-          this.storageService.createFile(
-            fileName,
-            entity.filePath,
-            entity.fileContentType,
-          );
-        }
-      } else if (currentFileName) {
-        this.storageService.deleteFile(currentFileName);
-      }
     } catch (error) {
       Logger.error(`Failed to update entity. Reason = ${error.message}`);
       throw error;

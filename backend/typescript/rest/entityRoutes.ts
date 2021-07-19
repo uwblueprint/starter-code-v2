@@ -102,7 +102,7 @@ entityRouter.delete("/:id", async (req, res) => {
   }
 });
 
-/* Get entity by id */
+/* Get file associated with entity by fileUUID */
 entityRouter.get("/files/:fileUUID", async (req, res) => {
   const { fileUUID } = req.params;
   try {

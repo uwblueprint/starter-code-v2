@@ -64,7 +64,6 @@ class EntityService implements IEntityService {
     let newEntity: Entity | null;
     const fileName = entity.filePath ? uuidv4() : "";
     try {
-      newEntity = await MgEntity.create({ ...entity, fileName });
       if (entity.filePath) {
         this.storageService.createFile(
           fileName,
@@ -72,6 +71,7 @@ class EntityService implements IEntityService {
           entity.fileContentType,
         );
       }
+      newEntity = await MgEntity.create({ ...entity, fileName });
     } catch (error) {
       Logger.error(`Failed to create entity. Reason = ${error.message}`);
       throw error;
@@ -98,19 +98,6 @@ class EntityService implements IEntityService {
       const currentFileName = currentEntity?.fileName;
       if (entity.filePath) {
         fileName = currentFileName || uuidv4();
-      }
-      updatedEntity = await MgEntity.findByIdAndUpdate(
-        id,
-        { ...entity, fileName },
-        {
-          new: true,
-          runValidators: true,
-        },
-      );
-      if (!updatedEntity) {
-        throw new Error(`Entity id ${id} not found`);
-      }
-      if (entity.filePath) {
         if (currentFileName) {
           this.storageService.updateFile(
             fileName,
@@ -126,6 +113,17 @@ class EntityService implements IEntityService {
         }
       } else if (currentFileName) {
         this.storageService.deleteFile(currentFileName);
+      }
+      updatedEntity = await MgEntity.findByIdAndUpdate(
+        id,
+        { ...entity, fileName },
+        {
+          new: true,
+          runValidators: true,
+        },
+      );
+      if (!updatedEntity) {
+        throw new Error(`Entity id ${id} not found`);
       }
     } catch (error) {
       Logger.error(`Failed to update entity. Reason = ${error.message}`);
