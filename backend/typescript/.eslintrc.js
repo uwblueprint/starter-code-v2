@@ -12,6 +12,8 @@ module.exports = {
     "airbnb-typescript/base",
     "prettier",
     "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
   ],
   rules: {
     "prettier/prettier": ["error", { endOfLine: "auto" }],

@@ -1,4 +1,5 @@
 # postgresql {
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 # } postgresql
 # mongodb {
@@ -8,7 +9,8 @@ from mongoengine import connect
 
 # postgresql {
 db = SQLAlchemy()
-erase_db_and_sync = True
+migrate = Migrate()
+erase_db_and_sync = False
 
 
 # } postgresql
@@ -21,6 +23,7 @@ def init_app(app):
     app.app_context().push()
     # postgresql {
     db.init_app(app)
+    migrate.init_app(app, db)
 
     if erase_db_and_sync:
         # drop tables

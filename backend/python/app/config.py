@@ -1,3 +1,6 @@
+import os
+
+
 class Config(object):
     """
     Common configurations
@@ -5,6 +8,7 @@ class Config(object):
 
     # put any configurations here that are common across all environments
     # list of available configs: https://flask.palletsprojects.com/en/1.1.x/config/
+    MONGODB_URL = os.getenv("MG_DATABASE_URL")
 
 
 class DevelopmentConfig(Config):
@@ -24,4 +28,13 @@ class ProductionConfig(Config):
     DEBUG = False
 
 
-app_config = {"development": DevelopmentConfig, "production": ProductionConfig}
+class TestingConfig(Config):
+    """
+    Testing configurations
+    """
+    DEBUG = False
+    TESTING = True
+    MONGODB_URL = "mongomock://localhost"
+
+
+app_config = {"development": DevelopmentConfig, "production": ProductionConfig, "testing": TestingConfig}

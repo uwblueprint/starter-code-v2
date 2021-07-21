@@ -13,7 +13,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     env_file:
-      - ./.env
+      - ./frontend/.env
   typescript {
   ts-backend:
     build:
@@ -29,6 +29,7 @@ services:
     postgresql {
     depends_on:
       - db
+      - db-test
     } postgresql
     env_file:
       - ./.env
@@ -48,6 +49,7 @@ services:
     postgresql {
     depends_on:
       - db
+      - db-test
     } postgresql
     env_file:
       - ./.env
@@ -61,7 +63,16 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
-  } postgresql
+  db-test:
+    image: postgres:12-alpine
+    ports:
+      - 5430:5432
+    volumes:
+      - postgres_data_test:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    } postgresql
 
 volumes:
   postgres_data:
+  postgres_data_test:
