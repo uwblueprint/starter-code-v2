@@ -1,12 +1,12 @@
 type Type = "string" | "integer" | "boolean";
 
-const allowableContentTypes = [
+const allowableContentTypes = new Set([
   "text/plain",
   "application/pdf",
   "image/png",
   "image/jpeg",
   "image/gif",
-];
+]);
 
 export const validatePrimitive = (value: any, type: Type): boolean => {
   if (value === undefined || value === null) return false;
@@ -38,7 +38,7 @@ export const validateArray = (value: any, type: Type): boolean => {
 };
 
 export const validateFileType = (mimetype: string): boolean => {
-  return allowableContentTypes.includes(mimetype);
+  return allowableContentTypes.has(mimetype);
 };
 
 export const getApiValidationError = (
@@ -50,6 +50,6 @@ export const getApiValidationError = (
 };
 
 export const getFileTypeValidationError = (mimetype: string): string => {
-  const allowableContentTypesString = allowableContentTypes.join(", ");
+  const allowableContentTypesString = [...allowableContentTypes].join(", ");
   return `The file type ${mimetype} is not one of ${allowableContentTypesString}`;
 };

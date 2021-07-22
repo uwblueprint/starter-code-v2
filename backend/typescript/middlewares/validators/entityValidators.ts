@@ -17,7 +17,7 @@ export const entityRequestDtoValidator = async (
   try {
     body = JSON.parse(req.body.body);
   } catch (e) {
-    return res.status(500).send(e.message);
+    return res.status(400).send(e.message);
   }
   if (!validatePrimitive(body.stringField, "string")) {
     return res.status(400).send(getApiValidationError("stringField", "string"));

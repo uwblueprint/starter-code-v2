@@ -146,7 +146,9 @@ class EntityService implements IEntityService {
       if (!deletedEntity) {
         throw new Error(`Entity id ${id} not found`);
       }
-      this.storageService.deleteFile(deletedEntity.fileName);
+      if (deletedEntity.fileName) {
+        this.storageService.deleteFile(deletedEntity.fileName);
+      }
     } catch (error) {
       Logger.error(`Failed to delete entity. Reason = ${error.message}`);
       throw error;
