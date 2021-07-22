@@ -9,10 +9,7 @@ const defaultBucket = process.env.DEFAULT_BUCKET || "";
 const fileStorageService = new FileStorageService(defaultBucket);
 const entityService = new EntityService(fileStorageService);
 
-const writeFile = (
-  readStream: ReadStream,
-  filePath: string,
-): Promise<void> => {
+const writeFile = (readStream: ReadStream, filePath: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const out = fs.createWriteStream(filePath);
     readStream.pipe(out);
@@ -49,7 +46,7 @@ const entityResolvers = {
         fileContentType = mimetype;
         await writeFile(createReadStream(), filePath);
       }
-      return entityService.createEntity({
+      const newEntity = entityService.createEntity({
         stringField: entity.stringField,
         intField: entity.intField,
         enumField: entity.enumField,
@@ -58,6 +55,10 @@ const entityResolvers = {
         filePath,
         fileContentType,
       });
+      if (filePath) {
+        fs.unlinkSync(filePath);
+      }
+      return newEntity;
     },
     updateEntity: async (
       _req: any,
@@ -76,7 +77,7 @@ const entityResolvers = {
         fileContentType = mimetype;
         await writeFile(createReadStream(), filePath);
       }
-      return entityService.updateEntity(id, {
+      const updatedEntity = entityService.updateEntity(id, {
         stringField: entity.stringField,
         intField: entity.intField,
         enumField: entity.enumField,
@@ -85,6 +86,10 @@ const entityResolvers = {
         filePath,
         fileContentType,
       });
+      if (filePath) {
+        fs.unlinkSync(filePath);
+      }
+      return updatedEntity;
     },
     deleteEntity: async (_req: any, { id }: { id: string }) => {
       return entityService.deleteEntity(id);
