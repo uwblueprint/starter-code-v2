@@ -1,5 +1,6 @@
 import fs from "fs";
 import { FileUpload } from "graphql-upload";
+import { ReadStream } from "fs-capacitor";
 import EntityService from "../../services/implementations/EntityServiceMg";
 import FileStorageService from "../../services/implementations/fileStorageService";
 import { EntityRequestDTO } from "../../services/interfaces/IEntityService";
@@ -7,6 +8,20 @@ import { EntityRequestDTO } from "../../services/interfaces/IEntityService";
 const defaultBucket = process.env.DEFAULT_BUCKET || "";
 const fileStorageService = new FileStorageService(defaultBucket);
 const entityService = new EntityService(fileStorageService);
+
+const writeFile = (
+  readStream: ReadStream,
+  filePath: string,
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const out = fs.createWriteStream(filePath);
+    readStream.pipe(out);
+    out.on("finish", () => {
+      resolve();
+    });
+    out.on("error", (err) => reject(err));
+  });
+};
 
 const entityResolvers = {
   Query: {
@@ -32,7 +47,7 @@ const entityResolvers = {
         const uploadDir = "uploads";
         filePath = `${uploadDir}/${filename}`;
         fileContentType = mimetype;
-        createReadStream().pipe(fs.createWriteStream(filePath));
+        await writeFile(createReadStream(), filePath);
       }
       return entityService.createEntity({
         stringField: entity.stringField,
@@ -59,7 +74,7 @@ const entityResolvers = {
         const uploadDir = "uploads";
         filePath = `${uploadDir}/${filename}`;
         fileContentType = mimetype;
-        createReadStream().pipe(fs.createWriteStream(filePath));
+        await writeFile(createReadStream(), filePath);
       }
       return entityService.updateEntity(id, {
         stringField: entity.stringField,
