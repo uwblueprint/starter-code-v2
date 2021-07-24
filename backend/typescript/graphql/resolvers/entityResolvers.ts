@@ -4,6 +4,10 @@ import { ReadStream } from "fs-capacitor";
 import EntityService from "../../services/implementations/EntityServiceMg";
 import FileStorageService from "../../services/implementations/fileStorageService";
 import { EntityRequestDTO } from "../../services/interfaces/IEntityService";
+import {
+  validateFileType,
+  getFileTypeValidationError,
+} from "../../middlewares/validators/util";
 
 const defaultBucket = process.env.DEFAULT_BUCKET || "";
 const fileStorageService = new FileStorageService(defaultBucket);
@@ -44,9 +48,12 @@ const entityResolvers = {
         const uploadDir = "uploads";
         filePath = `${uploadDir}/${filename}`;
         fileContentType = mimetype;
+        if (!validateFileType(fileContentType)) {
+          throw new Error(getFileTypeValidationError(fileContentType));
+        }
         await writeFile(createReadStream(), filePath);
       }
-      const newEntity = entityService.createEntity({
+      const newEntity = await entityService.createEntity({
         stringField: entity.stringField,
         intField: entity.intField,
         enumField: entity.enumField,
@@ -75,9 +82,12 @@ const entityResolvers = {
         const uploadDir = "uploads";
         filePath = `${uploadDir}/${filename}`;
         fileContentType = mimetype;
+        if (!validateFileType(fileContentType)) {
+          throw new Error(getFileTypeValidationError(fileContentType));
+        }
         await writeFile(createReadStream(), filePath);
       }
-      const updatedEntity = entityService.updateEntity(id, {
+      const updatedEntity = await entityService.updateEntity(id, {
         stringField: entity.stringField,
         intField: entity.intField,
         enumField: entity.enumField,

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import fs from "fs";
 import multer from "multer";
 // import EntityServiceMg from "../services/implementations/EntityServiceMg";
 import EntityServicePg from "../services/implementations/EntityServicePg";
@@ -36,6 +37,9 @@ entityRouter.post(
         filePath: req.file?.path,
         fileContentType: req.file?.mimetype,
       });
+      if (req.file?.path) {
+        fs.unlinkSync(req.file.path);
+      }
       res.status(201).json(newEntity);
     } catch (e) {
       res.status(500).send(e.message);
@@ -83,6 +87,9 @@ entityRouter.put(
         filePath: req.file?.path,
         fileContentType: req.file?.mimetype,
       });
+      if (req.file?.path) {
+        fs.unlinkSync(req.file.path);
+      }
       res.status(200).json(entity);
     } catch (e) {
       res.status(500).send(e.message);
@@ -107,7 +114,7 @@ entityRouter.get("/files/:fileUUID", async (req, res) => {
   const { fileUUID } = req.params;
   try {
     const fileURL = await fileStorageService.getFile(fileUUID);
-    res.status(200).json(fileURL);
+    res.status(200).json({ fileURL });
   } catch (e) {
     res.status(500).send(e.message);
   }

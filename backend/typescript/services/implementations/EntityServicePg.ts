@@ -65,7 +65,7 @@ class EntityService implements IEntityService {
     const fileName = entity.filePath ? uuidv4() : "";
     try {
       if (entity.filePath) {
-        this.storageService.createFile(
+        await this.storageService.createFile(
           fileName,
           entity.filePath,
           entity.fileContentType,
@@ -110,20 +110,20 @@ class EntityService implements IEntityService {
       if (entity.filePath) {
         fileName = currentFileName || uuidv4();
         if (currentFileName) {
-          this.storageService.updateFile(
+          await this.storageService.updateFile(
             fileName,
             entity.filePath,
             entity.fileContentType,
           );
         } else {
-          this.storageService.createFile(
+          await this.storageService.createFile(
             fileName,
             entity.filePath,
             entity.fileContentType,
           );
         }
       } else if (currentFileName) {
-        this.storageService.deleteFile(currentFileName);
+        await this.storageService.deleteFile(currentFileName);
       }
       updateResult = await PgEntity.update(
         {
@@ -167,7 +167,7 @@ class EntityService implements IEntityService {
         throw new Error(`Entity id ${id} not found`);
       }
       if (entityToDelete.file_name) {
-        this.storageService.deleteFile(entityToDelete.file_name);
+        await this.storageService.deleteFile(entityToDelete.file_name);
       }
     } catch (error) {
       Logger.error(`Failed to delete entity. Reason = ${error.message}`);

@@ -33,7 +33,7 @@ const entityType = gql`
   extend type Query {
     entity(id: ID!): EntityResponseDTO!
     entities: [EntityResponseDTO!]!
-    file(fileUUID: String!): ID!
+    file(fileUUID: ID!): String!
   }
 
   extend type Mutation {
