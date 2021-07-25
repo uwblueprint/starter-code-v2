@@ -1,11 +1,14 @@
 from ...models.entity import Entity
 from ...models import db
 from ..interfaces.entity_service import IEntityService
+from ..interfaces.file_storage_service import IFileStorageService
+from uuid import uuid4
 
 
 class EntityService(IEntityService):
-    def __init__(self, logger):
+    def __init__(self, logger, file_storage_service: IFileStorageService):
         self.logger = logger
+        self.file_storage_service = file_storage_service
 
     def get_entities(self):
         # Entity is a SQLAlchemy model, we can use convenient methods provided
@@ -44,11 +47,13 @@ class EntityService(IEntityService):
         return updated_entity.to_dict()
 
     def delete_entity(self, id):
+        file_name = Entity.query.get(id).file_name
         deleted = Entity.query.filter_by(id=id).delete()
         db.session.commit()
 
         # deleted is the number of rows deleted
         if deleted == 1:
+
             return id
 
         self.logger.error("Invalid id")
