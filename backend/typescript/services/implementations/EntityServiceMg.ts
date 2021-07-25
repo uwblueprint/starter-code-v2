@@ -1,14 +1,23 @@
+import { v4 as uuidv4 } from "uuid";
+
 import MgEntity, { Entity } from "../../models/entity.mgmodel";
 import {
   IEntityService,
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
+import IFileStorageService from "../interfaces/fileStorageService";
 import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
 
 class EntityService implements IEntityService {
+  storageService: IFileStorageService;
+
+  constructor(storageService: IFileStorageService) {
+    this.storageService = storageService;
+  }
+
   /* eslint-disable class-methods-use-this */
   async getEntity(id: string): Promise<EntityResponseDTO> {
     let entity: Entity | null;
@@ -29,6 +38,7 @@ class EntityService implements IEntityService {
       enumField: entity.enumField,
       stringArrayField: entity.stringArrayField,
       boolField: entity.boolField,
+      fileName: entity.fileName,
     };
   }
 
@@ -42,6 +52,7 @@ class EntityService implements IEntityService {
         enumField: entity.enumField,
         stringArrayField: entity.stringArrayField,
         boolField: entity.boolField,
+        fileName: entity.fileName,
       }));
     } catch (error) {
       Logger.error(`Failed to get entities. Reason = ${error.message}`);
@@ -51,8 +62,16 @@ class EntityService implements IEntityService {
 
   async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
     let newEntity: Entity | null;
+    const fileName = entity.filePath ? uuidv4() : "";
     try {
-      newEntity = await MgEntity.create(entity);
+      if (entity.filePath) {
+        await this.storageService.createFile(
+          fileName,
+          entity.filePath,
+          entity.fileContentType,
+        );
+      }
+      newEntity = await MgEntity.create({ ...entity, fileName });
     } catch (error) {
       Logger.error(`Failed to create entity. Reason = ${error.message}`);
       throw error;
@@ -64,6 +83,7 @@ class EntityService implements IEntityService {
       enumField: newEntity.enumField,
       stringArrayField: newEntity.stringArrayField,
       boolField: newEntity.boolField,
+      fileName,
     };
   }
 
@@ -72,11 +92,36 @@ class EntityService implements IEntityService {
     entity: EntityRequestDTO,
   ): Promise<EntityResponseDTO | null> {
     let updatedEntity: Entity | null;
+    let fileName = "";
     try {
-      updatedEntity = await MgEntity.findByIdAndUpdate(id, entity, {
-        new: true,
-        runValidators: true,
-      });
+      const currentEntity = await MgEntity.findById(id, "fileName");
+      const currentFileName = currentEntity?.fileName;
+      if (entity.filePath) {
+        fileName = currentFileName || uuidv4();
+        if (currentFileName) {
+          await this.storageService.updateFile(
+            fileName,
+            entity.filePath,
+            entity.fileContentType,
+          );
+        } else {
+          await this.storageService.createFile(
+            fileName,
+            entity.filePath,
+            entity.fileContentType,
+          );
+        }
+      } else if (currentFileName) {
+        await this.storageService.deleteFile(currentFileName);
+      }
+      updatedEntity = await MgEntity.findByIdAndUpdate(
+        id,
+        { ...entity, fileName },
+        {
+          new: true,
+          runValidators: true,
+        },
+      );
       if (!updatedEntity) {
         throw new Error(`Entity id ${id} not found`);
       }
@@ -91,6 +136,7 @@ class EntityService implements IEntityService {
       enumField: updatedEntity.enumField,
       stringArrayField: updatedEntity.stringArrayField,
       boolField: updatedEntity.boolField,
+      fileName,
     };
   }
 
@@ -99,6 +145,9 @@ class EntityService implements IEntityService {
       const deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
       if (!deletedEntity) {
         throw new Error(`Entity id ${id} not found`);
+      }
+      if (deletedEntity.fileName) {
+        await this.storageService.deleteFile(deletedEntity.fileName);
       }
     } catch (error) {
       Logger.error(`Failed to delete entity. Reason = ${error.message}`);
