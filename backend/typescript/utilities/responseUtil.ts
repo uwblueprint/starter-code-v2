@@ -1,18 +1,20 @@
 import { Response } from "express";
-import { generateCSV } from "./generateCsv";
+import { generateCSV } from "./CSVUtils";
 
 export const setResponseByMimeType = (
   res: Response,
   responseCode: number,
-  data: string,
-  contentType: string,
-  error?: any,
+  contentType: string | undefined,
+  data: Array<{ [key: string]: any }>,
 ): Response => {
   if (contentType === "text/csv") {
     const csvText = generateCSV(data);
     return res.status(responseCode).send(csvText);
-  } else if (contentType === "text/csv" || contentType === "text/csv")
-    return res.status(415).json({ error: error.message });
+  }
+  if (contentType === "application/json" || contentType === "*/*") {
+    return res.status(responseCode).json(data);
+  }
+  return res.status(415).json(data);
 };
 
 export default setResponseByMimeType;

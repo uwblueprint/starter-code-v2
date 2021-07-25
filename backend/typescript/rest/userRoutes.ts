@@ -7,6 +7,7 @@ import {
 } from "../middlewares/validators/userValidators";
 import UserService from "../services/implementations/userService";
 import IUserService from "../services/interfaces/userService";
+import { setResponseByMimeType } from "../utilities/responseUtil";
 
 const userRouter: Router = Router();
 userRouter.use(isAuthorizedByRole(new Set(["Admin"])));
@@ -16,9 +17,15 @@ const userService: IUserService = new UserService();
 /* Get all users, optionally filter by a userId or email query parameter to retrieve a single user */
 userRouter.get("/", async (req, res) => {
   const { userId, email } = req.query;
+  const contentType = req.headers["content-type"];
 
   if (userId && email) {
     res.status(400).json({ error: "Cannot query by both userId and email." });
+    setResponseByMimeType(res, 400, contentType, [
+      {
+        error: "Cannot query by both userId and email.",
+      },
+    ]);
     return;
   }
 
