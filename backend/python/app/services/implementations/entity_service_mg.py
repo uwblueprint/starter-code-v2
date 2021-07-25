@@ -1,6 +1,7 @@
 from ..interfaces.file_storage_service import IFileStorageService
 from ...models.entity_mg import Entity
 from ..interfaces.entity_service import IEntityService
+from uuid import uuid4
 
 
 class EntityService(IEntityService):
@@ -28,7 +29,11 @@ class EntityService(IEntityService):
 
     def create_entity(self, entity, file, content_type):
         try:
-            self.file_storage_service.create_file(entity.file_name, file, content_type)
+            if file:
+                file_name = file_name uuid4()
+                self.file_storage_service.create_file(file_name, file, content_type)
+                entity.file_name = file_name
+
             new_entity = Entity(**entity.__dict__)
             new_entity.save()
         except Exception as error:
@@ -52,6 +57,7 @@ class EntityService(IEntityService):
         try:
             file_name = Entity.objects.get(id=id).file_name
             deleted = Entity.objects(id=id).modify(remove=True)
+            file_name = deleted.file_name
             if deleted:
                 self.file_storage_service.delete_file(file_name)
             return id
