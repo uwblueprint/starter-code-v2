@@ -27,13 +27,14 @@ class EntityService(IEntityService):
 
         return entity.to_serializable_dict()
 
-    def create_entity(self, entity, file):
+    def create_entity(self, entity):
         try:
-            if file:
+            if entity.file:
                 file_name = str(uuid4())
-                self.file_storage_service.create_file(file_name, file, file.content_type)
+                self.file_storage_service.create_file(file_name, entity.file, entity.file.content_type)
                 entity.file_name = file_name
-
+            if "file" in entity:
+                del entity.file
             new_entity = Entity(**entity.__dict__)
             new_entity.save()
         except Exception as error:
@@ -42,9 +43,11 @@ class EntityService(IEntityService):
 
         return new_entity.to_serializable_dict()
 
-    def update_entity(self, id, entity, file):
-        if file:
-            self.file_storage_service.update_file(entity.file_name, file, file.content_type)
+    def update_entity(self, id, entity):
+        if entity.file:
+            self.file_storage_service.update_file(entity.file_name, entity.file, entity.file.content_type)
+        if "file" in entity:
+                del entity.file
         updated_entity = Entity.objects(id=id).modify(new=True, **entity.__dict__)
 
         if updated_entity is None:
@@ -57,7 +60,6 @@ class EntityService(IEntityService):
         try:
             file_name = Entity.objects.get(id=id).file_name
             deleted = Entity.objects(id=id).modify(remove=True)
-            file_name = deleted.file_name
             if deleted:
                 self.file_storage_service.delete_file(file_name)
             return id
