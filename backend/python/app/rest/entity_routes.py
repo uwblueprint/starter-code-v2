@@ -1,5 +1,6 @@
 from flask import Blueprint, current_app, request
 from flask import jsonify
+import json
 
 from ..resources.entity_dto import EntityDTO
 
@@ -58,17 +59,22 @@ def get_entity(id):
 @require_authorization_by_role({"User", "Admin"})
 @validate_request("EntityDTO")
 def create_entity():
+    file = None
     try:
         # create a EntityResource object instead of using the raw request body
         # data validators and transformations are applied when constructing the resource,
         # this allows downstream code to make safe assumptions about the data
-        body = EntityDTO(**request.json)
+        if request.content_type == "application/json":
+            body = EntityDTO(**request.json)
+        else:
+            file = request.files.get('file', default=None)
+            body = EntityDTO(**json.loads(request.form.get('body')))
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     # HTTP status code 201 means Created
-    return jsonify(entity_service.create_entity(body)), 201
+    return jsonify(entity_service.create_entity(body, file)), 201
 
 
 # POSTGRES

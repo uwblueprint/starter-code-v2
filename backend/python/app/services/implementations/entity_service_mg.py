@@ -27,11 +27,11 @@ class EntityService(IEntityService):
 
         return entity.to_serializable_dict()
 
-    def create_entity(self, entity, file, content_type):
+    def create_entity(self, entity, file):
         try:
             if file:
-                file_name = file_name uuid4()
-                self.file_storage_service.create_file(file_name, file, content_type)
+                file_name = str(uuid4())
+                self.file_storage_service.create_file(file_name, file, file.content_type)
                 entity.file_name = file_name
 
             new_entity = Entity(**entity.__dict__)
