@@ -59,7 +59,6 @@ def get_entity(id):
 @require_authorization_by_role({"User", "Admin"})
 @validate_request("EntityDTO")
 def create_entity():
-    file = None
     try:
         # create a EntityResource object instead of using the raw request body
         # data validators and transformations are applied when constructing the resource,
@@ -67,14 +66,15 @@ def create_entity():
         if request.content_type == "application/json":
             body = EntityDTO(**request.json)
         else:
-            file = request.files.get('file', default=None)
-            body = EntityDTO(**json.loads(request.form.get('body')))
+            req = json.loads(request.form.get('body'))
+            req['file'] = request.files.get('file', default=None)
+            body = EntityDTO(**req)
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     # HTTP status code 201 means Created
-    return jsonify(entity_service.create_entity(body, file)), 201
+    return jsonify(entity_service.create_entity(body)), 201
 
 
 # POSTGRES
@@ -107,14 +107,15 @@ def update_entity(id):
         if request.content_type == "application/json":
             body = EntityDTO(**request.json)
         else:
-            file = request.files.get('file', default=None)
-            body = EntityDTO(**json.loads(request.form.get('body')))
+            req = json.loads(request.form.get('body'))
+            req['file'] = request.files.get('file', default=None)
+            body = EntityDTO(**req)
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     try:
-        result = entity_service.update_entity(id, body, file)
+        result = entity_service.update_entity(id, body)
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
