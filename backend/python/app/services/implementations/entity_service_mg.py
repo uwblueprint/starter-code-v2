@@ -42,9 +42,9 @@ class EntityService(IEntityService):
 
         return new_entity.to_serializable_dict()
 
-    def update_entity(self, id, entity, file, content_type):
+    def update_entity(self, id, entity, file):
         if file:
-            self.file_storage_service.update_file(entity.file_name, file, content_type)
+            self.file_storage_service.update_file(entity.file_name, file, file.content_type)
         updated_entity = Entity.objects(id=id).modify(new=True, **entity.__dict__)
 
         if updated_entity is None:
