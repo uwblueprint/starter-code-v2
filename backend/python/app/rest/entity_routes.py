@@ -102,14 +102,19 @@ def create_entity():
 @require_authorization_by_role({"User", "Admin"})
 @validate_request("EntityDTO")
 def update_entity(id):
+    file = None
     try:
-        body = EntityDTO(**request.json)
+        if request.content_type == "application/json":
+            body = EntityDTO(**request.json)
+        else:
+            file = request.files.get('file', default=None)
+            body = EntityDTO(**json.loads(request.form.get('body')))
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     try:
-        result = entity_service.update_entity(id, body)
+        result = entity_service.update_entity(id, body, file)
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
