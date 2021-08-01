@@ -1,3 +1,11 @@
+allowable_content_types = [
+    "text/plain",
+    "application/pdf",
+    "image/png",
+    "image/jpeg",
+    "image/gif"
+]
+
 class EntityDTO(object):
     def __init__(self, **kwargs):
         self.string_field = kwargs.get("string_field")
@@ -29,4 +37,10 @@ class EntityDTO(object):
         enum_values = {"A", "B", "C", "D"}
         if not self.enum_field or self.enum_field.upper() not in enum_values:
             error_list.append("The enum_field supplied is not an enum.")
+        if self.file:
+            if self.file.content_type not in allowable_content_types:
+                error_list.append("The {file_content_type} is not one of {allowed_types_str}".format(
+                    file_content_type=self.file.content_type, allowed_types_str=",".join(allowable_content_types)
+                ))
+
         return error_list
