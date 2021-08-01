@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 // } graphql
 // rest {
-// import React, { useState, useEffect } from "react";
+// import React from "react";
+// import useSWR from "swr";
 // } rest
 import BTable from "react-bootstrap/Table";
 import { HeaderGroup, useTable, Column } from "react-table";
@@ -173,11 +174,10 @@ const FILE = gql`
 // } graphql
 
 const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
+  // graphql {
   const [entities, setEntities] = useState<EntityData[] | null>(null);
 
-  // graphql {
   const apolloClient = useApolloClient();
-  // } graphql
 
   useQuery(ENTITIES, {
     fetchPolicy: "cache-and-network",
@@ -185,17 +185,12 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
       setEntities(data.entities.map((d: EntityResponse) => convert(d)));
     },
   });
-
+  // } graphql
   // rest {
-  // useEffect(() => {
-  //   const retrieveAndUpdateData = async () => {
-  //     const result = await EntityAPIClient.get();
-  //     if (result) {
-  //       setData(result.map((r: EntityResponse) => convert(r)));
-  //     }
-  //   };
-  //   retrieveAndUpdateData();
-  // }, []);
+  // const { data: entities } = useSWR<EntityData[]>("/entities", async () => {
+  //   const result = await EntityAPIClient.get();
+  //   return result.map((r: EntityResponse) => convert(r));
+  // });
   // } rest
 
   const downloadEntityFile = async (fileUUID: string) => {
