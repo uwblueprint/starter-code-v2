@@ -12,12 +12,13 @@ import { gql, useQuery } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
-
 // rest {
+
 // import EntityAPIClient, {
 //   EntityResponse,
 // } from "../../APIClients/EntityAPIClient";
 // } rest
+import { downloadCSV, generateCSV } from "../../utils/CSVUtils";
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
@@ -157,7 +158,21 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   // }, []);
   // } rest
 
-  return entities && <DisplayTable data={entities} />;
+  const downloadEntitiesCSV = async () => {
+    if (entities) {
+      const csvString = await generateCSV<EntityData>({ data: entities });
+      downloadCSV(csvString, "export.csv");
+    }
+  };
+
+  return (
+    <>
+      <button type="button" onClick={downloadEntitiesCSV}>
+        Download CSV
+      </button>
+      {entities && <DisplayTable data={entities} />}
+    </>
+  );
 };
 
 export default DisplayTableContainer;
