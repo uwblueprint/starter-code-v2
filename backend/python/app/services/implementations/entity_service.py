@@ -42,9 +42,21 @@ class EntityService(IEntityService):
         return new_entity.to_dict()
 
     def update_entity(self, id, entity):
+        current_entity = Entity.query.get(id)
+
+        if current_entity is None:
+            self.logger.error("Invalid id")
+            raise Exception("Invalid id")
+
         if entity.file:
-            self.file_storage_service.update_file(entity.file_name, entity.file, entity.file.content_type)
+            if current_entity.file_name:
+                self.file_storage_service.update_file(current_entity.file_name, entity.file, entity.file.content_type)
+            else:
+                entity.file_name = str(uuid4())
+                self.file_storage_service.create_file(entity.file_name, entity.file, entity.file.content_type)
             del entity.file
+        elif current_entity.file_name:
+            self.file_storage_service.delete_file(current_entity.file_name)
 
         Entity.query.filter_by(id=id).update(entity.__dict__)
         updated_entity = Entity.query.get(id)
