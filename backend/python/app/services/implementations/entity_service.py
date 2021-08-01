@@ -25,6 +25,11 @@ class EntityService(IEntityService):
 
     def create_entity(self, entity):
         try:
+            if entity.file:
+                entity.file_name = str(uuid4())
+                self.file_storage_service.create_file(entity.file_name, entity.file, entity.file.content_type)
+                del entity.file
+
             new_entity = Entity(**entity.__dict__)
         except Exception as error:
             self.logger.error(str(error))
@@ -37,6 +42,10 @@ class EntityService(IEntityService):
         return new_entity.to_dict()
 
     def update_entity(self, id, entity):
+        if entity.file:
+            self.file_storage_service.update_file(entity.file_name, entity.file, entity.file.content_type)
+            del entity.file
+
         Entity.query.filter_by(id=id).update(entity.__dict__)
         updated_entity = Entity.query.get(id)
         db.session.commit()
@@ -47,13 +56,14 @@ class EntityService(IEntityService):
         return updated_entity.to_dict()
 
     def delete_entity(self, id):
-        file_name = Entity.query.get(id).file_name
+        deleted_entity = Entity.query.get(id)
         deleted = Entity.query.filter_by(id=id).delete()
         db.session.commit()
 
         # deleted is the number of rows deleted
         if deleted == 1:
-
+            if deleted_entity.file_name:
+                self.file_storage_service.delete_file(deleted_entity.file_name)
             return id
 
         self.logger.error("Invalid id")
