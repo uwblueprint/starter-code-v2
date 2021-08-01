@@ -47,7 +47,7 @@ class EntityService(IEntityService):
         if entity.file:
             self.file_storage_service.update_file(entity.file_name, entity.file, entity.file.content_type)
         if "file" in entity:
-                del entity.file
+            del entity.file
         updated_entity = Entity.objects(id=id).modify(new=True, **entity.__dict__)
 
         if updated_entity is None:

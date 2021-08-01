@@ -83,7 +83,12 @@ def create_entity():
 # @require_authorization_by_role({"User", "Admin"})
 # def update_entity(id):
 #     try:
-#         body = EntityDTO(**request.json)
+#         if request.content_type == "application/json"
+#             body = EntityDTO(**request.json)
+#         else:
+#             req = json.loads(request.form.get('body'))
+#             req_file = request.files.get('file', default=None)
+#             body = EntityDTO(**req, file=req_file)
 #     except Exception as e:
 #         error_message = getattr(e, "message", None)
 #         return jsonify({"error": (error_message if error_message else str(e))}), 500
@@ -102,7 +107,6 @@ def create_entity():
 @require_authorization_by_role({"User", "Admin"})
 @validate_request("EntityDTO")
 def update_entity(id):
-    file = None
     try:
         if request.content_type == "application/json":
             body = EntityDTO(**request.json)
