@@ -8,6 +8,7 @@ import { IEntityService } from "../services/interfaces/IEntityService";
 import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
 import IFileStorageService from "../services/interfaces/fileStorageService";
 import FileStorageService from "../services/implementations/fileStorageService";
+import { setResponseByMimeType } from "../utilities/responseUtil";
 
 const upload = multer({ dest: "uploads/" });
 
@@ -49,23 +50,32 @@ entityRouter.post(
 
 /* Get all entities */
 entityRouter.get("/", async (_req, res) => {
+  const contentType = _req.headers["content-type"];
   try {
     const entities = await entityService.getEntities();
-    res.status(200).json(entities);
+    await setResponseByMimeType(res, 200, contentType, entities);
   } catch (e) {
-    res.status(500).send(e.message);
+    await setResponseByMimeType(res, 500, contentType, [
+      {
+        error: e.message,
+      },
+    ]);
   }
 });
 
 /* Get entity by id */
 entityRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
-
+  const contentType = req.headers["content-type"];
   try {
     const entity = await entityService.getEntity(id);
-    res.status(200).json(entity);
+    await setResponseByMimeType(res, 200, contentType, [entity]);
   } catch (e) {
-    res.status(500).send(e.message);
+    await setResponseByMimeType(res, 500, contentType, [
+      {
+        error: e.message,
+      },
+    ]);
   }
 });
 

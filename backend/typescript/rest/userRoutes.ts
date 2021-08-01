@@ -20,8 +20,7 @@ userRouter.get("/", async (req, res) => {
   const contentType = req.headers["content-type"];
 
   if (userId && email) {
-    res.status(400).json({ error: "Cannot query by both userId and email." });
-    setResponseByMimeType(res, 400, contentType, [
+    await setResponseByMimeType(res, 400, contentType, [
       {
         error: "Cannot query by both userId and email.",
       },
@@ -32,24 +31,34 @@ userRouter.get("/", async (req, res) => {
   if (!userId && !email) {
     try {
       const users = await userService.getUsers();
-      res.status(200).json(users);
+      await setResponseByMimeType(res, 200, contentType, users);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      await setResponseByMimeType(res, 500, contentType, [
+        {
+          error: error.message,
+        },
+      ]);
     }
     return;
   }
 
   if (userId) {
     if (typeof userId !== "string") {
-      res
-        .status(400)
-        .json({ error: "userId query parameter must be a string." });
+      await setResponseByMimeType(res, 400, contentType, [
+        {
+          error: "userId query parameter must be a string.",
+        },
+      ]);
     } else {
       try {
         const user = await userService.getUserById(userId);
-        res.status(200).json(user);
+        await setResponseByMimeType(res, 200, contentType, [user]);
       } catch (error) {
-        res.status(500).json({ error: error.message });
+        await setResponseByMimeType(res, 500, contentType, [
+          {
+            error: error.message,
+          },
+        ]);
       }
     }
     return;
@@ -57,15 +66,21 @@ userRouter.get("/", async (req, res) => {
 
   if (email) {
     if (typeof email !== "string") {
-      res
-        .status(400)
-        .json({ error: "email query parameter must be a string." });
+      await setResponseByMimeType(res, 400, contentType, [
+        {
+          error: "email query parameter must be a string.",
+        },
+      ]);
     } else {
       try {
         const user = await userService.getUserByEmail(email);
-        res.status(200).json(user);
+        await setResponseByMimeType(res, 200, contentType, [user]);
       } catch (error) {
-        res.status(500).json({ error: error.message });
+        await setResponseByMimeType(res, 500, contentType, [
+          {
+            error: error.message,
+          },
+        ]);
       }
     }
   }

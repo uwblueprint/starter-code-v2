@@ -1,20 +1,19 @@
 import { Response } from "express";
 import { generateCSV } from "./CSVUtils";
 
-export const setResponseByMimeType = (
+/* eslint-disable-next-line import/prefer-default-export */
+export const setResponseByMimeType = async (
   res: Response,
   responseCode: number,
   contentType: string | undefined,
   data: Array<{ [key: string]: any }>,
-): Response => {
+): Promise<Response> => {
   if (contentType === "text/csv") {
-    const csvText = generateCSV(data);
-    return res.status(responseCode).send(csvText);
+    const csvText = await generateCSV(data);
+    return res.status(responseCode).type("text/csv").send(csvText);
   }
-  if (contentType === "application/json" || contentType === "*/*") {
+  if (contentType === "application/json" || contentType === undefined) {
     return res.status(responseCode).json(data);
   }
   return res.status(415).json(data);
 };
-
-export default setResponseByMimeType;
