@@ -12,7 +12,9 @@ from ..services.implementations.entity_service_mg import EntityService
 from ..services.implementations.file_storage_service import FileStorageService
 
 # define instance of EntityService
-entity_service = EntityService(current_app.logger, FileStorageService(current_app.logger))
+entity_service = EntityService(
+    current_app.logger, FileStorageService(current_app.logger)
+)
 
 # defines a shared URL prefix for all routes
 blueprint = Blueprint("entity", __name__, url_prefix="/entities")
@@ -66,8 +68,8 @@ def create_entity():
         if request.content_type == "application/json":
             body = EntityDTO(**request.json)
         else:
-            req = json.loads(request.form.get('body'))
-            req['file'] = request.files.get('file', default=None)
+            req = json.loads(request.form.get("body"))
+            req["file"] = request.files.get("file", default=None)
             body = EntityDTO(**req)
     except Exception as e:
         error_message = getattr(e, "message", None)
@@ -111,8 +113,8 @@ def update_entity(id):
         if request.content_type == "application/json":
             body = EntityDTO(**request.json)
         else:
-            req = json.loads(request.form.get('body'))
-            req['file'] = request.files.get('file', default=None)
+            req = json.loads(request.form.get("body"))
+            req["file"] = request.files.get("file", default=None)
             body = EntityDTO(**req)
     except Exception as e:
         error_message = getattr(e, "message", None)

@@ -31,10 +31,11 @@ class EntityService(IEntityService):
         try:
             if entity.file:
                 file_name = str(uuid4())
-                self.file_storage_service.create_file(file_name, entity.file, entity.file.content_type)
+                self.file_storage_service.create_file(
+                    file_name, entity.file, entity.file.content_type
+                )
                 entity.file_name = file_name
-            if "file" in entity:
-                del entity.file
+            entity.__dict__.pop("file", None)
             new_entity = Entity(**entity.__dict__)
             new_entity.save()
         except Exception as error:
@@ -51,11 +52,15 @@ class EntityService(IEntityService):
 
         if entity.file:
             if current_entity.file_name:
-                self.file_storage_service.update_file(current_entity.file_name, entity.file, entity.file.content_type)
+                self.file_storage_service.update_file(
+                    current_entity.file_name, entity.file, entity.file.content_type
+                )
             else:
                 entity.file_name = str(uuid4())
-                self.file_storage_service.create_file(entity.file_name, entity.file, entity.file.content_type)
-            del entity.file
+                self.file_storage_service.create_file(
+                    entity.file_name, entity.file, entity.file.content_type
+                )
+            entity.__dict__.pop("file", None)
         elif current_entity.file_name:
             self.file_storage_service.delete_file(current_entity.file_name)
 
