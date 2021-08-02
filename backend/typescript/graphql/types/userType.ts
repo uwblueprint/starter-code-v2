@@ -31,8 +31,11 @@ const userType = gql`
 
   extend type Query {
     userById(id: ID!): UserDTO!
+    userByIdCSV(id: ID!): String!
     userByEmail(email: String!): UserDTO!
+    userByEmailCSV(email: String!): String!
     users: [UserDTO!]!
+    usersCSV: String!
   }
 
   extend type Mutation {
