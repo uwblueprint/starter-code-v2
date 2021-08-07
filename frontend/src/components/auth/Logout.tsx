@@ -5,6 +5,7 @@ import { gql, useMutation } from "@apollo/client";
 
 import authAPIClient from "../../APIClients/AuthAPIClient";
 import AuthContext from "../../contexts/AuthContext";
+
 // graphql {
 const LOGOUT = gql`
   mutation Logout($userId: ID!) {

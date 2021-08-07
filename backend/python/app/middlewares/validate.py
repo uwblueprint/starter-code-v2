@@ -27,10 +27,14 @@ def validate_request(dto_class_name):
             if request.content_type == "application/json":
                 dto = dtos[dto_class_name](**request.json)
             else:
+<<<<<<< HEAD
                 req_body = request.form.get("body", default=None)
                 if req_body is None:
                     return jsonify({"error": "Missing body"}), 400
                 req = json.loads(req_body)
+=======
+                req = json.loads(request.form.get("body"))
+>>>>>>> cf892e3124fec315da450f9154ae1bb2c4fe3bcf
                 req["file"] = request.files.get("file", default=None)
                 dto = dtos[dto_class_name](**req)
             error_message = dto.validate()

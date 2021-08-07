@@ -339,7 +339,7 @@
         ],
         "description": "Delete an entity based on its ID",
         "responses": {
-          "204": {
+          "200": {
             "description": "Successfully deleted entity based on ID"
           },
           "401": {
@@ -530,7 +530,7 @@
         "parameters": [
           {
             "in": "query",
-            "name": "userId",
+            "name": "user_id",
             "schema": {
               "type": "string"
             },
@@ -548,7 +548,7 @@
         "tags": [
           "User"
         ],
-        "description": "Get all users, optionally filter by a userId or email query parameter to retrieve a single user",
+        "description": "Get all users, optionally filter by a user_id or email query parameter to retrieve a single user",
         "responses": {
           "200": {
             "description": "Successfully returned a list of users, or a user filtered by id or email",
@@ -683,7 +683,7 @@
         "parameters": [
           {
             "in": "query",
-            "name": "userId",
+            "name": "user_id",
             "schema": {
               "type": "string"
             },
@@ -701,13 +701,13 @@
         "tags": [
           "User"
         ],
-        "description": "Deletes a user by userId or email, specified through a query parameter",
+        "description": "Deletes a user by user_id or email, specified through a query parameter",
         "responses": {
           "204": {
             "description": "Succesfully deleted user"
           },
           "400": {
-            "description": "Cannot query by both userId and email, invalid userId or email, userId or email is not a string, userId or email not supplied"
+            "description": "Cannot query by both user_id and email, invalid user_id or email, user_id or email is not a string, user_id or email not supplied"
           },
           "401": {
             "description": "Unauthorized"

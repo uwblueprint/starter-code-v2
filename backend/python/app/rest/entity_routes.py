@@ -11,9 +11,12 @@ from ..middlewares.validate import validate_request
 from ..services.implementations.entity_service_mg import EntityService
 from ..services.implementations.file_storage_service import FileStorageService
 
+# define instance of FileStorageService
+file_storage_service = FileStorageService(current_app.logger)
+
 # define instance of EntityService
 entity_service = EntityService(
-    current_app.logger, FileStorageService(current_app.logger)
+    current_app.logger, file_storage_service
 )
 
 # defines a shared URL prefix for all routes
@@ -161,7 +164,7 @@ def delete_entity(id):
 @require_authorization_by_role({"user", "Admin"})
 def get_file(id):
     try:
-        file_url = FileStorageService.get_file(id)
+        file_url = file_storage_service.get_file(id)
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500

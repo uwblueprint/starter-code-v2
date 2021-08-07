@@ -13,7 +13,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     env_file:
-      - ./.env
+      - ./frontend/.env
   ts-backend:
     build:
       context: ./backend/typescript
@@ -27,6 +27,7 @@ services:
       - 8.8.8.8
     depends_on:
       - db
+      - db-test
     env_file:
       - ./.env
   py-backend:
@@ -42,6 +43,7 @@ services:
      - ./backend/python:/app
     depends_on:
       - db
+      - db-test
     env_file:
       - ./.env
   db:
@@ -52,6 +54,15 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
+  db-test:
+    image: postgres:12-alpine
+    ports:
+      - 5430:5432
+    volumes:
+      - postgres_data_test:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
 
 volumes:
   postgres_data:
+  postgres_data_test:
