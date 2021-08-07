@@ -18,7 +18,6 @@ class EntityDTO(object):
             else kwargs.get("enum_field")
         )
         self.bool_field = kwargs.get("bool_field")
-        self.file_name = kwargs.get("file_name")
         self.file = kwargs.get("file")
 
     def validate(self):

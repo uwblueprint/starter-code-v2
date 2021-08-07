@@ -29,14 +29,14 @@ class EntityService(IEntityService):
 
     def create_entity(self, entity):
         try:
+            file_name = None
             if entity.file:
                 file_name = str(uuid4())
                 self.file_storage_service.create_file(
                     file_name, entity.file, entity.file.content_type
                 )
-                entity.file_name = file_name
             entity.__dict__.pop("file", None)
-            new_entity = Entity(**entity.__dict__)
+            new_entity = Entity(**entity.__dict__, file_name=file_name)
             new_entity.save()
         except Exception as error:
             self.logger.error(str(error))
@@ -49,22 +49,24 @@ class EntityService(IEntityService):
         if current_entity is None:
             self.logger.error("Invalid id")
             raise Exception("Invalid id")
-
+        file_name = current_entity.file_name
         if entity.file:
-            if current_entity.file_name:
+            if file_name:
                 self.file_storage_service.update_file(
-                    current_entity.file_name, entity.file, entity.file.content_type
+                    file_name, entity.file, entity.file.content_type
                 )
             else:
-                entity.file_name = str(uuid4())
+                file_name = str(uuid4())
                 self.file_storage_service.create_file(
-                    entity.file_name, entity.file, entity.file.content_type
+                    file_name, entity.file, entity.file.content_type
                 )
             entity.__dict__.pop("file", None)
-        elif current_entity.file_name:
-            self.file_storage_service.delete_file(current_entity.file_name)
+        elif file_name:
+            self.file_storage_service.delete_file(file_name)
 
-        updated_entity = Entity.objects(id=id).modify(new=True, **entity.__dict__)
+        updated_entity = Entity.objects(id=id).modify(
+            new=True, **entity.__dict__, file_name=file_name
+        )
 
         if updated_entity is None:
             self.logger.error("Invalid id")
