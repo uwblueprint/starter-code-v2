@@ -7,6 +7,7 @@ import {
 } from "../middlewares/validators/userValidators";
 import UserService from "../services/implementations/userService";
 import IUserService from "../services/interfaces/userService";
+import { UserDTO } from "../types";
 import { sendResponseByMimeType } from "../utilities/responseUtil";
 
 const userRouter: Router = Router();
@@ -31,7 +32,7 @@ userRouter.get("/", async (req, res) => {
   if (!userId && !email) {
     try {
       const users = await userService.getUsers();
-      await sendResponseByMimeType(res, 200, contentType, users);
+      await sendResponseByMimeType<UserDTO>(res, 200, contentType, users);
     } catch (error) {
       await sendResponseByMimeType(res, 500, contentType, [
         {

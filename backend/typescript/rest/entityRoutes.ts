@@ -4,7 +4,10 @@ import multer from "multer";
 // import EntityServiceMg from "../services/implementations/EntityServiceMg";
 import EntityServicePg from "../services/implementations/EntityServicePg";
 import { isAuthorizedByRole } from "../middlewares/auth";
-import { IEntityService } from "../services/interfaces/IEntityService";
+import {
+  EntityResponseDTO,
+  IEntityService,
+} from "../services/interfaces/IEntityService";
 import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
 import IFileStorageService from "../services/interfaces/fileStorageService";
 import FileStorageService from "../services/implementations/fileStorageService";
@@ -53,7 +56,12 @@ entityRouter.get("/", async (req, res) => {
   const contentType = req.headers["content-type"];
   try {
     const entities = await entityService.getEntities();
-    await sendResponseByMimeType(res, 200, contentType, entities);
+    await sendResponseByMimeType<EntityResponseDTO>(
+      res,
+      200,
+      contentType,
+      entities,
+    );
   } catch (e) {
     await sendResponseByMimeType(res, 500, contentType, [
       {

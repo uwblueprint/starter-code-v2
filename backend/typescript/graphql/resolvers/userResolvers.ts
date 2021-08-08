@@ -1,6 +1,6 @@
 import UserService from "../../services/implementations/userService";
 import IUserService from "../../services/interfaces/userService";
-import { CreateUserDTO, UpdateUserDTO } from "../../types";
+import { CreateUserDTO, UpdateUserDTO, UserDTO } from "../../types";
 import { generateCSV } from "../../utilities/csvUtils";
 
 const userService: IUserService = new UserService();
@@ -18,7 +18,7 @@ const userResolvers = {
     },
     usersCSV: async () => {
       const users = await userService.getUsers();
-      const csv = await generateCSV(users);
+      const csv = await generateCSV<UserDTO>({ data: users });
       return csv;
     },
   },
