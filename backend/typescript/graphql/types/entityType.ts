@@ -32,7 +32,6 @@ const entityType = gql`
 
   extend type Query {
     entity(id: ID!): EntityResponseDTO!
-    entityCSV(id: ID!): String!
     entities: [EntityResponseDTO!]!
     entitiesCSV: String!
     file(fileUUID: ID!): String!

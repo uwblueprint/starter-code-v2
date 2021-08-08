@@ -8,7 +8,7 @@ import {
   validateFileType,
   getFileTypeValidationError,
 } from "../../middlewares/validators/util";
-import { generateCSV } from "../../utilities/CSVUtils";
+import { generateCSV } from "../../utilities/csvUtils";
 
 const defaultBucket = process.env.DEFAULT_BUCKET || "";
 const fileStorageService = new FileStorageService(defaultBucket);
@@ -29,11 +29,6 @@ const entityResolvers = {
   Query: {
     entity: async (_req: any, { id }: { id: string }) => {
       return entityService.getEntity(id);
-    },
-    entityCSV: async (_req: any, { id }: { id: string }) => {
-      const entity = await entityService.getEntity(id);
-      const csv = await generateCSV([entity]);
-      return csv;
     },
     entities: async () => {
       return entityService.getEntities();

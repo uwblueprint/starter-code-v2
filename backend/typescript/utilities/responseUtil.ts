@@ -1,8 +1,8 @@
 import { Response } from "express";
-import { generateCSV } from "./CSVUtils";
+import { generateCSV } from "./csvUtils";
 
 /* eslint-disable-next-line import/prefer-default-export */
-export const setResponseByMimeType = async (
+export const sendResponseByMimeType = async (
   res: Response,
   responseCode: number,
   contentType: string | undefined,

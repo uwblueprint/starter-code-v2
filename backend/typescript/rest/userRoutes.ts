@@ -7,7 +7,7 @@ import {
 } from "../middlewares/validators/userValidators";
 import UserService from "../services/implementations/userService";
 import IUserService from "../services/interfaces/userService";
-import { setResponseByMimeType } from "../utilities/responseUtil";
+import { sendResponseByMimeType } from "../utilities/responseUtil";
 
 const userRouter: Router = Router();
 userRouter.use(isAuthorizedByRole(new Set(["Admin"])));
@@ -20,7 +20,7 @@ userRouter.get("/", async (req, res) => {
   const contentType = req.headers["content-type"];
 
   if (userId && email) {
-    await setResponseByMimeType(res, 400, contentType, [
+    await sendResponseByMimeType(res, 400, contentType, [
       {
         error: "Cannot query by both userId and email.",
       },
@@ -31,9 +31,9 @@ userRouter.get("/", async (req, res) => {
   if (!userId && !email) {
     try {
       const users = await userService.getUsers();
-      await setResponseByMimeType(res, 200, contentType, users);
+      await sendResponseByMimeType(res, 200, contentType, users);
     } catch (error) {
-      await setResponseByMimeType(res, 500, contentType, [
+      await sendResponseByMimeType(res, 500, contentType, [
         {
           error: error.message,
         },
@@ -44,21 +44,15 @@ userRouter.get("/", async (req, res) => {
 
   if (userId) {
     if (typeof userId !== "string") {
-      await setResponseByMimeType(res, 400, contentType, [
-        {
-          error: "userId query parameter must be a string.",
-        },
-      ]);
+      res
+        .status(400)
+        .json({ error: "userId query parameter must be a string." });
     } else {
       try {
         const user = await userService.getUserById(userId);
-        await setResponseByMimeType(res, 200, contentType, [user]);
+        res.status(200).json(user);
       } catch (error) {
-        await setResponseByMimeType(res, 500, contentType, [
-          {
-            error: error.message,
-          },
-        ]);
+        res.status(500).json({ error: error.message });
       }
     }
     return;
@@ -66,21 +60,15 @@ userRouter.get("/", async (req, res) => {
 
   if (email) {
     if (typeof email !== "string") {
-      await setResponseByMimeType(res, 400, contentType, [
-        {
-          error: "email query parameter must be a string.",
-        },
-      ]);
+      res
+        .status(400)
+        .json({ error: "email query parameter must be a string." });
     } else {
       try {
         const user = await userService.getUserByEmail(email);
-        await setResponseByMimeType(res, 200, contentType, [user]);
+        res.status(200).json(user);
       } catch (error) {
-        await setResponseByMimeType(res, 500, contentType, [
-          {
-            error: error.message,
-          },
-        ]);
+        res.status(500).json({ error: error.message });
       }
     }
   }
