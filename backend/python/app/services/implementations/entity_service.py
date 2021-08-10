@@ -25,14 +25,14 @@ class EntityService(IEntityService):
 
     def create_entity(self, entity):
         try:
+            file_name = None
             if entity.file:
-                entity.file_name = str(uuid4())
+                file_name = str(uuid4())
                 self.file_storage_service.create_file(
-                    entity.file_name, entity.file, entity.file.content_type
+                    file_name, entity.file, entity.file.content_type
                 )
-                del entity.file
-
-            new_entity = Entity(**entity.__dict__)
+            entity.__dict__.pop("file", None)
+            new_entity = Entity(**entity.__dict__, file_name=file_name)
         except Exception as error:
             self.logger.error(str(error))
             raise error
@@ -50,21 +50,25 @@ class EntityService(IEntityService):
             self.logger.error("Invalid id")
             raise Exception("Invalid id")
 
+        file_name = current_entity.file_name
         if entity.file:
-            if current_entity.file_name:
+            if file_name:
                 self.file_storage_service.update_file(
-                    current_entity.file_name, entity.file, entity.file.content_type
+                    file_name, entity.file, entity.file.content_type
                 )
             else:
-                entity.file_name = str(uuid4())
+                file_name = str(uuid4())
                 self.file_storage_service.create_file(
-                    entity.file_name, entity.file, entity.file.content_type
+                    file_name, entity.file, entity.file.content_type
                 )
-            del entity.file
-        elif current_entity.file_name:
-            self.file_storage_service.delete_file(current_entity.file_name)
+            entity.__dict__.pop("file", None)
+        elif file_name:
+            self.file_storage_service.delete_file(file_name)
 
-        Entity.query.filter_by(id=id).update(entity.__dict__)
+        entity_dict = entity.__dict__
+        entity_dict.update({"file_name": file_name})
+
+        Entity.query.filter_by(id=id).update(entity_dict)
         updated_entity = Entity.query.get(id)
         db.session.commit()
 
