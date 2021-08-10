@@ -10,8 +10,16 @@ const authType = gql`
     accessToken: String!
   }
 
+  input RegisterUserDTO {
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+  }
+
   extend type Mutation {
     login(email: String!, password: String!): AuthDTO!
+    register(user: RegisterUserDTO!): AuthDTO!
     refresh: String!
     logout(userId: ID!): ID
     resetPassword(email: String!): Boolean!

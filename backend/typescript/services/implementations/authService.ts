@@ -94,6 +94,35 @@ class AuthService implements IAuthService {
     }
   }
 
+  async sendEmailVerificationLink(email: string): Promise<void> {
+    if (!this.emailService) {
+      const errorMessage =
+        "Attempted to call sendEmailVerificationLink but this instance of AuthService does not have an EmailService instance";
+      Logger.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
+    try {
+      const emailVerificationLink = await firebaseAdmin
+        .auth()
+        .generateEmailVerificationLink(email);
+      const emailBody = `
+      Hello,
+      <br><br>
+      Please click the following link to verify your email and activate your account.
+      <strong>This link is only valid for 1 hour.</strong>
+      <br><br>
+      <a href=${emailVerificationLink}>Verify email</a>`;
+
+      this.emailService.sendEmail(email, "Verify your email", emailBody);
+    } catch (error) {
+      Logger.error(
+        `Failed to generate email verification link for user with email ${email}`,
+      );
+      throw error;
+    }
+  }
+
   async isAuthorizedByRole(
     accessToken: string,
     roles: Set<Role>,
@@ -106,7 +135,7 @@ class AuthService implements IAuthService {
         decodedIdToken.uid,
       );
 
-      return roles.has(userRole);
+      return !!decodedIdToken.email_verified && roles.has(userRole);
     } catch (error) {
       return false;
     }
@@ -124,7 +153,10 @@ class AuthService implements IAuthService {
         decodedIdToken.uid,
       );
 
-      return String(tokenUserId) === requestedUserId;
+      return (
+        !!decodedIdToken.email_verified &&
+        String(tokenUserId) === requestedUserId
+      );
     } catch (error) {
       return false;
     }
@@ -138,7 +170,10 @@ class AuthService implements IAuthService {
       const decodedIdToken: firebaseAdmin.auth.DecodedIdToken = await firebaseAdmin
         .auth()
         .verifyIdToken(accessToken, true);
-      return decodedIdToken.email === requestedEmail;
+      return (
+        !!decodedIdToken.email_verified &&
+        decodedIdToken.email === requestedEmail
+      );
     } catch (error) {
       return false;
     }
