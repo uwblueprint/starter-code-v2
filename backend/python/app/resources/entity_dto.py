@@ -1,4 +1,4 @@
-allowable_content_types = [
+ALLOWABLE_CONTENT_TYPES = [
     "text/plain",
     "application/pdf",
     "image/png",
@@ -40,11 +40,11 @@ class EntityDTO(object):
         if type(self.bool_field) is not bool:
             error_list.append("The bool_field supplied is not a boolean.")
         if self.file:
-            if self.file.content_type not in allowable_content_types:
+            if self.file.content_type not in ALLOWABLE_CONTENT_TYPES:
                 error_list.append(
                     "The {file_content_type} is not one of {allowed_types_str}".format(
                         file_content_type=self.file.content_type,
-                        allowed_types_str=",".join(allowable_content_types),
+                        allowed_types_str=",".join(ALLOWABLE_CONTENT_TYPES),
                     )
                 )
 

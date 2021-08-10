@@ -161,7 +161,7 @@ def delete_entity(id):
 
 # defines GET endpoint for a URL to the entity's file with the provided uuid
 @blueprint.route("/files/<string:id>", methods=["GET"], strict_slashes=False)
-@require_authorization_by_role({"user", "Admin"})
+@require_authorization_by_role({"User", "Admin"})
 def get_file(id):
     try:
         file_url = file_storage_service.get_file(id)
