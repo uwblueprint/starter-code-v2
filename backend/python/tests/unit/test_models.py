@@ -1,4 +1,8 @@
-from app.models.user_mg import User
+from app.models.user import User
+
+# postgresql {
+from app.models import db
+# } postgresql
 
 '''
 Sample python test.
@@ -16,6 +20,10 @@ def test_create_user():
     }
 
     user = User(**user)
+    # postgresql {
+    db.session.add(user)
+    db.session.commit()
+    # } postgresql
     assert user.first_name == "Jane"
     assert user.last_name == "Doe"
     assert user.auth_id == "abc"

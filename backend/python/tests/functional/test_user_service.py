@@ -1,12 +1,12 @@
 from flask import current_app
 import pytest
 
-from app.models.user_mg import User
-from app.models.user_pg import User as UserPg
-from app.services.implementations.user_service_mg import UserService as UserServiceMg
-from app.services.implementations.user_service_pg import UserService as UserServicePg
+from app.models.user import User
+from app.services.implementations.user_service import UserService
 
+# postgresql {
 from app.models import db
+# } postgresql
 
 '''
 Sample python test.
@@ -22,17 +22,15 @@ def setup(module_mocker):
 
 
 @pytest.fixture
-def mg_user_service():
-    user_service = UserServiceMg(current_app.logger)
+def user_service():
+    user_service = UserService(current_app.logger)
     yield user_service
+    # mongodb {
     User.objects.delete()
-
-
-@pytest.fixture
-def pg_user_service():
-    user_service = UserServicePg(current_app.logger)
-    yield user_service
-    UserPg.query.delete()
+    # } mongodb
+    # postgresql {
+    User.query.delete()
+    # } postgresql
 
 
 TEST_USERS = (
@@ -70,15 +68,16 @@ def get_expected_user(user):
     return expected_user
 
 
-def insert_users_mg():
+def insert_users():
+    # mongodb {
     user_instances = [User(**data) for data in TEST_USERS]
     User.objects.insert(user_instances, load_bulk=False)
-
-
-def insert_users_pg():
-    user_instances = [UserPg(**data) for data in TEST_USERS]
+    # } mongodb
+    # postgresql {
+    user_instances = [User(**data) for data in TEST_USERS]
     db.session.bulk_save_objects(user_instances)
     db.session.commit()
+    # } postgresql
 
 
 def assert_returned_users(users, expected):
@@ -87,15 +86,9 @@ def assert_returned_users(users, expected):
             assert expected_user[key] == actual_user[key]
 
 
-def test_get_users(mg_user_service, pg_user_service):
-    insert_users_mg()
-    res = mg_user_service.get_users()
+def test_get_users(user_service):
+    insert_users()
+    res = user_service.get_users()
     users = list(map(lambda user: user.__dict__, res))
     users_with_email = list(map(get_expected_user, TEST_USERS))
-    assert_returned_users(users, users_with_email)
-
-    # test pg implementation
-    insert_users_pg()
-    res = pg_user_service.get_users()
-    users = list(map(lambda user: user.__dict__, res))
     assert_returned_users(users, users_with_email)

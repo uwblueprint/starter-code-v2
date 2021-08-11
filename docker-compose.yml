@@ -73,6 +73,8 @@ services:
       - ./.env
     } postgresql
 
+postgresql {
 volumes:
   postgres_data:
   postgres_data_test:
+} postgresql

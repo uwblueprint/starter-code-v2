@@ -54,9 +54,6 @@ def create_app(config_name):
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     # } postgresql
-    # mongodb {
-    app.config["MONGODB_URL"] = os.getenv("MG_DATABASE_URL")
-    # } mongodb
 
     # auth {
     firebase_admin.initialize_app()

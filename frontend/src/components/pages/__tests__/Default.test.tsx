@@ -7,10 +7,12 @@ import Default from "../Default";
 // https://jestjs.io/docs/tutorial-react
 // https://reactjs.org/docs/testing.html
 
+// graphql {
 jest.mock("@apollo/client", () => ({
   gql: () => {},
   useMutation: () => [],
 }));
+// } graphql
 
 describe("Default page", () => {
   it("Should render Create Entity button", () => {

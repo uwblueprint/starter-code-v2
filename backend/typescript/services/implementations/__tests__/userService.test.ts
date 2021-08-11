@@ -1,13 +1,18 @@
+// postgresql {
 import { snakeCase } from "lodash";
+// } postgresql
 
-import MgUser from "../../../models/user.mgmodel";
-import PgUser from "../../../models/user.pgmodel";
+import User from "../../../models/user.model";
 import UserService from "../userService";
-import UserServicePg from "../userServicepg";
 
 import { UserDTO } from "../../../types";
 
-import db, { testSql } from "../../../testUtils/testDb";
+// mongodb {
+import db from "../../../testUtils/testDb";
+// } mongodb
+// postgresql {
+import { testSql } from "../../../testUtils/testDb";
+// } postgresql
 
 const testUsers = [
   {
@@ -31,6 +36,7 @@ jest.mock("firebase-admin", () => {
   return { auth };
 });
 
+// mongodb {
 describe("mongo userService", (): void => {
   let userService: UserService;
 
@@ -51,7 +57,7 @@ describe("mongo userService", (): void => {
   });
 
   it("getUsers", async () => {
-    await MgUser.insertMany(testUsers);
+    await User.insertMany(testUsers);
 
     const res = await userService.getUsers();
 
@@ -62,13 +68,15 @@ describe("mongo userService", (): void => {
     });
   });
 });
+// } mongodb
 
+// postgresql {
 describe("pg userService", () => {
-  let userService: UserServicePg;
+  let userService: UserService;
 
   beforeEach(async () => {
     await testSql.sync({ force: true });
-    userService = new UserServicePg();
+    userService = new UserService();
   });
 
   afterAll(async () => {
@@ -85,7 +93,7 @@ describe("pg userService", () => {
       return userSnakeCase;
     });
 
-    await PgUser.bulkCreate(users);
+    await User.bulkCreate(users);
 
     const res = await userService.getUsers();
 
@@ -96,3 +104,4 @@ describe("pg userService", () => {
     });
   });
 });
+// } postgresql
