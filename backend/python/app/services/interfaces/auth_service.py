@@ -59,6 +59,18 @@ class IAuthService(ABC):
         pass
 
     @abstractmethod
+    def send_email_verification_link(self, email):
+        """
+        Generates an email verification link for the user with the given email
+        and sends the reset link to that email address
+
+        :param email: email of user requesting password reset
+        :type email: str
+        :raises Exception: if unable to generate link or send email
+        """
+        pass
+
+    @abstractmethod
     def is_authorized_by_role(self, access_token, roles):
         """
         Determine if the provided access token is valid and authorized for at least
