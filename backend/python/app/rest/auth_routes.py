@@ -6,10 +6,11 @@ from ..middlewares.auth import (
     require_authorization_by_user_id,
     require_authorization_by_email,
 )
+from ..middlewares.validate import validate_request
+from ..resources.create_user_dto import CreateUserDTO
 from ..services.implementations.auth_service import AuthService
 from ..services.implementations.email_service import EmailService
 from ..services.implementations.user_service_mg import UserService
-from ..resources.create_user_dto import CreateUserDTO
 
 
 user_service = UserService(current_app.logger)
@@ -59,6 +60,7 @@ def login():
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
 @blueprint.route("/register", methods=["POST"], strict_slashes=False)
+@validate_request("CreateUserDTO")
 def register():
     """
     Returns access token and user info in response body and sets refreshToken as an httpOnly cookie
