@@ -60,10 +60,11 @@ class EntityService(IEntityService):
                 self.file_storage_service.create_file(
                     file_name, entity.file, entity.file.content_type
                 )
-            entity.__dict__.pop("file", None)
         elif file_name:
             self.file_storage_service.delete_file(file_name)
+            file_name = None
 
+        entity.__dict__.pop("file", None)
         updated_entity = Entity.objects(id=id).modify(
             new=True, **entity.__dict__, file_name=file_name
         )
