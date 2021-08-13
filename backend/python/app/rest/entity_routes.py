@@ -15,9 +15,7 @@ from ..services.implementations.file_storage_service import FileStorageService
 file_storage_service = FileStorageService(current_app.logger)
 
 # define instance of EntityService
-entity_service = EntityService(
-    current_app.logger, file_storage_service
-)
+entity_service = EntityService(current_app.logger, file_storage_service)
 
 # defines a shared URL prefix for all routes
 blueprint = Blueprint("entity", __name__, url_prefix="/entities")
@@ -169,4 +167,4 @@ def get_file(id):
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
-    return jsonify(file_url), 200
+    return jsonify({"file_url": file_url}), 200
