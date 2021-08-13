@@ -59,18 +59,23 @@ def login():
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
+
 @blueprint.route("/register", methods=["POST"], strict_slashes=False)
-@validate_request("CreateUserDTO")
+@validate_request("RegisterUserDTO")
 def register():
     """
     Returns access token and user info in response body and sets refreshToken as an httpOnly cookie
     """
-    try: 
+    try:
+        request.json["role"] = "User"
         user = CreateUserDTO(**request.json)
         user_service.create_user(user)
         auth_dto = auth_service.generate_token(
             request.json["email"], request.json["password"]
         )
+
+        auth_service.send_email_verification_link(request.json["email"])
+
         response = jsonify(
             {
                 "access_token": auth_dto.access_token,
@@ -82,8 +87,6 @@ def register():
             }
         )
 
-        auth_service.send_email_verification_link(request.json["email"])
-
         response.set_cookie(
             "refreshToken",
             value=auth_dto.refresh_token,
@@ -94,6 +97,7 @@ def register():
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
+
 
 @blueprint.route("/refresh", methods=["POST"], strict_slashes=False)
 def refresh():
