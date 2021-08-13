@@ -104,7 +104,9 @@ class AuthService(IAuthService):
             raise Exception(error_message)
 
         try:
-            verification_link = firebase_admin.auth.generate_email_verification_link(email)
+            verification_link = firebase_admin.auth.generate_email_verification_link(
+                email
+            )
             email_body = """
                 Hello,
                 <br><br>
@@ -132,7 +134,7 @@ class AuthService(IAuthService):
             user_role = self.user_service.get_user_role_by_auth_id(
                 decoded_id_token["uid"]
             )
-            return decoded_id_token.email_verified and user_role in roles
+            return decoded_id_token["email_verified"] and user_role in roles
         except:
             return False
 
@@ -144,7 +146,10 @@ class AuthService(IAuthService):
             token_user_id = self.user_service.get_user_id_by_auth_id(
                 decoded_id_token["uid"]
             )
-            return decoded_id_token.email_verified and token_user_id == requested_user_id
+            return (
+                decoded_id_token["email_verified"]
+                and token_user_id == requested_user_id
+            )
         except:
             return False
 
@@ -153,6 +158,9 @@ class AuthService(IAuthService):
             decoded_id_token = firebase_admin.auth.verify_id_token(
                 access_token, check_revoked=True
             )
-            return decoded_id_token.email_verified and decoded_id_token["email"] == requested_email
+            return (
+                decoded_id_token["email_verified"]
+                and decoded_id_token["email"] == requested_email
+            )
         except:
             return False
