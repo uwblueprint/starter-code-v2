@@ -117,7 +117,7 @@ class AuthService(IAuthService):
                 """.format(
                 verification_link=verification_link
             )
-            self.email_service.send_email(email, "Your Password Reset Link", email_body)
+            self.email_service.send_email(email, "Verify your email", email_body)
         except Exception as e:
             self.logger.error(
                 "Failed to generate email verification link for user with email {email}.".format(
