@@ -135,7 +135,11 @@ class AuthService implements IAuthService {
         decodedIdToken.uid,
       );
 
-      return !!decodedIdToken.email_verified && roles.has(userRole);
+      const firebaseUser = await firebaseAdmin
+        .auth()
+        .getUser(decodedIdToken.uid);
+
+      return firebaseUser.emailVerified && roles.has(userRole);
     } catch (error) {
       return false;
     }
@@ -153,9 +157,12 @@ class AuthService implements IAuthService {
         decodedIdToken.uid,
       );
 
+      const firebaseUser = await firebaseAdmin
+        .auth()
+        .getUser(decodedIdToken.uid);
+
       return (
-        !!decodedIdToken.email_verified &&
-        String(tokenUserId) === requestedUserId
+        firebaseUser.emailVerified && String(tokenUserId) === requestedUserId
       );
     } catch (error) {
       return false;
@@ -170,9 +177,13 @@ class AuthService implements IAuthService {
       const decodedIdToken: firebaseAdmin.auth.DecodedIdToken = await firebaseAdmin
         .auth()
         .verifyIdToken(accessToken, true);
+
+      const firebaseUser = await firebaseAdmin
+        .auth()
+        .getUser(decodedIdToken.uid);
+
       return (
-        !!decodedIdToken.email_verified &&
-        decodedIdToken.email === requestedEmail
+        firebaseUser.emailVerified && decodedIdToken.email === requestedEmail
       );
     } catch (error) {
       return false;
