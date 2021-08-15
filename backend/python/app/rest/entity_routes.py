@@ -84,13 +84,14 @@ def create_entity():
 # # defines PUT endpoint for updating the entity with the provided id
 # @blueprint.route("/<int:id>", methods=["PUT"], strict_slashes=False)
 # @require_authorization_by_role({"User", "Admin"})
+# @validate_request("EntityDTO")
 # def update_entity(id):
 #     try:
-#         if request.content_type == "application/json"
+#         if request.content_type == "application/json":
 #             body = EntityDTO(**request.json)
 #         else:
-#             req = json.loads(request.form.get('body'))
-#             req_file = request.files.get('file', default=None)
+#             req = json.loads(request.form.get("body"))
+#             req_file = request.files.get("file", default=None)
 #             body = EntityDTO(**req, file=req_file)
 #     except Exception as e:
 #         error_message = getattr(e, "message", None)

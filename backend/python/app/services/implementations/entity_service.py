@@ -64,6 +64,7 @@ class EntityService(IEntityService):
             entity.__dict__.pop("file", None)
         elif file_name:
             self.file_storage_service.delete_file(file_name)
+            file_name = None
 
         entity_dict = entity.__dict__
         entity_dict.update({"file_name": file_name})
