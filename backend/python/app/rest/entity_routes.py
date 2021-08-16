@@ -42,6 +42,7 @@ def get_entities():
 #     # HTTP status code 200 means OK
 #     return jsonify(result), 200
 
+
 # MONGO
 # defines GET endpoint for retrieving a single entity based on a provided id
 @blueprint.route("/<string:id>", methods=["GET"], strict_slashes=False)
@@ -105,6 +106,7 @@ def create_entity():
 
 #     return jsonify(result), 200
 
+
 # MONGO
 # defines PUT endpoint for updating the entity with the provided id
 @blueprint.route("/<string:id>", methods=["PUT"], strict_slashes=False)
@@ -143,6 +145,7 @@ def update_entity(id):
 #         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
 #     return jsonify(result), 200
+
 
 # MONGO
 # defines DELETE endpoint for deleting the entity with the provided id
