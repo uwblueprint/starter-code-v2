@@ -47,7 +47,7 @@ const app = express();
 app.use(cookieParser());
 app.use(cors(CORS_OPTIONS));
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 // rest {
 // auth {

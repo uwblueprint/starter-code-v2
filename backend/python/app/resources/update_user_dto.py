@@ -7,12 +7,12 @@ class UpdateUserDTO:
 
     def validate(self):
         error_list = []
-        if not self.first_name or type(self.first_name) is not str:
+        if type(self.first_name) is not str:
             error_list.append("The first_name supplied is not a string.")
-        if not self.last_name or type(self.last_name) is not str:
+        if type(self.last_name) is not str:
             error_list.append("The last_name supplied is not a string.")
-        if not self.email or type(self.email) is not str:
+        if type(self.email) is not str:
             error_list.append("The email supplied is not a string.")
-        if not self.role or type(self.role) is not str:
+        if type(self.role) is not str:
             error_list.append("The role supplied is not a string.")
         return error_list
