@@ -20,6 +20,7 @@ import SampleContextDispatcherContext from "./contexts/SampleContextDispatcherCo
 import EditTeamInfoPage from "./components/pages/EditTeamPage";
 
 import { AuthenticatedUser } from "./types/AuthTypes";
+import * as Routes from "./constants/Routes";
 
 const App = (): React.ReactElement => {
   const currentUser: AuthenticatedUser = getLocalStorageObj<AuthenticatedUser>(
@@ -48,22 +49,26 @@ const App = (): React.ReactElement => {
         >
           <Router>
             <Switch>
-              <PrivateRoute exact path="/" component={Default} />
-              <Route exact path="/login" component={Login} />
+              <Route exact path={Routes.LOGIN_PAGE} component={Login} />
+              <PrivateRoute exact path={Routes.HOME_PAGE} component={Default} />
               <PrivateRoute
                 exact
-                path="/entity/create"
+                path={Routes.CREATE_ENTITY_PAGE}
                 component={CreatePage}
               />
               <PrivateRoute
                 exact
-                path="/entity/update"
+                path={Routes.UPDATE_ENTITY_PAGE}
                 component={UpdatePage}
               />
-              <PrivateRoute exact path="/entity" component={DisplayPage} />
               <PrivateRoute
                 exact
-                path="/edit-team"
+                path={Routes.DISPLAY_ENTITY_PAGE}
+                component={DisplayPage}
+              />
+              <PrivateRoute
+                exact
+                path={Routes.EDIT_TEAM_PAGE}
                 component={EditTeamInfoPage}
               />
               <Route exact path="*" component={NotFound} />
