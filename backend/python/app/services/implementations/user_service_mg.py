@@ -128,14 +128,17 @@ class UserService(IUserService):
 
         return user_dtos
 
-    def create_user(self, user):
+    def create_user(self, user, auth_id=None, signup_method="PASSWORD"):
         new_user = None
         firebase_user = None
 
         try:
-            firebase_user = firebase_admin.auth.create_user(
-                email=user.email, password=user.password
-            )
+            if signup_method == "PASSWORD":
+                firebase_user = firebase_admin.auth.create_user(
+                    email=user.email, password=user.password
+                )
+            elif signup_method == "GOOGLE":
+                firebase_user = firebase_admin.auth.get_user(uid=auth_id)
 
             try:
                 new_user = User(
