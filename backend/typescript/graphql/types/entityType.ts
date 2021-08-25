@@ -8,6 +8,8 @@ const entityType = gql`
     D
   }
 
+  scalar Upload
+
   type EntityResponseDTO {
     id: ID!
     stringField: String!
@@ -15,6 +17,7 @@ const entityType = gql`
     enumField: Enum!
     stringArrayField: [String]!
     boolField: Boolean!
+    fileName: String
   }
 
   input EntityRequestDTO {
@@ -23,16 +26,23 @@ const entityType = gql`
     enumField: Enum!
     stringArrayField: [String]!
     boolField: Boolean!
+    filePath: String
+    contentType: String
   }
 
   extend type Query {
     entity(id: ID!): EntityResponseDTO!
     entities: [EntityResponseDTO!]!
+    file(fileUUID: ID!): String!
   }
 
   extend type Mutation {
-    createEntity(entity: EntityRequestDTO!): EntityResponseDTO!
-    updateEntity(id: ID!, entity: EntityRequestDTO!): EntityResponseDTO!
+    createEntity(entity: EntityRequestDTO!, file: Upload): EntityResponseDTO!
+    updateEntity(
+      id: ID!
+      entity: EntityRequestDTO!
+      file: Upload
+    ): EntityResponseDTO!
     deleteEntity(id: ID!): ID
   }
 `;
