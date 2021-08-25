@@ -8,7 +8,9 @@ export interface Entity extends Document {
   enumField: string;
   stringArrayField: [string];
   boolField: boolean;
+  // file-storage {
   fileName: string;
+  // } file-storage
 }
 
 const EntitySchema: Schema = new Schema({
@@ -33,9 +35,11 @@ const EntitySchema: Schema = new Schema({
     type: Boolean,
     required: true,
   },
+  // file-storage {
   fileName: {
     type: String,
   },
+  // } file-storage
 });
 
 export default model<Entity>("Entity", EntitySchema);
@@ -63,8 +67,10 @@ export default class Entity extends Model {
   @Column
   bool_field!: boolean;
 
+  // file-storage {
   @Column
   file_name!: string;
+  // } file-storage
 }
 
 // } postgresql
