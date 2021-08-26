@@ -37,6 +37,39 @@ class AuthService implements IAuthService {
     }
   }
 
+  /* eslint-disable class-methods-use-this */
+  async generateTokenOAuth(idToken: string): Promise<AuthDTO> {
+    try {
+      const googleUser = await FirebaseRestClient.signInWithGoogleOAuth(
+        idToken,
+      );
+      const token = {
+        accessToken: idToken,
+        refreshToken: googleUser.refreshToken,
+      };
+      let user = await this.userService.getUserByEmail(googleUser.email);
+      if (user) {
+        return { ...token, ...user };
+      }
+      user = await this.userService.createUser(
+        {
+          firstName: googleUser.firstName,
+          lastName: googleUser.lastName,
+          email: googleUser.email,
+          role: "User",
+          password: "",
+        },
+        googleUser.localId,
+        "GOOGLE",
+      );
+
+      return { ...token, ...user };
+    } catch (error) {
+      Logger.error(`Failed to generate token for user with OAuth ID token`);
+      throw error;
+    }
+  }
+
   async revokeTokens(userId: string): Promise<void> {
     try {
       const authId = await this.userService.getAuthIdById(userId);
