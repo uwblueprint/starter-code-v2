@@ -15,6 +15,7 @@ export type EntityRequest = {
   stringArrayField: string[];
   enumField: EnumField;
   boolField: boolean;
+  file?: File;
 };
 
 export type EntityResponse = {
@@ -24,6 +25,7 @@ export type EntityResponse = {
   stringArrayField: string[];
   enumField: EnumField;
   boolField: boolean;
+  fileName: string;
 };
 
 const create = async ({

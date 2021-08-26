@@ -83,6 +83,7 @@ const CREATE_ENTITY = gql`
 
 const CreateForm = (): React.ReactElement => {
   const [data, setData] = useState<EntityResponse | null>(null);
+  const [fileField, setFileField] = useState<File | null>(null);
 
   // graphql {
   const [createEntity] = useMutation<{ createEntity: EntityResponse }>(
@@ -94,7 +95,23 @@ const CreateForm = (): React.ReactElement => {
     return <p>Created! ✔️</p>;
   }
 
+  const fileChanged = (e: { target: HTMLInputElement }) => {
+    if (e.target.files) {
+      const fileSize = e.target.files[0].size / 1024 / 1024;
+      if (fileSize > 5) {
+        // eslint-disable-next-line no-alert
+        window.alert("Your file exceeds 5MB. Upload a smaller file.");
+      } else {
+        setFileField(e.target.files[0]);
+      }
+    }
+  };
+
   const onSubmit = async ({ formData }: { formData: EntityRequest }) => {
+    if (fileField) {
+      // eslint-disable-next-line no-param-reassign
+      formData.file = fileField;
+    }
     // graphql {
     const graphQLResult = await createEntity({
       variables: { entity: formData },
@@ -107,7 +124,12 @@ const CreateForm = (): React.ReactElement => {
     // } rest
     setData(result);
   };
-  return <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />;
+  return (
+    <>
+      <input type="file" onChange={fileChanged} />
+      <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />
+    </>
+  );
 };
 
 export default CreateForm;
