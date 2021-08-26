@@ -76,6 +76,37 @@ const get = async (): Promise<EntityResponse[]> => {
   }
 };
 
+const getCSV = async (): Promise<string> => {
+  // auth {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  // } auth
+  try {
+    // auth {
+    const { data } = await baseAPIClient.get("/entities", {
+      // Following line is necessary to set the Content-Type header
+      // Reference: https://github.com/axios/axios/issues/86
+      data: null,
+      headers: { Authorization: bearerToken, "Content-Type": "text/csv" },
+    });
+    // } auth
+
+    // no-auth {
+    // const { data } = await baseAPIClient.get("/entities", {
+    //   // Following line is necessary to set the Content-Type header
+    //   // Reference: https://github.com/axios/axios/issues/86
+    //   data: null,
+    //   headers: { "Content-Type": "text/csv" },
+    // });
+    // } no-auth
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 const update = async (
   id: number | string,
   {
@@ -106,4 +137,4 @@ const update = async (
   }
 };
 
-export default { create, get, update };
+export default { create, get, getCSV, update };

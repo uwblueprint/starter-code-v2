@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import BTable from "react-bootstrap/Table";
 import { HeaderGroup, useTable, Column } from "react-table";
 // graphql {
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useLazyQuery } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
@@ -18,7 +18,7 @@ import { EntityResponse } from "../../APIClients/EntityAPIClient";
 //   EntityResponse,
 // } from "../../APIClients/EntityAPIClient";
 // } rest
-import { downloadCSV, generateCSV } from "../../utils/CSVUtils";
+import { downloadCSV } from "../../utils/CSVUtils";
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
@@ -134,6 +134,12 @@ const ENTITIES = gql`
     }
   }
 `;
+
+const ENTITIESCSV = gql`
+  query DisplayTableContainer_EntitiesCSV {
+    entitiesCSV
+  }
+`;
 // } graphql
 
 const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
@@ -145,6 +151,15 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
       setEntities(data.entities.map((d: EntityResponse) => convert(d)));
     },
   });
+
+  // graphql {
+  const [getEntitiesCSV] = useLazyQuery(ENTITIESCSV, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: (data) => {
+      downloadCSV(data.entitiesCSV, "export.csv");
+    },
+  });
+  // } graphql
 
   // rest {
   // useEffect(() => {
@@ -160,8 +175,16 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
 
   const downloadEntitiesCSV = async () => {
     if (entities) {
-      const csvString = await generateCSV<EntityData>({ data: entities });
-      downloadCSV(csvString, "export.csv");
+      // graphql {
+      getEntitiesCSV();
+      // } graphql
+      // rest {
+      // const csvString = await EntityAPIClient.getCSV();
+      // downloadCSV(csvString, "export.csv");
+      // } rest
+      // Use the following lines to download CSV using frontend CSV generation instead of API
+      // const csvString = await generateCSV<EntityData>({ data: entities });
+      // downloadCSV(csvString, "export.csv");
     }
   };
 
