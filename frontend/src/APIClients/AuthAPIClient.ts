@@ -48,6 +48,41 @@ const login = async (
   return user;
 };
 
+type RegisterFunction = (
+  options?:
+    | MutationFunctionOptions<{ register: AuthenticatedUser }, OperationVariables>
+    | undefined,
+) => Promise<
+  FetchResult<
+    { register: AuthenticatedUser },
+    Record<string, unknown>,
+    Record<string, unknown>
+  >
+>;
+
+const register = async (
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+  registerFunction: RegisterFunction,
+): Promise<AuthenticatedUser | null> => {
+  let user: AuthenticatedUser = null;
+  try {
+    const result = await registerFunction({
+      variables: { firstName, lastName, email, password },
+    });
+    user = result.data?.register ?? null;
+    if (user) {
+      localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(user));
+    }
+  } catch (e: unknown) {
+    // eslint-disable-next-line no-alert
+    window.alert("Failed to sign up");
+  }
+  return user;
+};
+
 type LogoutFunction = (
   options?:
     | MutationFunctionOptions<
@@ -112,7 +147,7 @@ const refresh = async (refreshFunction: RefreshFunction): Promise<boolean> => {
   return success;
 };
 
-export default { login, logout, refresh };
+export default { login, logout, register, refresh };
 
 // } graphql
 
@@ -152,6 +187,25 @@ export default { login, logout, refresh };
 //   }
 // };
 
+// const register = async (
+//   firstName: string,
+//   lastName: string,
+//   email: string,
+//   password: string,
+// ): Promise<AuthenticatedUser> => {
+//   try {
+//     const { data } = await baseAPIClient.post(
+//       "/auth/register",
+//       { firstName, lastName, email, password },
+//       { withCredentials: true },
+//     );
+//     localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(data));
+//     return data;
+//   } catch (error) {
+//     return null;
+//   }
+// };
+
 // const resetPassword = async (email: string | undefined): Promise<boolean> => {
 //   const bearerToken = `Bearer ${getLocalStorageObjProperty(
 //     AUTHENTICATED_USER_KEY,
@@ -188,5 +242,5 @@ export default { login, logout, refresh };
 //   }
 // };
 
-// export default { login, logout, resetPassword, refresh };
+// export default { login, logout, register, resetPassword, refresh };
 // } rest

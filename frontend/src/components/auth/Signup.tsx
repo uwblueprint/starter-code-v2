@@ -9,9 +9,19 @@ import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 
 // graphql {
-const LOGIN = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+const REGISTER = gql`
+  mutation Register(
+    $firstName: String!,
+    $lastName: String!,
+    $email: String!,
+    $password: String!
+  ) {
+    register(user: {
+      firstName: $firstName,
+      lastName: $lastName,
+      email: $email,
+      password: $password
+    }) {
       id
       firstName
       lastName
@@ -23,46 +33,62 @@ const LOGIN = gql`
 `;
 // } graphql
 
-const Login = (): React.ReactElement => {
+const Signup = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signup, setSignup] = useState(false);
 
   // graphql {
-  const [login] = useMutation<{ login: AuthenticatedUser }>(LOGIN);
+  const [register] = useMutation<{ register: AuthenticatedUser }>(REGISTER);
   // } graphql
 
-  const onLogInClick = async () => {
+  const onSignupClick = async () => {
     // graphql {
-    const user: AuthenticatedUser = await authAPIClient.login(
+    const user: AuthenticatedUser = await authAPIClient.register(
+      firstName,
+      lastName,
       email,
       password,
-      login,
+      register,
     );
     // } graphql
     // rest {
-    // const user: AuthenticatedUser = await authAPIClient.login(email, password);
+    // const user: AuthenticatedUser = await authAPIClient.register(
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   password,
+    // );
     // } rest
     setAuthenticatedUser(user);
-  };
-
-  const onSignUpClick = async () => {
-    setSignup(true);
   };
 
   if (authenticatedUser) {
     return <Redirect to="/" />;
   }
 
-  if (signup) {
-    return <Redirect to="/signup" />;
-  }
-
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>Login</h1>
+      <h1>Signup</h1>
       <form>
+        <div>
+          <input
+            type="text"
+            value={firstName}
+            onChange={(event) => setFirstName(event.target.value)}
+            placeholder="first name"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            value={lastName}
+            onChange={(event) => setLastName(event.target.value)}
+            placeholder="last name"
+          />
+        </div>
         <div>
           <input
             type="email"
@@ -83,23 +109,14 @@ const Login = (): React.ReactElement => {
           <button
             className="btn btn-primary"
             type="button"
-            onClick={onLogInClick}
+            onClick={onSignupClick}
           >
-            Log In
+            Sign Up
           </button>
         </div>
       </form>
-      <div>
-        <button
-          className="btn btn-primary"
-          type="button"
-          onClick={onSignUpClick}
-        >
-          Sign Up
-        </button>
-      </div>
     </div>
   );
 };
 
-export default Login;
+export default Signup;
