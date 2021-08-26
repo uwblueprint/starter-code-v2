@@ -29,6 +29,7 @@ const convert = (entityReponse: EntityResponse): EntityData => {
     stringArrayField: entityReponse.stringArrayField,
     enumField: entityReponse.enumField,
     boolField: entityReponse.boolField.toString(),
+    fileName: entityReponse.fileName,
   };
 };
 
@@ -130,6 +131,7 @@ const ENTITIES = gql`
       enumField
       stringArrayField
       boolField
+      fileName
     }
   }
 `;
