@@ -97,7 +97,6 @@ const CreateForm = (): React.ReactElement => {
   }
 
   const fileChanged = (e: { target: HTMLInputElement }) => {
-    console.log(e);
     if (e.target.files) {
       const fileSize = e.target.files[0].size / 1024 / 1024;
       if (fileSize > 5) {
@@ -111,8 +110,6 @@ const CreateForm = (): React.ReactElement => {
 
   const onSubmit = async ({ formData }: { formData: EntityRequest }) => {
     // graphql {
-    console.log(formData);
-    console.log(fileField);
     const graphQLResult = await createEntity({
       variables: { entity: formData, file: fileField },
     });

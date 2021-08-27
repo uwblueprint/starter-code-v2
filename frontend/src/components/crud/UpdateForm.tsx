@@ -74,14 +74,19 @@ const uiSchema = {
 
 // graphql {
 const UPDATE_ENTITY = gql`
-  mutation UpdateForm_UpdateEntity($id: ID!, $entity: EntityRequestDTO!) {
-    updateEntity(id: $id, entity: $entity) {
+  mutation UpdateForm_UpdateEntity(
+    $id: ID!
+    $entity: EntityRequestDTO!
+    $file: Upload
+  ) {
+    updateEntity(id: $id, entity: $entity, file: $file) {
       id
       stringField
       intField
       enumField
       stringArrayField
       boolField
+      fileName
     }
   }
 `;
@@ -89,6 +94,7 @@ const UPDATE_ENTITY = gql`
 
 const UpdateForm = (): React.ReactElement => {
   const [data, setData] = useState<EntityResponse | null>(null);
+  const [fileField, setFileField] = useState<File | null>(null);
 
   // graphql {
   const [updateEntity] = useMutation<{ updateEntity: EntityResponse }>(
@@ -100,12 +106,28 @@ const UpdateForm = (): React.ReactElement => {
     return <p>Updated! ✔️</p>;
   }
 
+  const fileChanged = (e: { target: HTMLInputElement }) => {
+    if (e.target.files) {
+      const fileSize = e.target.files[0].size / 1024 / 1024;
+      if (fileSize > 5) {
+        // eslint-disable-next-line no-alert
+        window.alert("Your file exceeds 5MB. Upload a smaller file.");
+      } else {
+        setFileField(e.target.files[0]);
+      }
+    }
+  };
+
   const onSubmit = async ({ formData }: { formData: EntityResponse }) => {
     const { id, ...entityData } = formData;
 
     // graphql {
     const graphQLResult = await updateEntity({
-      variables: { id: formData.id, entity: entityData as EntityRequest },
+      variables: {
+        id: formData.id,
+        entity: entityData as EntityRequest,
+        file: fileField,
+      },
     });
     const result: EntityResponse | null =
       graphQLResult.data?.updateEntity ?? null;
@@ -116,7 +138,12 @@ const UpdateForm = (): React.ReactElement => {
     // } rest
     setData(result);
   };
-  return <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />;
+  return (
+    <>
+      <input type="file" onChange={fileChanged} />
+      <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />
+    </>
+  );
 };
 
 export default UpdateForm;

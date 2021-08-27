@@ -41,8 +41,6 @@ const entityResolvers = {
       _req: any,
       { entity, file }: { entity: EntityRequestDTO; file: Promise<FileUpload> },
     ) => {
-      const result = await file;
-      console.log(result);
       let filePath = "";
       let fileContentType = "";
       if (file) {
@@ -51,7 +49,7 @@ const entityResolvers = {
         filePath = `${uploadDir}/${filename}`;
         fileContentType = mimetype;
         if (!validateFileType(fileContentType)) {
-          // throw new Error(getFileTypeValidationError(fileContentType));
+          throw new Error(getFileTypeValidationError(fileContentType));
         }
         await writeFile(createReadStream(), filePath);
       }

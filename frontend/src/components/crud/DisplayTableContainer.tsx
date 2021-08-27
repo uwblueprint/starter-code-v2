@@ -69,6 +69,11 @@ const columns: Column<EntityData>[] = [
 
     accessor: "boolField",
   },
+  {
+    Header: "fileName",
+
+    accessor: "fileName",
+  },
 ];
 
 const DisplayTable = ({ data }: TableProps) => {
@@ -131,6 +136,7 @@ const ENTITIES = gql`
       enumField
       stringArrayField
       boolField
+      fileName
     }
   }
 `;
