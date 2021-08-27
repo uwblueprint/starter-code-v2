@@ -4,6 +4,10 @@ export interface EntityRequestDTO {
   enumField: string;
   stringArrayField: string[];
   boolField: boolean;
+  // file-storage {
+  filePath?: string;
+  fileContentType?: string;
+  // } file-storage
 }
 
 export interface EntityResponseDTO {
@@ -13,6 +17,9 @@ export interface EntityResponseDTO {
   enumField: string;
   stringArrayField: string[];
   boolField: boolean;
+  // file-storage {
+  fileName: string;
+  // } file-storage
 }
 
 export interface IEntityService {

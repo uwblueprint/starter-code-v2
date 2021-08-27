@@ -8,6 +8,10 @@ const entityType = gql`
     D
   }
 
+  // file-storage {
+  scalar Upload
+
+  // } file-storage
   type EntityResponseDTO {
     id: ID!
     stringField: String!
@@ -15,6 +19,9 @@ const entityType = gql`
     enumField: Enum!
     stringArrayField: [String]!
     boolField: Boolean!
+    // file-storage {
+    fileName: String
+    // } file-storage
   }
 
   input EntityRequestDTO {
@@ -23,16 +30,37 @@ const entityType = gql`
     enumField: Enum!
     stringArrayField: [String]!
     boolField: Boolean!
+    // file-storage {
+    filePath: String
+    contentType: String
+    // } file-storage
   }
 
   extend type Query {
     entity(id: ID!): EntityResponseDTO!
     entities: [EntityResponseDTO!]!
+    // file-storage {
+    file(fileUUID: ID!): String!
+    // } file-storage
   }
 
   extend type Mutation {
+    // file-storage {
+    createEntity(entity: EntityRequestDTO!, file: Upload): EntityResponseDTO!
+    // } file-storage
+    // no-file-storage {
     createEntity(entity: EntityRequestDTO!): EntityResponseDTO!
+    // } no-file-storage
+    // file-storage {
+    updateEntity(
+      id: ID!
+      entity: EntityRequestDTO!
+      file: Upload
+    ): EntityResponseDTO!
+    // } file-storage
+    // no-file-storage {
     updateEntity(id: ID!, entity: EntityRequestDTO!): EntityResponseDTO!
+    // } no-file-storage
     deleteEntity(id: ID!): ID
   }
 `;
