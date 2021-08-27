@@ -28,9 +28,9 @@ const Logout = (): React.ReactElement => {
       logout,
     );
     // } graphql
-    // rest {
+    // // rest {
     // const success = await authAPIClient.logout(authenticatedUser?.id);
-    // } rest
+    // // } rest
     if (success) {
       setAuthenticatedUser(null);
     }

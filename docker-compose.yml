@@ -62,7 +62,6 @@ services:
       - postgres_data_test:/var/lib/postgresql/data/
     env_file:
       - ./.env
-
 volumes:
   postgres_data:
   postgres_data_test:

@@ -45,6 +45,9 @@ class AuthService(IAuthService):
         try:
             google_user = self.firebase_rest_client.sign_in_with_google(id_token)
             token = Token(google_user["idToken"], google_user["refreshToken"])
+            print(google_user['idToken'])
+            print("TOKEN")
+            print(str(token))
             # If user already has a login with this email, just return the token
             try:
                 user = self.user_service.get_user_by_email(google_user["email"])

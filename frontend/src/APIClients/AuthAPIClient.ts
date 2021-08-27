@@ -5,13 +5,13 @@ import {
 } from "@apollo/client";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { AuthenticatedUser } from "../types/AuthTypes";
-// rest {
+// // rest {
 // import baseAPIClient from "./BaseAPIClient";
 // import {
 //   getLocalStorageObjProperty,
 //   setLocalStorageObjProperty,
 // } from "../utils/LocalStorageUtils";
-// } rest
+// // } rest
 // graphql {
 import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 // } graphql
@@ -36,7 +36,9 @@ const login = async (
 ): Promise<AuthenticatedUser | null> => {
   let user: AuthenticatedUser = null;
   try {
-    const result = await loginFunction({ variables: { email, password } });
+    const result = await loginFunction({
+      variables: { email, password },
+    });
     user = result.data?.login ?? null;
     if (user) {
       localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(user));
@@ -47,6 +49,57 @@ const login = async (
   }
   return user;
 };
+
+type LoginWithGoogleFunction = (
+  options?:
+    | MutationFunctionOptions<
+        { loginWithGoogle: AuthenticatedUser },
+        OperationVariables
+      >
+    | undefined,
+) => Promise<
+  FetchResult<
+    { loginWithGoogle: AuthenticatedUser },
+    Record<string, unknown>,
+    Record<string, unknown>
+  >
+>;
+
+// graphql {
+const loginWithGoogle = async (
+  idToken: string,
+  loginFunction: LoginWithGoogleFunction,
+): Promise<AuthenticatedUser | null> => {
+  let user: AuthenticatedUser = null;
+  try {
+    const result = await loginFunction({
+      variables: { idToken },
+    });
+    user = result.data?.loginWithGoogle ?? null;
+    if (user) {
+      localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(user));
+    }
+  } catch (e: unknown) {
+    // eslint-disable-next-line no-alert
+    window.alert("Failed to login");
+  }
+  return user;
+};
+// graphql {
+
+// const loginWithGoogle = async (idToken: string): Promise<AuthenticatedUser> => {
+//   try {
+//     const { data } = await baseAPIClient.post(
+//       "/auth/login",
+//       { idToken },
+//       { withCredentials: true },
+//     );
+//     localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(data));
+//     return data;
+//   } catch (error) {
+//     return null;
+//   }
+// };
 
 type LogoutFunction = (
   options?:
@@ -112,11 +165,11 @@ const refresh = async (refreshFunction: RefreshFunction): Promise<boolean> => {
   return success;
 };
 
-export default { login, logout, refresh };
+export default { login, logout, loginWithGoogle, refresh };
 
 // } graphql
 
-// rest {
+// // rest {
 // const login = async (
 //   email: string,
 //   password: string,
@@ -183,7 +236,7 @@ export default { login, logout, refresh };
 //   }
 // };
 
-// for testing only, refresh does not need to be exposed in the client
+// // for testing only, refresh does not need to be exposed in the client
 // const refresh = async (): Promise<boolean> => {
 //   try {
 //     const { data } = await baseAPIClient.post(
@@ -203,4 +256,4 @@ export default { login, logout, refresh };
 // };
 
 // export default { login, logout, loginWithGoogle, resetPassword, refresh };
-// } rest
+// // } rest

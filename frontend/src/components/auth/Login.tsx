@@ -17,7 +17,7 @@ type GoogleResponse = GoogleLoginResponse | GoogleLoginResponseOffline;
 
 // graphql {
 const LOGIN = gql`
-  mutation Login($email: String!, $password: String!) {
+  mutation Login($email: String, $password: String) {
     login(email: $email, password: $password) {
       id
       firstName
@@ -30,6 +30,19 @@ const LOGIN = gql`
 `;
 // } graphql
 
+const LOGIN_WITH_GOOGLE = gql`
+  mutation LoginWithGoogle($idToken: String!) {
+    loginWithGoogle(idToken: $idToken) {
+      id
+      firstName
+      lastName
+      email
+      role
+      accessToken
+    }
+  }
+`;
+
 const Login = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
@@ -37,7 +50,9 @@ const Login = (): React.ReactElement => {
 
   // graphql {
   const [login] = useMutation<{ login: AuthenticatedUser }>(LOGIN);
-  // } graphql
+  const [loginWithGoogle] = useMutation<{ loginWithGoogle: AuthenticatedUser }>(
+    LOGIN_WITH_GOOGLE,
+  );
 
   const onLogInClick = async () => {
     // graphql {
@@ -47,14 +62,20 @@ const Login = (): React.ReactElement => {
       login,
     );
     // } graphql
-    // rest {
+    // // rest {
     // const user: AuthenticatedUser = await authAPIClient.login(email, password);
-    // } rest
+    // // } rest
     setAuthenticatedUser(user);
   };
 
   // graphql {
-  const onGoogleLoginSuccess = async (tokenId: string) => {}
+  const onGoogleLoginSuccess = async (idToken: string) => {
+    const user: AuthenticatedUser = await authAPIClient.loginWithGoogle(
+      idToken,
+      loginWithGoogle,
+    );
+    setAuthenticatedUser(user);
+  };
   // } graphql
   // rest {
   // const onGoogleLoginSuccess = async (tokenId: string) => {

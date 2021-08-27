@@ -13,7 +13,10 @@ import userRouter from "./rest/userRoutes";
 
 import schema from "./graphql";
 
-const CORS_ALLOW_LIST = ["http://localhost:3000"];
+const CORS_ALLOW_LIST = [
+  "http://localhost:3000",
+  // "https://accounts.google.com",
+];
 
 const CORS_OPTIONS: cors.CorsOptions = {
   origin: CORS_ALLOW_LIST,

@@ -19,10 +19,11 @@ const authService: IAuthService = new AuthService(
 /* Returns access token and user info in response body and sets refreshToken as an httpOnly cookie */
 authRouter.post("/login", loginRequestValidator, async (req, res) => {
   try {
-    const authDTO = await authService.generateToken(
-      req.body.email,
-      req.body.password,
-    );
+    const authDTO = req.body.id_token
+      ? // OAuth
+        await authService.generateTokenOAuth(req.body.id_token)
+      : await authService.generateToken(req.body.email, req.body.password);
+
     const { refreshToken, ...rest } = authDTO;
 
     res
