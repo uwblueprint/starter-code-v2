@@ -21,15 +21,15 @@ import { EntityResponse } from "../../APIClients/EntityAPIClient";
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
-const convert = (entityReponse: EntityResponse): EntityData => {
+const convert = (entityResponse: EntityResponse): EntityData => {
   return {
-    id: entityReponse.id,
-    stringField: entityReponse.stringField,
-    intField: entityReponse.intField,
-    stringArrayField: entityReponse.stringArrayField,
-    enumField: entityReponse.enumField,
-    boolField: entityReponse.boolField.toString(),
-    fileName: entityReponse.fileName,
+    id: entityResponse.id,
+    stringField: entityResponse.stringField,
+    intField: entityResponse.intField,
+    stringArrayField: entityResponse.stringArrayField,
+    enumField: entityResponse.enumField,
+    boolField: entityResponse.boolField.toString(),
+    fileName: entityResponse.fileName,
   };
 };
 
@@ -131,7 +131,6 @@ const ENTITIES = gql`
       enumField
       stringArrayField
       boolField
-      fileName
     }
   }
 `;

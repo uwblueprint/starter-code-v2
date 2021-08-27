@@ -15,7 +15,8 @@ export type EntityRequest = {
   stringArrayField: string[];
   enumField: EnumField;
   boolField: boolean;
-  file?: File;
+  filePath?: string;
+  fileContentType?: string;
 };
 
 export type EntityResponse = {
@@ -31,7 +32,7 @@ export type EntityResponse = {
 const create = async ({
   formData,
 }: {
-  formData: EntityRequest;
+  formData: EntityRequest | FormData;
 }): Promise<EntityResponse> => {
   // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(

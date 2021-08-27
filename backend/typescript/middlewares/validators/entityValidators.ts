@@ -36,6 +36,7 @@ export const entityRequestDtoValidator = async (
   if (!validatePrimitive(body.boolField, "boolean")) {
     return res.status(400).send(getApiValidationError("boolField", "boolean"));
   }
+  console.log(req.file);
   if (req.file && !validateFileType(req.file.mimetype)) {
     return res.status(400).send(getFileTypeValidationError(req.file.mimetype));
   }

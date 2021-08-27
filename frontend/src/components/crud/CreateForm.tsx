@@ -68,14 +68,15 @@ const uiSchema = {
 
 // graphql {
 const CREATE_ENTITY = gql`
-  mutation CreateForm_CreateEntity($entity: EntityRequestDTO!) {
-    createEntity(entity: $entity) {
+  mutation CreateForm_CreateEntity($entity: EntityRequestDTO!, $file: Upload) {
+    createEntity(entity: $entity, file: $file) {
       id
       stringField
       intField
       enumField
       stringArrayField
       boolField
+      fileName
     }
   }
 `;
@@ -96,6 +97,7 @@ const CreateForm = (): React.ReactElement => {
   }
 
   const fileChanged = (e: { target: HTMLInputElement }) => {
+    console.log(e);
     if (e.target.files) {
       const fileSize = e.target.files[0].size / 1024 / 1024;
       if (fileSize > 5) {
@@ -108,19 +110,25 @@ const CreateForm = (): React.ReactElement => {
   };
 
   const onSubmit = async ({ formData }: { formData: EntityRequest }) => {
-    if (fileField) {
-      // eslint-disable-next-line no-param-reassign
-      formData.file = fileField;
-    }
     // graphql {
+    console.log(formData);
+    console.log(fileField);
     const graphQLResult = await createEntity({
-      variables: { entity: formData },
+      variables: { entity: formData, file: fileField },
     });
     const result: EntityResponse | null =
       graphQLResult.data?.createEntity ?? null;
     // } graphql
     // rest {
-    // const result = await EntityAPIClient.create({ formData });
+    // let result;
+    // if (fileField) {
+    //   const multipartFormData = new FormData();
+    //   multipartFormData.append("body", JSON.stringify(formData));
+    //   multipartFormData.append("file", fileField);
+    //   result = await EntityAPIClient.create({ multipartFormData });
+    // } else {
+    //   result = await EntityAPIClient.create({ formData });
+    // }
     // } rest
     setData(result);
   };
