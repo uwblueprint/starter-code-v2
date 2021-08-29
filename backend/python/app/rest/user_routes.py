@@ -5,10 +5,16 @@ from ..middlewares.validate import validate_request
 from ..resources.create_user_dto import CreateUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
 from ..services.implementations.user_service_mg import UserService
-
+from ..utilities.csv_utils import generate_csv_from_list
 
 user_service = UserService(current_app.logger)
 blueprint = Blueprint("users", __name__, url_prefix="/users")
+
+DEFAULT_CSV_OPTIONS = {
+    "header": True,
+    "flatten_lists": True,
+    "flatten_objects": False,
+}
 
 
 @blueprint.route("/", methods=["GET"], strict_slashes=False)
@@ -19,6 +25,7 @@ def get_users():
     """
     user_id = request.args.get("user_id")
     email = request.args.get("email")
+    content_type = request.mimetype
 
     if user_id and email:
         return jsonify({"error": "Cannot query by both user_id and email"}), 400
@@ -26,6 +33,13 @@ def get_users():
     if not (user_id or email):
         try:
             users = user_service.get_users()
+
+            if content_type == "text/csv":
+                return (
+                    jsonify(generate_csv_from_list(users, options=DEFAULT_CSV_OPTIONS)),
+                    200,
+                )
+
             return jsonify(list(map(lambda user: user.__dict__, users))), 200
         except Exception as e:
             error_message = getattr(e, "message", None)

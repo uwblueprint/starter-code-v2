@@ -10,6 +10,13 @@ from ..middlewares.validate import validate_request
 # from ..services.implementations.entity_service import EntityService
 from ..services.implementations.entity_service_mg import EntityService
 from ..services.implementations.file_storage_service import FileStorageService
+from ..utilities.csv_utils import generate_csv_from_list
+
+DEFAULT_CSV_OPTIONS = {
+    "header": True,
+    "flatten_lists": False,
+    "flatten_objects": False,
+}
 
 # define instance of FileStorageService
 file_storage_service = FileStorageService(current_app.logger)
@@ -25,6 +32,11 @@ blueprint = Blueprint("entity", __name__, url_prefix="/entities")
 @require_authorization_by_role({"User", "Admin"})
 def get_entities():
     result = entity_service.get_entities()
+    content_type = request.mimetype
+
+    if content_type == "text/csv":
+        return jsonify(generate_csv_from_list(result, options=DEFAULT_CSV_OPTIONS)), 200
+
     return jsonify(result), 200
 
 
@@ -54,7 +66,6 @@ def get_entity(id):
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
-    # HTTP status code 200 means OK
     return jsonify(result), 200
 
 
