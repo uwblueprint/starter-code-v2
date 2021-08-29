@@ -13,6 +13,8 @@ import { DecodedJWT } from "../types/AuthTypes";
 import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 // } auth
 
+import { DecodedJWT } from "../types/AuthTypes";
+
 const baseAPIClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
 });
