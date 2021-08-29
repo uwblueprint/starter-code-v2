@@ -23,6 +23,8 @@ class Entity(db.Model):
     enum_field = db.Column(enum, nullable=False)
     string_array_field = db.Column(db.ARRAY(db.String), nullable=False)
     bool_field = db.Column(db.Boolean, nullable=False)
+    file_name = db.Column(db.String)
+
     # must define how to convert to a dict so that Entity can eventually be serialized into JSON
     # this would be a good method to include in a base Mixin
     def to_dict(self, include_relationships=False):

@@ -1,3 +1,12 @@
+ALLOWABLE_CONTENT_TYPES = [
+    "text/plain",
+    "application/pdf",
+    "image/png",
+    "image/jpeg",
+    "image/gif",
+]
+
+
 class EntityDTO(object):
     def __init__(self, **kwargs):
         self.string_field = kwargs.get("string_field")
@@ -9,6 +18,7 @@ class EntityDTO(object):
             else kwargs.get("enum_field")
         )
         self.bool_field = kwargs.get("bool_field")
+        self.file = kwargs.get("file")
 
     def validate(self):
         error_list = []
@@ -29,4 +39,13 @@ class EntityDTO(object):
             error_list.append("The enum_field supplied is not an enum.")
         if type(self.bool_field) is not bool:
             error_list.append("The bool_field supplied is not a boolean.")
+        if self.file:
+            if self.file.content_type not in ALLOWABLE_CONTENT_TYPES:
+                error_list.append(
+                    "The file type {file_content_type} is not one of {allowed_types_str}".format(
+                        file_content_type=self.file.content_type,
+                        allowed_types_str=", ".join(ALLOWABLE_CONTENT_TYPES),
+                    )
+                )
+
         return error_list
