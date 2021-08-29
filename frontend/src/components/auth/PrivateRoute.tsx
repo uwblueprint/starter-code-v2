@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 
 import AuthContext from "../../contexts/AuthContext";
+import { LOGIN_PAGE } from "../../constants/Routes";
 
 type PrivateRouteProps = {
   component: React.FC;
@@ -19,7 +20,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return authenticatedUser ? (
     <Route path={path} exact={exact} component={component} />
   ) : (
-    <Redirect to="/login" />
+    <Redirect to={LOGIN_PAGE} />
   );
 };
 
