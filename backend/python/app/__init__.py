@@ -56,7 +56,12 @@ def create_app(config_name):
     # } postgresql
 
     # auth {
+    # file-storage {
+    firebase_admin.initialize_app(None, {"storageBucket": os.getenv("DEFAULT_BUCKET")})
+    # } file-storage
+    # no-file-storage {
     firebase_admin.initialize_app()
+    # } no-file-storage
 
     # } auth
     from . import models, rest

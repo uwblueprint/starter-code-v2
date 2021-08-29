@@ -1,6 +1,8 @@
 from flask import Blueprint, current_app, request
 from flask import jsonify
+# file-storage {
 import json
+# } file-storage
 
 from ..resources.entity_dto import EntityDTO
 
@@ -9,14 +11,22 @@ from ..middlewares.auth import require_authorization_by_role
 # } auth
 from ..middlewares.validate import validate_request
 from ..services.implementations.entity_service import EntityService
+# file-storage {
 from ..services.implementations.file_storage_service import FileStorageService
+# } file-storage
 
+# file-storage {
 # define instance of FileStorageService
 file_storage_service = FileStorageService(current_app.logger)
 
 # define instance of EntityService
 entity_service = EntityService(current_app.logger, file_storage_service)
 
+# } file-storage
+# no-file-storage {
+entity_service = EntityService(current_app.logger)
+
+# } no-file-storage
 # defines a shared URL prefix for all routes
 blueprint = Blueprint("entity", __name__, url_prefix="/entities")
 
@@ -58,12 +68,17 @@ def create_entity():
         # create a EntityResource object instead of using the raw request body
         # data validators and transformations are applied when constructing the resource,
         # this allows downstream code to make safe assumptions about the data
+        # file-storage {
         if request.content_type == "application/json":
             body = EntityDTO(**request.json)
         else:
             req = json.loads(request.form.get("body"))
             req["file"] = request.files.get("file", default=None)
             body = EntityDTO(**req)
+        # } file-storage
+        # no-file-storage {
+        body = EntityDTO(**request.json)
+        # } no-file-storage
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
@@ -80,12 +95,17 @@ def create_entity():
 @validate_request("EntityDTO")
 def update_entity(id):
     try:
+        # file-storage {
         if request.content_type == "application/json":
             body = EntityDTO(**request.json)
         else:
             req = json.loads(request.form.get("body"))
             req_file = request.files.get("file", default=None)
             body = EntityDTO(**req, file=req_file)
+        # } file-storage
+        # no-file-storage {
+        body = EntityDTO(**request.json)
+        # } no-file-storage
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
@@ -142,12 +162,17 @@ def create_entity():
         # create a EntityResource object instead of using the raw request body
         # data validators and transformations are applied when constructing the resource,
         # this allows downstream code to make safe assumptions about the data
+        # file-storage {
         if request.content_type == "application/json":
             body = EntityDTO(**request.json)
         else:
             req = json.loads(request.form.get("body"))
             req["file"] = request.files.get("file", default=None)
             body = EntityDTO(**req)
+        # } file-storage
+        # no-file-storage {
+        body = EntityDTO(**request.json)
+        # } no-file-storage
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
@@ -164,12 +189,17 @@ def create_entity():
 @validate_request("EntityDTO")
 def update_entity(id):
     try:
+        # file-storage {
         if request.content_type == "application/json":
             body = EntityDTO(**request.json)
         else:
             req = json.loads(request.form.get("body"))
             req["file"] = request.files.get("file", default=None)
             body = EntityDTO(**req)
+        # } file-storage
+        # no-file-storage {
+        body = EntityDTO(**request.json)
+        # } no-file-storage
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
@@ -199,9 +229,12 @@ def delete_entity(id):
 
 # } mongodb
 
+# file-storage {
 # defines GET endpoint for a URL to the entity's file with the provided uuid
 @blueprint.route("/files/<string:id>", methods=["GET"], strict_slashes=False)
+# auth {
 @require_authorization_by_role({"User", "Admin"})
+# } auth
 def get_file(id):
     try:
         file_url = file_storage_service.get_file(id)
@@ -210,3 +243,4 @@ def get_file(id):
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
     return jsonify({"file_url": file_url}), 200
+# } file-storage

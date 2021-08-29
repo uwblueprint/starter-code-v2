@@ -1,7 +1,9 @@
 from flask import jsonify, request
 from functools import wraps
+# file-storage {
 import json
 
+# } file-storage
 # auth {
 from ..resources.create_user_dto import CreateUserDTO
 # } auth
@@ -32,6 +34,7 @@ def validate_request(dto_class_name):
     def validate_dto(api_func):
         @wraps(api_func)
         def wrapper(*args, **kwargs):
+            # file-storage {
             if request.content_type == "application/json":
                 dto = dtos[dto_class_name](**request.json)
             else:
@@ -41,6 +44,10 @@ def validate_request(dto_class_name):
                 req = json.loads(req_body)
                 req["file"] = request.files.get("file", default=None)
                 dto = dtos[dto_class_name](**req)
+            # } file-storage
+            # no-file-storage {
+            dto = dtos[dto_class_name](**request.json)
+            # } no-file-storage
             error_message = dto.validate()
             if error_message:
                 return (

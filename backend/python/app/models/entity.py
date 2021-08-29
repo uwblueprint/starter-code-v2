@@ -24,7 +24,9 @@ class Entity(db.Model):
     enum_field = db.Column(enum, nullable=False)
     string_array_field = db.Column(db.ARRAY(db.String), nullable=False)
     bool_field = db.Column(db.Boolean, nullable=False)
+    # file-storage {
     file_name = db.Column(db.String)
+    # } file-storage
 
     # must define how to convert to a dict so that Entity can eventually be serialized into JSON
     # this would be a good method to include in a base Mixin
@@ -60,7 +62,9 @@ class Entity(Document):
     )
     string_array_field = ListField(StringField())
     bool_field = BooleanField()
+    # file-storage {
     file_name = StringField()
+    # } file-storage
 
     def to_serializable_dict(self):
         entity_dict = self.to_mongo().to_dict()
