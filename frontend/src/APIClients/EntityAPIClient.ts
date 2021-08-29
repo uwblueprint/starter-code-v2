@@ -79,6 +79,29 @@ const get = async (): Promise<EntityResponse[]> => {
   }
 };
 
+const getFile = async (uuid: string): Promise<string> => {
+  // auth {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  // } auth
+  try {
+    // auth {
+    const { data } = await baseAPIClient.get(`/entities/files/${uuid}`, {
+      headers: { Authorization: bearerToken },
+    });
+    // } auth
+
+    // no-auth {
+    // const { data } = await baseAPIClient.get(`/entities/files/${uuid}`);
+    // } no-auth
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 const update = async (
   id: number | string,
   {
@@ -109,4 +132,4 @@ const update = async (
   }
 };
 
-export default { create, get, update };
+export default { create, get, getFile, update };

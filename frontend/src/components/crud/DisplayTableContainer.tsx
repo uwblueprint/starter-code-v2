@@ -6,9 +6,9 @@ import React, { useState } from "react";
 // import React, { useState, useEffect } from "react";
 // } rest
 import BTable from "react-bootstrap/Table";
-import { HeaderGroup, useTable, Column } from "react-table";
+import { HeaderGroup, useTable, Column, Cell } from "react-table";
 // graphql {
-import { gql, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
@@ -73,6 +73,12 @@ const columns: Column<EntityData>[] = [
     Header: "fileName",
 
     accessor: "fileName",
+
+    // eslint-disable-next-line react/display-name
+    Cell: ({ cell }) =>
+      cell.row.values ? (
+        <button onClick={downloadEntityFile}>Download</button>
+      ) : null,
   },
 ];
 
@@ -140,6 +146,12 @@ const ENTITIES = gql`
     }
   }
 `;
+
+const FILE = gql`
+  query DisplayTableContainer_File($fileUUID: String) {
+    file(fileUUID: $fileUUID)
+  }
+`;
 // } graphql
 
 const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
@@ -151,6 +163,21 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
       setEntities(data.entities.map((d: EntityResponse) => convert(d)));
     },
   });
+
+  // graphql {
+  const [getFile] = useLazyQuery(FILE, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: (data) => {
+      downloadFile(data);
+    },
+  });
+  // } graphql
+
+  const downloadEntityFile = async (fileUUID: string) => {
+    // graphql {
+    getFile({ variables: { fileUUID } });
+    // } graphql
+  };
 
   // rest {
   // useEffect(() => {
