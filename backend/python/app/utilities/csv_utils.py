@@ -26,7 +26,7 @@ def flatten_dicts(dictionary, parent_key="", sep="."):
     """
     items = []
     for key, val in dictionary.items():
-        new_key = parent_key + sep + key if parent_key else key
+        new_key = parent_key + sep + str(key) if parent_key else str(key)
         if isinstance(val, dict):
             items.extend(flatten_dicts(val, new_key, sep=sep).items())
 

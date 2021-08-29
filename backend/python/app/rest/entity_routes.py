@@ -12,7 +12,7 @@ from ..services.implementations.entity_service_mg import EntityService
 from ..services.implementations.file_storage_service import FileStorageService
 from ..utilities.csv_utils import generate_csv_from_list
 
-DEFAULT_OPTIONS = {
+DEFAULT_CSV_OPTIONS = {
     "header": True,
     "flatten_lists": False,
     "flatten_objects": False,
@@ -35,7 +35,7 @@ def get_entities():
     content_type = request.mimetype
 
     if content_type == "text/csv":
-        return jsonify(generate_csv_from_list(result, options=DEFAULT_OPTIONS)), 200
+        return jsonify(generate_csv_from_list(result, options=DEFAULT_CSV_OPTIONS)), 200
 
     return jsonify(result), 200
 
@@ -50,8 +50,9 @@ def get_entities():
 #     except Exception as e:
 #         error_message = getattr(e, "message", None)
 #         return jsonify({"error": (error_message if error_message else str(e))}), 500
-#
-#       return jsonify(result), 200
+
+#     # HTTP status code 200 means OK
+#     return jsonify(result), 200
 
 
 # MONGO

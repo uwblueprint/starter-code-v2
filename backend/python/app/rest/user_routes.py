@@ -10,7 +10,7 @@ from ..utilities.csv_utils import generate_csv_from_list
 user_service = UserService(current_app.logger)
 blueprint = Blueprint("users", __name__, url_prefix="/users")
 
-DEFAULT_OPTIONS = {
+DEFAULT_CSV_OPTIONS = {
     "header": True,
     "flatten_lists": True,
     "flatten_objects": False,
@@ -36,7 +36,7 @@ def get_users():
 
             if content_type == "text/csv":
                 return (
-                    jsonify(generate_csv_from_list(users, options=DEFAULT_OPTIONS)),
+                    jsonify(generate_csv_from_list(users, options=DEFAULT_CSV_OPTIONS)),
                     200,
                 )
 
