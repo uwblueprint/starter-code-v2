@@ -24,6 +24,7 @@ entity_service = EntityService(current_app.logger, file_storage_service)
 
 # } file-storage
 # no-file-storage {
+# define instance of EntityService
 entity_service = EntityService(current_app.logger)
 
 # } no-file-storage

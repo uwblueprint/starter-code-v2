@@ -6,9 +6,9 @@ ALLOWABLE_CONTENT_TYPES = [
     "image/jpeg",
     "image/gif",
 ]
+
+
 # } file-storage
-
-
 class EntityDTO(object):
     def __init__(self, **kwargs):
         self.string_field = kwargs.get("string_field")
