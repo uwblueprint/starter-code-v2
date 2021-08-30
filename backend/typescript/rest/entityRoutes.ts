@@ -14,7 +14,7 @@ import IFileStorageService from "../services/interfaces/fileStorageService";
 // } file-storage
 import {
   EntityResponseDTO,
-  IEntityService
+  IEntityService,
 } from "../services/interfaces/IEntityService";
 import { sendResponseByMimeType } from "../utilities/responseUtil";
 

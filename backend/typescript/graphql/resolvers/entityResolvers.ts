@@ -13,7 +13,7 @@ import FileStorageService from "../../services/implementations/fileStorageServic
 // } file-storage
 import {
   EntityRequestDTO,
-  EntityResponseDTO
+  EntityResponseDTO,
 } from "../../services/interfaces/IEntityService";
 import { generateCSV } from "../../utilities/csvUtils";
 

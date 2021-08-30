@@ -141,7 +141,7 @@ def generate_csv_from_list(dict_list, **kwargs):
         dict_list = [flatten_lists_in_dict(dict) for dict in dict_list]
 
     output = io.StringIO()
-    writer = csv.DictWriter(output, fieldnames=dict_list[0].keys())
+    writer = csv.DictWriter(output, fieldnames=field_names)
 
     if kwargs.get("header", None):
         writer.writeheader()

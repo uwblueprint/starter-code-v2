@@ -94,12 +94,12 @@ const getCSV = async (): Promise<string> => {
     // } auth
 
     // no-auth {
-    // const { data } = await baseAPIClient.get("/entities", {
-    //   // Following line is necessary to set the Content-Type header
-    //   // Reference: https://github.com/axios/axios/issues/86
-    //   data: null,
-    //   headers: { "Content-Type": "text/csv" },
-    // });
+    const { data } = await baseAPIClient.get("/entities", {
+      // Following line is necessary to set the Content-Type header
+      // Reference: https://github.com/axios/axios/issues/86
+      data: null,
+      headers: { "Content-Type": "text/csv" },
+    });
     // } no-auth
     return data;
   } catch (error) {
