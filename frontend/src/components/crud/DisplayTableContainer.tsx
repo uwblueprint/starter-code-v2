@@ -8,15 +8,17 @@ import React, { useState, useEffect } from "react";
 import BTable from "react-bootstrap/Table";
 import { HeaderGroup, useTable, Column } from "react-table";
 // graphql {
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useLazyQuery } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
 // rest {
+
 import EntityAPIClient, {
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
 // } rest
+import { downloadCSV } from "../../utils/CSVUtils";
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
@@ -133,6 +135,12 @@ const ENTITIES = gql`
   }
 `;
 
+const ENTITIESCSV = gql`
+  query DisplayTableContainer_EntitiesCSV {
+    entitiesCSV
+  }
+`;
+
 // } graphql
 const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   const [entities, setEntities] = useState<EntityData[] | null>(null);
@@ -142,6 +150,13 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
     fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
       setEntities(data.entities.map((d: EntityResponse) => convert(d)));
+    },
+  });
+
+  const [getEntitiesCSV] = useLazyQuery(ENTITIESCSV, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: (data) => {
+      downloadCSV(data.entitiesCSV, "export.csv");
     },
   });
   // } graphql
@@ -157,7 +172,29 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   }, []);
   // } rest
 
-  return entities && <DisplayTable data={entities} />;
+  const downloadEntitiesCSV = async () => {
+    if (entities) {
+      // graphql {
+      getEntitiesCSV();
+      // } graphql
+      // rest {
+      const csvString = await EntityAPIClient.getCSV();
+      downloadCSV(csvString, "export.csv");
+      // } rest
+      // Use the following lines to download CSV using frontend CSV generation instead of API
+      // const csvString = await generateCSV<EntityData>({ data: entities });
+      // downloadCSV(csvString, "export.csv");
+    }
+  };
+
+  return (
+    <>
+      <button type="button" onClick={downloadEntitiesCSV}>
+        Download CSV
+      </button>
+      {entities && <DisplayTable data={entities} />}
+    </>
+  );
 };
 
 export default DisplayTableContainer;

@@ -7,6 +7,8 @@ import {
 } from "../middlewares/validators/userValidators";
 import UserService from "../services/implementations/userService";
 import IUserService from "../services/interfaces/userService";
+import { UserDTO } from "../types";
+import { sendResponseByMimeType } from "../utilities/responseUtil";
 
 const userRouter: Router = Router();
 userRouter.use(isAuthorizedByRole(new Set(["Admin"])));
@@ -16,18 +18,27 @@ const userService: IUserService = new UserService();
 /* Get all users, optionally filter by a userId or email query parameter to retrieve a single user */
 userRouter.get("/", async (req, res) => {
   const { userId, email } = req.query;
+  const contentType = req.headers["content-type"];
 
   if (userId && email) {
-    res.status(400).json({ error: "Cannot query by both userId and email." });
+    await sendResponseByMimeType(res, 400, contentType, [
+      {
+        error: "Cannot query by both userId and email.",
+      },
+    ]);
     return;
   }
 
   if (!userId && !email) {
     try {
       const users = await userService.getUsers();
-      res.status(200).json(users);
+      await sendResponseByMimeType<UserDTO>(res, 200, contentType, users);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      await sendResponseByMimeType(res, 500, contentType, [
+        {
+          error: error.message,
+        },
+      ]);
     }
     return;
   }

@@ -32,9 +32,14 @@ class TestingConfig(Config):
     """
     Testing configurations
     """
+
     DEBUG = False
     TESTING = True
     MONGODB_URL = "mongomock://localhost"
 
 
-app_config = {"development": DevelopmentConfig, "production": ProductionConfig, "testing": TestingConfig}
+app_config = {
+    "development": DevelopmentConfig,
+    "production": ProductionConfig,
+    "testing": TestingConfig,
+}

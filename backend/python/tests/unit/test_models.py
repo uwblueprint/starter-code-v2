@@ -4,11 +4,11 @@ from app.models.user import User
 from app.models import db
 # } postgresql
 
-'''
+"""
 Sample python test.
 For more information on pytest, visit:
 https://docs.pytest.org/en/6.2.x/reference.html
-'''
+"""
 
 
 def test_create_user():

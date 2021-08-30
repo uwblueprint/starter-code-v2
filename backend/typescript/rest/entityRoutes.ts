@@ -12,7 +12,11 @@ import EntityService from "../services/implementations/entityService";
 import FileStorageService from "../services/implementations/fileStorageService";
 import IFileStorageService from "../services/interfaces/fileStorageService";
 // } file-storage
-import { IEntityService } from "../services/interfaces/IEntityService";
+import {
+  EntityResponseDTO,
+  IEntityService
+} from "../services/interfaces/IEntityService";
+import { sendResponseByMimeType } from "../utilities/responseUtil";
 
 // file-storage {
 const upload = multer({ dest: "uploads/" });
@@ -73,12 +77,22 @@ entityRouter.post(
 );
 
 /* Get all entities */
-entityRouter.get("/", async (_req, res) => {
+entityRouter.get("/", async (req, res) => {
+  const contentType = req.headers["content-type"];
   try {
     const entities = await entityService.getEntities();
-    res.status(200).json(entities);
+    await sendResponseByMimeType<EntityResponseDTO>(
+      res,
+      200,
+      contentType,
+      entities,
+    );
   } catch (e) {
-    res.status(500).send(e.message);
+    await sendResponseByMimeType(res, 500, contentType, [
+      {
+        error: e.message,
+      },
+    ]);
   }
 });
 
