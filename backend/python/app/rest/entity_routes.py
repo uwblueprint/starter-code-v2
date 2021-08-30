@@ -35,7 +35,7 @@ def get_entities():
     content_type = request.mimetype
 
     if content_type == "text/csv":
-        return jsonify(generate_csv_from_list(result, options=DEFAULT_CSV_OPTIONS)), 200
+        return jsonify(generate_csv_from_list(result, **DEFAULT_CSV_OPTIONS)), 200
 
     return jsonify(result), 200
 
