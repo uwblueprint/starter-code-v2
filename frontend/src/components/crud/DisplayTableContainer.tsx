@@ -6,13 +6,14 @@ import React, { useState } from "react";
 // import React, { useState, useEffect } from "react";
 // } rest
 import BTable from "react-bootstrap/Table";
-import { HeaderGroup, useTable, Column, Cell } from "react-table";
+import { HeaderGroup, useTable, Column } from "react-table";
+
 // graphql {
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
-
+import { downloadFile } from "../../utils/FileUtils";
 // rest {
 // import EntityAPIClient, {
 //   EntityResponse,
@@ -35,9 +36,10 @@ const convert = (entityResponse: EntityResponse): EntityData => {
 
 type TableProps = {
   data: EntityData[];
+  downloadEntityFile: any;
 };
 
-const columns: Column<EntityData>[] = [
+const createColumns = (downloadEntityFile: any): Column<EntityData>[] => [
   {
     Header: "id",
 
@@ -75,14 +77,16 @@ const columns: Column<EntityData>[] = [
     accessor: "fileName",
 
     // eslint-disable-next-line react/display-name
-    Cell: ({ cell }) =>
-      cell.row.values ? (
-        <button onClick={downloadEntityFile}>Download</button>
+    Cell: ({ cell }: any) =>
+      cell.row.values.fileName ? (
+        <button type="button" onClick={downloadEntityFile}>
+          Download
+        </button>
       ) : null,
   },
 ];
 
-const DisplayTable = ({ data }: TableProps) => {
+const DisplayTable = ({ data, downloadEntityFile }: TableProps) => {
   const {
     getTableProps,
 
@@ -91,7 +95,10 @@ const DisplayTable = ({ data }: TableProps) => {
     rows,
 
     prepareRow,
-  } = useTable<EntityData>({ columns, data });
+  } = useTable<EntityData>({
+    columns: createColumns(downloadEntityFile),
+    data,
+  });
 
   return (
     <BTable
@@ -168,7 +175,8 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   const [getFile] = useLazyQuery(FILE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
-      downloadFile(data);
+      // downloadFile(data, "file");
+      console.log(data);
     },
   });
   // } graphql
@@ -191,7 +199,11 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   // }, []);
   // } rest
 
-  return entities && <DisplayTable data={entities} />;
+  return (
+    entities && (
+      <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />
+    )
+  );
 };
 
 export default DisplayTableContainer;
