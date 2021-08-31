@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 // } graphql
 
 import authAPIClient from "../../APIClients/AuthAPIClient";
+import { HOME_PAGE, SIGNUP_PAGE } from "../../constants/Routes";
 import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 
@@ -27,7 +28,7 @@ const Login = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signup, setSignup] = useState(false);
+  const history = useHistory();
 
   // graphql {
   const [login] = useMutation<{ login: AuthenticatedUser }>(LOGIN);
@@ -47,16 +48,12 @@ const Login = (): React.ReactElement => {
     setAuthenticatedUser(user);
   };
 
-  const onSignUpClick = async () => {
-    setSignup(true);
+  const onSignUpClick = () => {
+    history.push(SIGNUP_PAGE);
   };
 
   if (authenticatedUser) {
-    return <Redirect to="/" />;
-  }
-
-  if (signup) {
-    return <Redirect to="/signup" />;
+    return <Redirect to={HOME_PAGE} />;
   }
 
   return (

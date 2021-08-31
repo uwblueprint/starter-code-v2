@@ -51,7 +51,7 @@ const App = (): React.ReactElement => {
           <Router>
             <Switch>
               <Route exact path={Routes.LOGIN_PAGE} component={Login} />
-              <Route exact path="/signup" component={Signup} />
+              <Route exact path={Routes.SIGNUP_PAGE} component={Signup} />
               <PrivateRoute exact path={Routes.HOME_PAGE} component={Default} />
               <PrivateRoute
                 exact

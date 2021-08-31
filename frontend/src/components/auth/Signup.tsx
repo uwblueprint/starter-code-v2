@@ -5,12 +5,13 @@ import { gql, useMutation } from "@apollo/client";
 // } graphql
 
 import authAPIClient from "../../APIClients/AuthAPIClient";
+import { HOME_PAGE } from "../../constants/Routes";
 import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 
 // graphql {
 const REGISTER = gql`
-  mutation Register(
+  mutation Signup_Register(
     $firstName: String!,
     $lastName: String!,
     $email: String!,
@@ -66,7 +67,7 @@ const Signup = (): React.ReactElement => {
   };
 
   if (authenticatedUser) {
-    return <Redirect to="/" />;
+    return <Redirect to={HOME_PAGE} />;
   }
 
   return (
