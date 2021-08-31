@@ -1,9 +1,9 @@
+import os
+
 from flask import Blueprint, current_app, jsonify, request
 
 from ..middlewares.auth import require_authorization_by_role
 from ..middlewares.validate import validate_request
-import os
-
 from ..resources.create_user_dto import CreateUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
 from ..services.implementations.auth_service import AuthService
