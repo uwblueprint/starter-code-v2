@@ -11,7 +11,11 @@ import EntityService from "../../services/implementations/EntityService";
 // file-storage {
 import FileStorageService from "../../services/implementations/fileStorageService";
 // } file-storage
-import { EntityRequestDTO } from "../../services/interfaces/IEntityService";
+import {
+  EntityRequestDTO,
+  EntityResponseDTO,
+} from "../../services/interfaces/IEntityService";
+import { generateCSV } from "../../utilities/csvUtils";
 
 // no-file-storage {
 const entityService = new EntityService();
@@ -40,6 +44,11 @@ const entityResolvers = {
     },
     entities: async () => {
       return entityService.getEntities();
+    },
+    entitiesCSV: async () => {
+      const entities = await entityService.getEntities();
+      const csv = await generateCSV<EntityResponseDTO>({ data: entities });
+      return csv;
     },
     // file-storage {
     file: async (_req: any, { fileUUID }: { fileUUID: string }) => {

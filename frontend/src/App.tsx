@@ -16,6 +16,7 @@ import Default from "./components/pages/Default";
 import DisplayPage from "./components/pages/DisplayPage";
 import NotFound from "./components/pages/NotFound";
 import UpdatePage from "./components/pages/UpdatePage";
+import * as Routes from "./constants/Routes";
 // auth {
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
 import AuthContext from "./contexts/AuthContext";
@@ -62,22 +63,26 @@ const App = (): React.ReactElement => {
         >
           <Router>
             <Switch>
-              <PrivateRoute exact path="/" component={Default} />
-              <Route exact path="/login" component={Login} />
+              <Route exact path={Routes.LOGIN_PAGE} component={Login} />
+              <PrivateRoute exact path={Routes.HOME_PAGE} component={Default} />
               <PrivateRoute
                 exact
-                path="/entity/create"
+                path={Routes.CREATE_ENTITY_PAGE}
                 component={CreatePage}
               />
               <PrivateRoute
                 exact
-                path="/entity/update"
+                path={Routes.UPDATE_ENTITY_PAGE}
                 component={UpdatePage}
               />
-              <PrivateRoute exact path="/entity" component={DisplayPage} />
               <PrivateRoute
                 exact
-                path="/edit-team"
+                path={Routes.DISPLAY_ENTITY_PAGE}
+                component={DisplayPage}
+              />
+              <PrivateRoute
+                exact
+                path={Routes.EDIT_TEAM_PAGE}
                 component={EditTeamInfoPage}
               />
               <Route exact path="*" component={NotFound} />
@@ -94,11 +99,11 @@ const App = (): React.ReactElement => {
       >
         <Router>
           <Switch>
-            <Route exact path="/" component={Default} />
-            <Route exact path="/entity/create" component={CreatePage} />
-            <Route exact path="/entity/update" component={UpdatePage} />
-            <Route exact path="/entity" component={DisplayPage} />
-            <Route exact path="/edit-team" component={EditTeamInfoPage} />
+            <Route exact path={Routes.HOME_PAGE} component={Default} />
+            <Route exact path={Routes.CREATE_ENTITY_PAGE} component={CreatePage} />
+            <Route exact path={Routes.UPDATE_ENTITY_PAGE} component={UpdatePage} />
+            <Route exact path={Routes.DISPLAY_ENTITY_PAGE} component={DisplayPage} />
+            <Route exact path={Routes.EDIT_TEAM_PAGE} component={EditTeamInfoPage} />
             <Route exact path="*" component={NotFound} />
           </Switch>
         </Router>

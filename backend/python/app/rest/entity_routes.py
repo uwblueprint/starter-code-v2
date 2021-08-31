@@ -14,6 +14,13 @@ from ..services.implementations.entity_service import EntityService
 # file-storage {
 from ..services.implementations.file_storage_service import FileStorageService
 # } file-storage
+from ..utilities.csv_utils import generate_csv_from_list
+
+DEFAULT_CSV_OPTIONS = {
+    "header": True,
+    "flatten_lists": False,
+    "flatten_objects": False,
+}
 
 # file-storage {
 # define instance of FileStorageService
@@ -38,6 +45,11 @@ blueprint = Blueprint("entity", __name__, url_prefix="/entities")
 # } auth
 def get_entities():
     result = entity_service.get_entities()
+    content_type = request.mimetype
+
+    if content_type == "text/csv":
+        return jsonify(generate_csv_from_list(result, **DEFAULT_CSV_OPTIONS)), 200
+
     return jsonify(result), 200
 
 
