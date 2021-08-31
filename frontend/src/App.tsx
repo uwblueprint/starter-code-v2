@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // auth {
 import Login from "./components/auth/Login";
+import Signup from "./components/auth/Signup";
 import PrivateRoute from "./components/auth/PrivateRoute";
 // } auth
 import CreatePage from "./components/pages/CreatePage";
@@ -64,6 +65,7 @@ const App = (): React.ReactElement => {
           <Router>
             <Switch>
               <Route exact path={Routes.LOGIN_PAGE} component={Login} />
+              <Route exact path={Routes.SIGNUP_PAGE} component={Signup} />
               <PrivateRoute exact path={Routes.HOME_PAGE} component={Default} />
               <PrivateRoute
                 exact

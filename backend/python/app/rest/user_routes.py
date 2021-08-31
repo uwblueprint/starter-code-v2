@@ -2,13 +2,29 @@ from flask import Blueprint, current_app, jsonify, request
 
 from ..middlewares.auth import require_authorization_by_role
 from ..middlewares.validate import validate_request
+import os
+
 from ..resources.create_user_dto import CreateUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
+from ..services.implementations.auth_service import AuthService
+from ..services.implementations.email_service import EmailService
 from ..services.implementations.user_service import UserService
 from ..utilities.csv_utils import generate_csv_from_list
 
 
 user_service = UserService(current_app.logger)
+email_service = EmailService(
+    current_app.logger,
+    {
+        "refresh_token": os.getenv("EMAIL_REFRESH_TOKEN"),
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "client_id": os.getenv("EMAIL_CLIENT_ID"),
+        "client_secret": os.getenv("EMAIL_CLIENT_SECRET"),
+    },
+    "name@domain.org",  # must replace
+    "Display Name",  # must replace
+)
+auth_service = AuthService(current_app.logger, user_service, email_service)
 blueprint = Blueprint("users", __name__, url_prefix="/users")
 
 DEFAULT_CSV_OPTIONS = {
@@ -89,6 +105,7 @@ def create_user():
     try:
         user = CreateUserDTO(**request.json)
         created_user = user_service.create_user(user)
+        auth_service.send_email_verification_link(request.json["email"])
         return jsonify(created_user.__dict__), 201
     except Exception as e:
         error_message = getattr(e, "message", None)
