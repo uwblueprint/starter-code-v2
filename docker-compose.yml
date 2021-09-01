@@ -30,22 +30,22 @@ services:
       - db-test
     env_file:
       - ./.env
-  # py-backend:
-  #   restart: always
-  #   build:
-  #     context: ./backend/python
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 5000:5000
-  #   dns:
-  #     - 8.8.8.8
-  #   volumes:
-  #    - ./backend/python:/app
-  #   depends_on:
-  #     - db
-  #     - db-test
-  #   env_file:
-  #     - ./.env
+  py-backend:
+    restart: always
+    build:
+      context: ./backend/python
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    dns:
+      - 8.8.8.8
+    volumes:
+      - ./backend/python:/app
+    depends_on:
+      - db
+      - db-test
+    env_file:
+      - ./.env
   db:
     image: postgres:12-alpine
     ports:
