@@ -56,12 +56,12 @@ const Signup = (): React.ReactElement => {
     );
     // } graphql
     // rest {
-    // const user: AuthenticatedUser = await authAPIClient.register(
-    //   firstName,
-    //   lastName,
-    //   email,
-    //   password,
-    // );
+    const user: AuthenticatedUser = await authAPIClient.register(
+      firstName,
+      lastName,
+      email,
+      password,
+    );
     // } rest
     setAuthenticatedUser(user);
   };
