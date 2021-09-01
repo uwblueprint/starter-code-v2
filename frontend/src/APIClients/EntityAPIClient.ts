@@ -15,8 +15,6 @@ export type EntityRequest = {
   stringArrayField: string[];
   enumField: EnumField;
   boolField: boolean;
-  filePath?: string;
-  fileContentType?: string;
 };
 
 export type EntityResponse = {
