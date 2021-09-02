@@ -3,8 +3,7 @@ export const downloadFile = (data: string, fileName: string): void => {
   const a = document.createElement("a");
   a.href = data;
   a.download = fileName;
+  a.target = "_blank";
   a.click();
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-  });
+  a.parentNode?.removeChild(a);
 };

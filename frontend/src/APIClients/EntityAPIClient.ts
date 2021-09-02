@@ -94,7 +94,7 @@ const getFile = async (uuid: string): Promise<string> => {
     // no-auth {
     // const { data } = await baseAPIClient.get(`/entities/files/${uuid}`);
     // } no-auth
-    return data;
+    return data.fileURL;
   } catch (error) {
     return error;
   }
