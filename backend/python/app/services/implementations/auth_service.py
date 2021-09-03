@@ -170,7 +170,7 @@ class AuthService(IAuthService):
                 decoded_id_token["uid"]
             )
             firebase_user = firebase_admin.auth.get_user(decoded_id_token["uid"])
-            return firebase_user["email_verified"] and user_role in roles
+            return firebase_user.email_verified and user_role in roles
         except:
             return False
 
@@ -184,7 +184,7 @@ class AuthService(IAuthService):
             )
             firebase_user = firebase_admin.auth.get_user(decoded_id_token["uid"])
             return (
-                firebase_user["email_verified"] and token_user_id == requested_user_id
+                firebase_user.email_verified and token_user_id == requested_user_id
             )
         except:
             return False
@@ -196,7 +196,7 @@ class AuthService(IAuthService):
             )
             firebase_user = firebase_admin.auth.get_user(decoded_id_token["uid"])
             return (
-                firebase_user["email_verified"]
+                firebase_user.email_verified
                 and decoded_id_token["email"] == requested_email
             )
         except:
