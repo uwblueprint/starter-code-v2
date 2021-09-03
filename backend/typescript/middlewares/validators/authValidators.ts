@@ -9,7 +9,7 @@ export const loginRequestValidator = async (
 ) => {
   if (req.body.idToken) {
     if (!validatePrimitive(req.body.idToken, "string")) {
-      return res.status(400).json(getApiValidationError("id_token", "string"));
+      return res.status(400).json(getApiValidationError("idToken", "string"));
     }
   } else {
     if (!validatePrimitive(req.body.email, "string")) {
