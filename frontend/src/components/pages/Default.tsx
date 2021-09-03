@@ -5,12 +5,13 @@ import SampleContext from "../../contexts/SampleContext";
 import Logout from "../auth/Logout";
 import RefreshCredentials from "../auth/RefreshCredentials";
 import ResetPassword from "../auth/ResetPassword";
+import * as Routes from "../../constants/Routes";
 
 type ButtonProps = { text: string; path: string };
 
 const Button = ({ text, path }: ButtonProps) => {
   const history = useHistory();
-  const navigateTo = () => history.push(`/${path}`);
+  const navigateTo = () => history.push(path);
   return (
     <button className="btn btn-primary" onClick={navigateTo} type="button">
       {text}
@@ -44,10 +45,10 @@ const Default = (): React.ReactElement => {
         <Logout />
         <RefreshCredentials />
         <ResetPassword />
-        <Button text="Create Entity" path="entity/create" />
-        <Button text="Update Entity" path="entity/update" />
-        <Button text="Display Entities" path="entity" />
-        <Button text="Edit Team" path="edit-team" />
+        <Button text="Create Entity" path={Routes.CREATE_ENTITY_PAGE} />
+        <Button text="Update Entity" path={Routes.UPDATE_ENTITY_PAGE} />
+        <Button text="Display Entities" path={Routes.DISPLAY_ENTITY_PAGE} />
+        <Button text="Edit Team" path={Routes.EDIT_TEAM_PAGE} />
       </div>
 
       <div style={{ height: "2rem" }} />

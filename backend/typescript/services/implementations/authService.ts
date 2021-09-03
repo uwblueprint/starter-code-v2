@@ -37,6 +37,40 @@ class AuthService implements IAuthService {
     }
   }
 
+  /* eslint-disable class-methods-use-this */
+  async generateTokenOAuth(idToken: string): Promise<AuthDTO> {
+    try {
+      const googleUser = await FirebaseRestClient.signInWithGoogleOAuth(
+        idToken,
+      );
+      const token = {
+        accessToken: googleUser.idToken,
+        refreshToken: googleUser.refreshToken,
+      };
+      try {
+        const user = await this.userService.getUserByEmail(googleUser.email);
+        return { ...token, ...user };
+      } catch (error) {}
+
+      const user = await this.userService.createUser(
+        {
+          firstName: googleUser.firstName,
+          lastName: googleUser.lastName,
+          email: googleUser.email,
+          role: "User",
+          password: "",
+        },
+        googleUser.localId,
+        "GOOGLE",
+      );
+
+      return { ...token, ...user };
+    } catch (error) {
+      Logger.error(`Failed to generate token for user with OAuth ID token`);
+      throw error;
+    }
+  }
+
   async revokeTokens(userId: string): Promise<void> {
     try {
       const authId = await this.userService.getAuthIdById(userId);
@@ -94,6 +128,35 @@ class AuthService implements IAuthService {
     }
   }
 
+  async sendEmailVerificationLink(email: string): Promise<void> {
+    if (!this.emailService) {
+      const errorMessage =
+        "Attempted to call sendEmailVerificationLink but this instance of AuthService does not have an EmailService instance";
+      Logger.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
+    try {
+      const emailVerificationLink = await firebaseAdmin
+        .auth()
+        .generateEmailVerificationLink(email);
+      const emailBody = `
+      Hello,
+      <br><br>
+      Please click the following link to verify your email and activate your account.
+      <strong>This link is only valid for 1 hour.</strong>
+      <br><br>
+      <a href=${emailVerificationLink}>Verify email</a>`;
+
+      this.emailService.sendEmail(email, "Verify your email", emailBody);
+    } catch (error) {
+      Logger.error(
+        `Failed to generate email verification link for user with email ${email}`,
+      );
+      throw error;
+    }
+  }
+
   async isAuthorizedByRole(
     accessToken: string,
     roles: Set<Role>,
@@ -106,7 +169,11 @@ class AuthService implements IAuthService {
         decodedIdToken.uid,
       );
 
-      return roles.has(userRole);
+      const firebaseUser = await firebaseAdmin
+        .auth()
+        .getUser(decodedIdToken.uid);
+
+      return firebaseUser.emailVerified && roles.has(userRole);
     } catch (error) {
       return false;
     }
@@ -124,7 +191,13 @@ class AuthService implements IAuthService {
         decodedIdToken.uid,
       );
 
-      return String(tokenUserId) === requestedUserId;
+      const firebaseUser = await firebaseAdmin
+        .auth()
+        .getUser(decodedIdToken.uid);
+
+      return (
+        firebaseUser.emailVerified && String(tokenUserId) === requestedUserId
+      );
     } catch (error) {
       return false;
     }
@@ -138,7 +211,14 @@ class AuthService implements IAuthService {
       const decodedIdToken: firebaseAdmin.auth.DecodedIdToken = await firebaseAdmin
         .auth()
         .verifyIdToken(accessToken, true);
-      return decodedIdToken.email === requestedEmail;
+
+      const firebaseUser = await firebaseAdmin
+        .auth()
+        .getUser(decodedIdToken.uid);
+
+      return (
+        firebaseUser.emailVerified && decodedIdToken.email === requestedEmail
+      );
     } catch (error) {
       return false;
     }

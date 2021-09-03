@@ -15,10 +15,12 @@ import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
 import { downloadFile } from "../../utils/FileUtils";
 // rest {
+
 // import EntityAPIClient, {
 //   EntityResponse,
 // } from "../../APIClients/EntityAPIClient";
 // } rest
+import { downloadCSV } from "../../utils/CSVUtils";
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
@@ -157,6 +159,12 @@ const ENTITIES = gql`
   }
 `;
 
+const ENTITIESCSV = gql`
+  query DisplayTableContainer_EntitiesCSV {
+    entitiesCSV
+  }
+`;
+
 const FILE = gql`
   query DisplayTableContainer_File($fileUUID: ID!) {
     file(fileUUID: $fileUUID)
@@ -178,6 +186,18 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
     },
   });
 
+  // rest {
+  // useEffect(() => {
+  //   const retrieveAndUpdateData = async () => {
+  //     const result = await EntityAPIClient.get();
+  //     if (result) {
+  //       setData(result.map((r: EntityResponse) => convert(r)));
+  //     }
+  //   };
+  //   retrieveAndUpdateData();
+  // }, []);
+  // } rest
+
   const downloadEntityFile = async (fileUUID: string) => {
     // graphql {
     const { data } = await apolloClient.query({
@@ -193,22 +213,31 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
     // } rest
   };
 
-  // rest {
-  // useEffect(() => {
-  //   const retrieveAndUpdateData = async () => {
-  //     const result = await EntityAPIClient.get();
-  //     if (result) {
-  //       setData(result.map((r: EntityResponse) => convert(r)));
-  //     }
-  //   };
-  //   retrieveAndUpdateData();
-  // }, []);
-  // } rest
+  const downloadEntitiesCSV = async () => {
+    if (entities) {
+      // graphql {
+      const { data } = await apolloClient.query({
+        query: ENTITIESCSV,
+      });
+      downloadCSV(data.entitiesCSV, "export.csv");
+      // } graphql
+      // rest {
+      // const csvString = await EntityAPIClient.getCSV();
+      // downloadCSV(csvString, "export.csv");
+      // } rest
+      // Use the following lines to download CSV using frontend CSV generation instead of API
+      // const csvString = await generateCSV<EntityData>({ data: entities });
+      // downloadCSV(csvString, "export.csv");
+    }
+  };
 
   return (
-    entities && (
-      <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />
-    )
+    <>
+      <button type="button" onClick={downloadEntitiesCSV}>
+        Download CSV
+      </button>
+      {entities && <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />}
+    </>
   );
 };
 

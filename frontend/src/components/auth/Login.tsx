@@ -1,12 +1,20 @@
 import React, { useContext, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from "react-google-login";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 // } graphql
 
 import authAPIClient from "../../APIClients/AuthAPIClient";
+import { HOME_PAGE, SIGNUP_PAGE } from "../../constants/Routes";
 import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
+
+type GoogleResponse = GoogleLoginResponse | GoogleLoginResponseOffline;
 
 // graphql {
 const LOGIN = gql`
@@ -27,6 +35,7 @@ const Login = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
 
   // graphql {
   const [login] = useMutation<{ login: AuthenticatedUser }>(LOGIN);
@@ -46,8 +55,24 @@ const Login = (): React.ReactElement => {
     setAuthenticatedUser(user);
   };
 
+  const onSignUpClick = () => {
+    history.push(SIGNUP_PAGE);
+  };
+
+  // graphql {
+  const onGoogleLoginSuccess = async (tokenId: string) => {}
+  // } graphql
+  // rest {
+  // const onGoogleLoginSuccess = async (tokenId: string) => {
+  //   const user: AuthenticatedUser = await authAPIClient.loginWithGoogle(
+  //     tokenId,
+  //   );
+  //   setAuthenticatedUser(user);
+  // };
+  // } rest
+
   if (authenticatedUser) {
-    return <Redirect to="/" />;
+    return <Redirect to={HOME_PAGE} />;
   }
 
   return (
@@ -79,7 +104,30 @@ const Login = (): React.ReactElement => {
             Log In
           </button>
         </div>
+        <GoogleLogin
+          clientId={process.env.REACT_APP_OAUTH_CLIENT_ID || ""}
+          buttonText="Login with Google"
+          onSuccess={(response: GoogleResponse): void => {
+            if ("tokenId" in response) {
+              onGoogleLoginSuccess(response.tokenId);
+            } else {
+              // eslint-disable-next-line no-alert
+              window.alert(response);
+            }
+          }}
+          // eslint-disable-next-line no-alert
+          onFailure={(error) => window.alert(error)}
+        />
       </form>
+      <div>
+        <button
+          className="btn btn-primary"
+          type="button"
+          onClick={onSignUpClick}
+        >
+          Sign Up
+        </button>
+      </div>
     </div>
   );
 };

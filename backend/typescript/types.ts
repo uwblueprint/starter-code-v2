@@ -17,6 +17,8 @@ export type CreateUserDTO = Omit<UserDTO, "id"> & { password: string };
 
 export type UpdateUserDTO = Omit<UserDTO, "id">;
 
+export type RegisterUserDTO = Omit<CreateUserDTO, "role">;
+
 export type AuthDTO = Token & UserDTO;
 
 export type Letters = "A" | "B" | "C" | "D";
@@ -31,3 +33,5 @@ export type NodemailerConfig = {
     refreshToken: string;
   };
 };
+
+export type SignUpMethod = "PASSWORD" | "GOOGLE";

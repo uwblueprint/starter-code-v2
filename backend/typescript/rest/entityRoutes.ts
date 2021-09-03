@@ -4,10 +4,14 @@ import multer from "multer";
 // import EntityServiceMg from "../services/implementations/EntityServiceMg";
 import EntityServicePg from "../services/implementations/EntityServicePg";
 import { isAuthorizedByRole } from "../middlewares/auth";
-import { IEntityService } from "../services/interfaces/IEntityService";
+import {
+  EntityResponseDTO,
+  IEntityService,
+} from "../services/interfaces/IEntityService";
 import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
 import IFileStorageService from "../services/interfaces/fileStorageService";
 import FileStorageService from "../services/implementations/fileStorageService";
+import { sendResponseByMimeType } from "../utilities/responseUtil";
 
 const upload = multer({ dest: "uploads/" });
 
@@ -48,19 +52,28 @@ entityRouter.post(
 );
 
 /* Get all entities */
-entityRouter.get("/", async (_req, res) => {
+entityRouter.get("/", async (req, res) => {
+  const contentType = req.headers["content-type"];
   try {
     const entities = await entityService.getEntities();
-    res.status(200).json(entities);
+    await sendResponseByMimeType<EntityResponseDTO>(
+      res,
+      200,
+      contentType,
+      entities,
+    );
   } catch (e) {
-    res.status(500).send(e.message);
+    await sendResponseByMimeType(res, 500, contentType, [
+      {
+        error: e.message,
+      },
+    ]);
   }
 });
 
 /* Get entity by id */
 entityRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
-
   try {
     const entity = await entityService.getEntity(id);
     res.status(200).json(entity);

@@ -12,6 +12,15 @@ interface IAuthService {
   generateToken(email: string, password: string): Promise<AuthDTO>;
 
   /**
+   * Generate a short-lived JWT access token and a long-lived refresh token
+   * when supplied OAuth ID token
+   * @param idToken user's ID token
+   * @returns AuthDTO object containing the access token, refresh token, and user info
+   * @throws Error if token generation fails
+   */
+  generateTokenOAuth(idToken: string): Promise<AuthDTO>;
+
+  /**
    * Revoke all refresh tokens of a user
    * @param userId userId of user whose refresh tokens are to be revoked
    * @throws Error if token revocation fails
@@ -28,11 +37,19 @@ interface IAuthService {
 
   /**
    * Generate a password reset link for the user with the given email and send
-   * the link to that that email address
+   * the link to that email address
    * @param email email of user requesting password reset
    * @throws Error if unable to generate link or send email
    */
   resetPassword(email: string): Promise<void>;
+
+  /**
+   * Generate an email verification link for the user with the given email and send
+   * the link to that email address
+   * @param email email of user that needs to be verified
+   * @throws Error if unable to generate link or send email
+   */
+  sendEmailVerificationLink(email: string): Promise<void>;
 
   /**
    * Determine if the provided access token is valid and authorized for at least

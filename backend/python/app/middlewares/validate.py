@@ -1,13 +1,16 @@
 from flask import jsonify, request
 from functools import wraps
+import json
 
 from ..resources.create_user_dto import CreateUserDTO
 from ..resources.entity_dto import EntityDTO
+from ..resources.register_user_dto import RegisterUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
 
 dtos = {
     "CreateUserDTO": CreateUserDTO,
     "EntityDTO": EntityDTO,
+    "RegisterUserDTO": RegisterUserDTO,
     "UpdateUserDTO": UpdateUserDTO,
 }
 
@@ -23,7 +26,15 @@ def validate_request(dto_class_name):
     def validate_dto(api_func):
         @wraps(api_func)
         def wrapper(*args, **kwargs):
-            dto = dtos[dto_class_name](**request.json)
+            if request.content_type == "application/json":
+                dto = dtos[dto_class_name](**request.json)
+            else:
+                req_body = request.form.get("body", default=None)
+                if req_body is None:
+                    return jsonify({"error": "Missing body"}), 400
+                req = json.loads(req_body)
+                req["file"] = request.files.get("file", default=None)
+                dto = dtos[dto_class_name](**req)
             error_message = dto.validate()
             if error_message:
                 return (

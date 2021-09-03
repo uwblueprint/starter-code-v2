@@ -9,6 +9,8 @@ const FIREBASE_SIGN_IN_URL =
   "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
 const FIREBASE_REFRESH_TOKEN_URL =
   "https://securetoken.googleapis.com/v1/token";
+const FIREBASE_OAUTH_SIGN_IN_URL =
+  "https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp";
 
 type SignInResponse = {
   idToken: string;
@@ -17,6 +19,8 @@ type SignInResponse = {
   expiresIn: string;
   localId: string;
   registered: boolean;
+  firstName: string;
+  lastName: string;
 };
 
 type RefreshTokenResponse = {
@@ -75,6 +79,41 @@ const FirebaseRestClient = {
       accessToken: (responseJson as SignInResponse).idToken,
       refreshToken: (responseJson as SignInResponse).refreshToken,
     };
+  },
+
+  // Docs: https://firebase.google.com/docs/reference/rest/auth/#section-sign-in-with-oauth-credential
+  signInWithGoogleOAuth: async (idToken: string): Promise<SignInResponse> => {
+    const response: Response = await fetch(
+      `${FIREBASE_OAUTH_SIGN_IN_URL}?key=${process.env.FIREBASE_WEB_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postBody: `id_token=${idToken}&providerId=google.com`,
+          requestUri: process.env.FIREBASE_REQUEST_URI,
+          returnIdpCredential: true,
+          returnSecureToken: true,
+        }),
+      },
+    );
+
+    const responseJson: SignInResponse | RequestError = await response.json();
+
+    if (!response.ok) {
+      const errorMessage = [
+        "Failed to sign-in via Firebase REST API with OAuth, status code =",
+        `${response.status},`,
+        "error message =",
+        (responseJson as RequestError).error.message,
+      ];
+      Logger.error(errorMessage.join(" "));
+
+      throw new Error("Failed to sign-in via Firebase REST API");
+    }
+
+    return responseJson as SignInResponse;
   },
 
   // Docs: https://firebase.google.com/docs/reference/rest/auth/#section-refresh-token

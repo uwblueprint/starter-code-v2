@@ -6,12 +6,12 @@ import EmailService from "../../services/implementations/emailService";
 import UserService from "../../services/implementations/userService";
 import IAuthService from "../../services/interfaces/authService";
 import IEmailService from "../../services/interfaces/emailService";
+import IUserService from "../../services/interfaces/userService";
+import { RegisterUserDTO } from "../../types";
 
+const userService: IUserService = new UserService();
 const emailService: IEmailService = new EmailService(nodemailerConfig);
-const authService: IAuthService = new AuthService(
-  new UserService(),
-  emailService,
-);
+const authService: IAuthService = new AuthService(userService, emailService);
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
@@ -28,6 +28,21 @@ const authResolvers = {
     ) => {
       const authDTO = await authService.generateToken(email, password);
       const { refreshToken, ...rest } = authDTO;
+      res.cookie("refreshToken", refreshToken, cookieOptions);
+      return rest;
+    },
+    register: async (
+      _parent: any,
+      { user }: { user: RegisterUserDTO },
+      { res }: { res: Response },
+    ) => {
+      await userService.createUser({ ...user, role: "User" });
+      const authDTO = await authService.generateToken(
+        user.email,
+        user.password,
+      );
+      const { refreshToken, ...rest } = authDTO;
+      await authService.sendEmailVerificationLink(user.email);
       res.cookie("refreshToken", refreshToken, cookieOptions);
       return rest;
     },
