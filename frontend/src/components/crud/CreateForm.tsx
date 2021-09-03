@@ -117,15 +117,12 @@ const CreateForm = (): React.ReactElement => {
       graphQLResult.data?.createEntity ?? null;
     // } graphql
     // rest {
-    // let result;
+    // const multipartFormData = new FormData();
+    // multipartFormData.append("body", JSON.stringify(formData));
     // if (fileField) {
-    //   const multipartFormData = new FormData();
-    //   multipartFormData.append("body", JSON.stringify(formData));
     //   multipartFormData.append("file", fileField);
-    //   result = await EntityAPIClient.create({ multipartFormData });
-    // } else {
-    //   result = await EntityAPIClient.create({ formData });
     // }
+    // const result = await EntityAPIClient.create({ formData: multipartFormData });
     // } rest
     setData(result);
   };
