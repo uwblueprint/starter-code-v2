@@ -14,15 +14,15 @@ const baseAPIClient = axios.create({
 // Python API uses snake_case, frontend uses camelCase
 // convert request and response data to/from snake_case and camelCase through axios interceptors
 // python {
-// baseAPIClient.interceptors.response.use((response: AxiosResponse) => {
-//   if (
-//     response.data &&
-//     response.headers["content-type"] === "application/json"
-//   ) {
-//     response.data = camelizeKeys(response.data);
-//   }
-//   return response;
-// });
+baseAPIClient.interceptors.response.use((response: AxiosResponse) => {
+  if (
+    response.data &&
+    response.headers["content-type"] === "application/json"
+  ) {
+    response.data = camelizeKeys(response.data);
+  }
+  return response;
+});
 // } python
 
 baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {

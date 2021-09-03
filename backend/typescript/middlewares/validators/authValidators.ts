@@ -7,8 +7,8 @@ export const loginRequestValidator = async (
   res: Response,
   next: NextFunction,
 ) => {
-  if (req.body.id_token) {
-    if (!validatePrimitive(req.body.id_token, "string")) {
+  if (req.body.idToken) {
+    if (!validatePrimitive(req.body.idToken, "string")) {
       return res.status(400).json(getApiValidationError("id_token", "string"));
     }
   } else {
