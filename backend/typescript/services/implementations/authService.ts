@@ -44,14 +44,15 @@ class AuthService implements IAuthService {
         idToken,
       );
       const token = {
-        accessToken: idToken,
+        accessToken: googleUser.idToken,
         refreshToken: googleUser.refreshToken,
       };
-      let user = await this.userService.getUserByEmail(googleUser.email);
-      if (user) {
+      try {
+        const user = await this.userService.getUserByEmail(googleUser.email);
         return { ...token, ...user };
-      }
-      user = await this.userService.createUser(
+      } catch (error) {}
+
+      const user = await this.userService.createUser(
         {
           firstName: googleUser.firstName,
           lastName: googleUser.lastName,
