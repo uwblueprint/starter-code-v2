@@ -1,3 +1,12 @@
+// import { parseAsync } from "json2csv";
+
+// /* eslint-disable-next-line import/prefer-default-export */
+// export const generateCSV = async (
+//   data: Array<{ [key: string]: any }>,
+// ): Promise<string> => {
+//   return parseAsync(data);
+// };
+
 import { parseAsync, transforms } from "json2csv";
 import { Readable, TransformOptions } from "stream";
 
@@ -58,27 +67,4 @@ export const generateCSV = async <T>({
     ...opts,
   };
   return parseAsync<T>(data, options, transformOpts);
-};
-
-/**
- * Downloads a CSV file.
- * References: https://github.com/mui-org/material-ui-x/blob/fa346f0fbe3d9b9eea9bb403fe4675f544d6abf9/packages/grid/_modules_/grid/utils/exportAs.ts
- * @param data CSV string
- * @param fileName name of the CSV file
- */
-export const downloadCSV = (data: string, fileName: string): void => {
-  const byteOrderMark = "\uFEFF";
-  const csvContent = byteOrderMark + data;
-  const blob = new Blob([csvContent], {
-    type: "text/csv, charset=UTF-8",
-  });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = fileName;
-  a.click();
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-  });
 };

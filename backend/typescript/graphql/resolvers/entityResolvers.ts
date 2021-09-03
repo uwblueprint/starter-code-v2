@@ -3,11 +3,15 @@ import { FileUpload } from "graphql-upload";
 import { ReadStream } from "fs-capacitor";
 import EntityService from "../../services/implementations/EntityServiceMg";
 import FileStorageService from "../../services/implementations/fileStorageService";
-import { EntityRequestDTO } from "../../services/interfaces/IEntityService";
+import {
+  EntityRequestDTO,
+  EntityResponseDTO,
+} from "../../services/interfaces/IEntityService";
 import {
   validateFileType,
   getFileTypeValidationError,
 } from "../../middlewares/validators/util";
+import { generateCSV } from "../../utilities/csvUtils";
 
 const defaultBucket = process.env.DEFAULT_BUCKET || "";
 const fileStorageService = new FileStorageService(defaultBucket);
@@ -31,6 +35,11 @@ const entityResolvers = {
     },
     entities: async () => {
       return entityService.getEntities();
+    },
+    entitiesCSV: async () => {
+      const entities = await entityService.getEntities();
+      const csv = await generateCSV<EntityResponseDTO>({ data: entities });
+      return csv;
     },
     file: async (_req: any, { fileUUID }: { fileUUID: string }) => {
       return fileStorageService.getFile(fileUUID);
