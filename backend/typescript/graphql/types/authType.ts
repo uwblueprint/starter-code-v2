@@ -19,6 +19,7 @@ const authType = gql`
 
   extend type Mutation {
     login(email: String!, password: String!): AuthDTO!
+    loginWithGoogle(idToken: String!): AuthDTO!
     register(user: RegisterUserDTO!): AuthDTO!
     refresh: String!
     logout(userId: ID!): ID
