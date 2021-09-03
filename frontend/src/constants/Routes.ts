@@ -3,6 +3,8 @@ export const HOME_PAGE = "/";
 // auth {
 export const LOGIN_PAGE = "/login";
 
+export const SIGNUP_PAGE = "/signup";
+
 // } auth
 export const EDIT_TEAM_PAGE = "/edit-team";
 

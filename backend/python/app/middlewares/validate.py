@@ -9,6 +9,7 @@ from ..resources.create_user_dto import CreateUserDTO
 # } auth
 from ..resources.entity_dto import EntityDTO
 # auth {
+from ..resources.register_user_dto import RegisterUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
 # } auth
 
@@ -18,6 +19,7 @@ dtos = {
     # } auth
     "EntityDTO": EntityDTO,
     # auth {
+    "RegisterUserDTO": RegisterUserDTO,
     "UpdateUserDTO": UpdateUserDTO,
     # } auth
 }

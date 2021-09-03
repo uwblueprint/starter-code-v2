@@ -5,7 +5,12 @@ import {
   createUserDtoValidator,
   updateUserDtoValidator,
 } from "../middlewares/validators/userValidators";
+import nodemailerConfig from "../nodemailer.config";
+import AuthService from "../services/implementations/authService";
+import EmailService from "../services/implementations/emailService";
 import UserService from "../services/implementations/userService";
+import IAuthService from "../services/interfaces/authService";
+import IEmailService from "../services/interfaces/emailService";
 import IUserService from "../services/interfaces/userService";
 import { UserDTO } from "../types";
 import { sendResponseByMimeType } from "../utilities/responseUtil";
@@ -14,6 +19,8 @@ const userRouter: Router = Router();
 userRouter.use(isAuthorizedByRole(new Set(["Admin"])));
 
 const userService: IUserService = new UserService();
+const emailService: IEmailService = new EmailService(nodemailerConfig);
+const authService: IAuthService = new AuthService(userService, emailService);
 
 /* Get all users, optionally filter by a userId or email query parameter to retrieve a single user */
 userRouter.get("/", async (req, res) => {
@@ -85,6 +92,9 @@ userRouter.post("/", createUserDtoValidator, async (req, res) => {
       role: req.body.role,
       password: req.body.password,
     });
+
+    await authService.sendEmailVerificationLink(req.body.email);
+    
     res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ error: error.message });

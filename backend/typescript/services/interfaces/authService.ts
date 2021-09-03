@@ -28,11 +28,19 @@ interface IAuthService {
 
   /**
    * Generate a password reset link for the user with the given email and send
-   * the link to that that email address
+   * the link to that email address
    * @param email email of user requesting password reset
    * @throws Error if unable to generate link or send email
    */
   resetPassword(email: string): Promise<void>;
+
+  /**
+   * Generate an email verification link for the user with the given email and send
+   * the link to that email address
+   * @param email email of user that needs to be verified
+   * @throws Error if unable to generate link or send email
+   */
+  sendEmailVerificationLink(email: string): Promise<void>;
 
   /**
    * Determine if the provided access token is valid and authorized for at least
