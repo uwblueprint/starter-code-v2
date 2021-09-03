@@ -2,6 +2,8 @@ import firebase_admin.auth
 
 from ..interfaces.auth_service import IAuthService
 from ...resources.auth_dto import AuthDTO
+from ...resources.create_user_dto import CreateUserDTO
+from ...resources.token import Token
 from ...utilities.firebase_rest_client import FirebaseRestClient
 
 
@@ -35,6 +37,39 @@ class AuthService(IAuthService):
             self.logger.error(
                 "Failed to generate token for user with email {email}".format(
                     email=email
+                )
+            )
+            raise e
+
+    def generate_token_for_oauth(self, id_token):
+        try:
+            google_user = self.firebase_rest_client.sign_in_with_google(id_token)
+            # google_user["idToken"] refers to the Firebase Auth access token for the user
+            token = Token(google_user["idToken"], google_user["refreshToken"])
+            # If user already has a login with this email, just return the token
+            try:
+                user = self.user_service.get_user_by_email(google_user["email"])
+                return AuthDTO(**{**token.__dict__, **user.__dict__})
+            except Exception as e:
+                pass
+
+            user = self.user_service.create_user(
+                CreateUserDTO(
+                    first_name=google_user["firstName"],
+                    last_name=google_user["lastName"],
+                    email=google_user["email"],
+                    role="User",
+                    password="",
+                ),
+                auth_id=google_user["localId"],
+                signup_method="GOOGLE",
+            )
+            return AuthDTO(**{**token.__dict__, **user.__dict__})
+        except Exception as e:
+            reason = getattr(e, "message", None)
+            self.logger.error(
+                "Failed to generate token for user with OAuth id token. Reason = {reason}".format(
+                    reason=(reason if reason else str(e))
                 )
             )
             raise e
