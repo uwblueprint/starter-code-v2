@@ -7,11 +7,17 @@ export const loginRequestValidator = async (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!validatePrimitive(req.body.email, "string")) {
-    return res.status(400).send(getApiValidationError("email", "string"));
-  }
-  if (!validatePrimitive(req.body.password, "string")) {
-    return res.status(400).send(getApiValidationError("password", "string"));
+  if (req.body.idToken) {
+    if (!validatePrimitive(req.body.idToken, "string")) {
+      return res.status(400).json(getApiValidationError("idToken", "string"));
+    }
+  } else {
+    if (!validatePrimitive(req.body.email, "string")) {
+      return res.status(400).send(getApiValidationError("email", "string"));
+    }
+    if (!validatePrimitive(req.body.password, "string")) {
+      return res.status(400).send(getApiValidationError("password", "string"));
+    }
   }
   return next();
 };

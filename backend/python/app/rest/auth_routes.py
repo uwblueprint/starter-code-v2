@@ -35,9 +35,13 @@ def login():
     Returns access token in response body and sets refreshToken as an httpOnly cookie
     """
     try:
-        auth_dto = auth_service.generate_token(
-            request.json["email"], request.json["password"]
-        )
+        auth_dto = None
+        if "id_token" in request.json:
+            auth_dto = auth_service.generate_token_for_oauth(request.json["id_token"])
+        else:
+            auth_dto = auth_service.generate_token(
+                request.json["email"], request.json["password"]
+            )
         response = jsonify(
             {
                 "access_token": auth_dto.access_token,

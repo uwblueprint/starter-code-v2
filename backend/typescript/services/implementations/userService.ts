@@ -138,15 +138,24 @@ class UserService implements IUserService {
     return userDtos;
   }
 
-  async createUser(user: CreateUserDTO): Promise<UserDTO> {
+  async createUser(
+    user: CreateUserDTO,
+    authId?: string,
+    signUpMethod = "PASSWORD",
+  ): Promise<UserDTO> {
     let newUser: User;
     let firebaseUser: firebaseAdmin.auth.UserRecord;
 
     try {
-      firebaseUser = await firebaseAdmin.auth().createUser({
-        email: user.email,
-        password: user.password,
-      });
+      if (signUpMethod === "GOOGLE") {
+        firebaseUser = await firebaseAdmin.auth().getUser(authId!);
+      } else {
+        // signUpMethod === PASSWORD
+        firebaseUser = await firebaseAdmin.auth().createUser({
+          email: user.email,
+          password: user.password,
+        });
+      }
 
       try {
         newUser = await MgUser.create({
@@ -468,15 +477,24 @@ class UserService implements IUserService {
     return userDtos;
   }
 
-  async createUser(user: CreateUserDTO): Promise<UserDTO> {
+  async createUser(
+    user: CreateUserDTO,
+    authId?: string,
+    signUpMethod = "PASSWORD",
+  ): Promise<UserDTO> {
     let newUser: User;
     let firebaseUser: firebaseAdmin.auth.UserRecord;
 
     try {
-      firebaseUser = await firebaseAdmin.auth().createUser({
-        email: user.email,
-        password: user.password,
-      });
+      if (signUpMethod === "GOOGLE") {
+        firebaseUser = await firebaseAdmin.auth().getUser(authId!);
+      } else {
+        // signUpMethod === PASSWORD
+        firebaseUser = await firebaseAdmin.auth().createUser({
+          email: user.email,
+          password: user.password,
+        });
+      }
 
       try {
         newUser = await User.create({
