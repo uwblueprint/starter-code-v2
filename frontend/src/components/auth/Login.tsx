@@ -1,5 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Redirect, useHistory } from "react-router-dom";
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from "react-google-login";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 // } graphql
@@ -9,10 +14,25 @@ import { HOME_PAGE, SIGNUP_PAGE } from "../../constants/Routes";
 import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 
+type GoogleResponse = GoogleLoginResponse | GoogleLoginResponseOffline;
+
 // graphql {
 const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
+      id
+      firstName
+      lastName
+      email
+      role
+      accessToken
+    }
+  }
+`;
+
+const LOGIN_WITH_GOOGLE = gql`
+  mutation LoginWithGoogle($idToken: String!) {
+    loginWithGoogle(idToken: $idToken) {
       id
       firstName
       lastName
@@ -32,6 +52,9 @@ const Login = (): React.ReactElement => {
 
   // graphql {
   const [login] = useMutation<{ login: AuthenticatedUser }>(LOGIN);
+  const [loginWithGoogle] = useMutation<{ loginWithGoogle: AuthenticatedUser }>(
+    LOGIN_WITH_GOOGLE,
+  );
 
   // } graphql
   const onLogInClick = async () => {
@@ -51,6 +74,24 @@ const Login = (): React.ReactElement => {
   const onSignUpClick = () => {
     history.push(SIGNUP_PAGE);
   };
+
+  // graphql {
+  const onGoogleLoginSuccess = async (idToken: string) => {
+    const user: AuthenticatedUser = await authAPIClient.loginWithGoogle(
+      idToken,
+      loginWithGoogle,
+    );
+    setAuthenticatedUser(user);
+  };
+  // } graphql
+  // rest {
+  const onGoogleLoginSuccess = async (tokenId: string) => {
+    const user: AuthenticatedUser = await authAPIClient.loginWithGoogle(
+      tokenId,
+    );
+    setAuthenticatedUser(user);
+  };
+  // } rest
 
   if (authenticatedUser) {
     return <Redirect to={HOME_PAGE} />;
@@ -85,6 +126,20 @@ const Login = (): React.ReactElement => {
             Log In
           </button>
         </div>
+        <GoogleLogin
+          clientId={process.env.REACT_APP_OAUTH_CLIENT_ID || ""}
+          buttonText="Login with Google"
+          onSuccess={(response: GoogleResponse): void => {
+            if ("tokenId" in response) {
+              onGoogleLoginSuccess(response.tokenId);
+            } else {
+              // eslint-disable-next-line no-alert
+              window.alert(response);
+            }
+          }}
+          // eslint-disable-next-line no-alert
+          onFailure={(error) => window.alert(error)}
+        />
       </form>
       <div>
         <button

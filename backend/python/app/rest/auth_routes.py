@@ -35,9 +35,13 @@ def login():
     Returns access token in response body and sets refreshToken as an httpOnly cookie
     """
     try:
-        auth_dto = auth_service.generate_token(
-            request.json["email"], request.json["password"]
-        )
+        auth_dto = None
+        if "id_token" in request.json:
+            auth_dto = auth_service.generate_token_for_oauth(request.json["id_token"])
+        else:
+            auth_dto = auth_service.generate_token(
+                request.json["email"], request.json["password"]
+            )
         response = jsonify(
             {
                 "access_token": auth_dto.access_token,
@@ -48,6 +52,45 @@ def login():
                 "role": auth_dto.role,
             }
         )
+        response.set_cookie(
+            "refreshToken",
+            value=auth_dto.refresh_token,
+            httponly=True,
+            secure=(os.getenv("FLASK_CONFIG") == "production"),
+        )
+        return response, 200
+    except Exception as e:
+        error_message = getattr(e, "message", None)
+        return jsonify({"error": (error_message if error_message else str(e))}), 500
+
+
+@blueprint.route("/register", methods=["POST"], strict_slashes=False)
+@validate_request("RegisterUserDTO")
+def register():
+    """
+    Returns access token and user info in response body and sets refreshToken as an httpOnly cookie
+    """
+    try:
+        request.json["role"] = "User"
+        user = CreateUserDTO(**request.json)
+        user_service.create_user(user)
+        auth_dto = auth_service.generate_token(
+            request.json["email"], request.json["password"]
+        )
+
+        auth_service.send_email_verification_link(request.json["email"])
+
+        response = jsonify(
+            {
+                "access_token": auth_dto.access_token,
+                "id": auth_dto.id,
+                "first_name": auth_dto.first_name,
+                "last_name": auth_dto.last_name,
+                "email": auth_dto.email,
+                "role": auth_dto.role,
+            }
+        )
+
         response.set_cookie(
             "refreshToken",
             value=auth_dto.refresh_token,
