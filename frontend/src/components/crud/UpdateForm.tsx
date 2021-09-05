@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+// python {
+import { decamelizeKeys } from "humps";
+// } python
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
 // graphql {
@@ -135,7 +138,12 @@ const UpdateForm = (): React.ReactElement => {
 
     // rest {
     // const multipartFormData = new FormData();
+    // // typescript {
     // multipartFormData.append("body", JSON.stringify(entityData));
+    // // } typescript
+    // // python {
+    // multipartFormData.append("body", JSON.stringify(decamelizeKeys(entityData)));
+    // // } python
     // if (fileField) {
     //   multipartFormData.append("file", fileField);
     // }

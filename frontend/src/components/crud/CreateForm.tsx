@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+// python {
+import { decamelizeKeys } from "humps";
+// } python
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
 // graphql {
@@ -12,6 +15,7 @@ import {
 
 // rest {
 // import EntityAPIClient, {
+//   EntityRequest,
 //   EntityResponse,
 // } from "../../APIClients/EntityAPIClient";
 // } rest
@@ -118,7 +122,12 @@ const CreateForm = (): React.ReactElement => {
     // } graphql
     // rest {
     // const multipartFormData = new FormData();
+    // // typescript {
     // multipartFormData.append("body", JSON.stringify(formData));
+    // // } typescript
+    // // python {
+    // multipartFormData.append("body", JSON.stringify(decamelizeKeys(formData)));
+    // // } python
     // if (fileField) {
     //   multipartFormData.append("file", fileField);
     // }
