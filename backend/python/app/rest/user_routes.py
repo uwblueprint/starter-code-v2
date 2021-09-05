@@ -52,7 +52,11 @@ def get_users():
 
             if content_type == "text/csv":
                 return (
-                    jsonify(generate_csv_from_list(users, options=DEFAULT_CSV_OPTIONS)),
+                    jsonify(
+                        generate_csv_from_list(
+                            [user.__dict__ for user in users], **DEFAULT_CSV_OPTIONS
+                        )
+                    ),
                     200,
                 )
 

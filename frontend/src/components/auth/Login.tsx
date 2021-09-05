@@ -29,6 +29,19 @@ const LOGIN = gql`
     }
   }
 `;
+
+const LOGIN_WITH_GOOGLE = gql`
+  mutation LoginWithGoogle($idToken: String!) {
+    loginWithGoogle(idToken: $idToken) {
+      id
+      firstName
+      lastName
+      email
+      role
+      accessToken
+    }
+  }
+`;
 // } graphql
 
 const Login = (): React.ReactElement => {
@@ -39,6 +52,9 @@ const Login = (): React.ReactElement => {
 
   // graphql {
   const [login] = useMutation<{ login: AuthenticatedUser }>(LOGIN);
+  const [loginWithGoogle] = useMutation<{ loginWithGoogle: AuthenticatedUser }>(
+    LOGIN_WITH_GOOGLE,
+  );
   // } graphql
 
   const onLogInClick = async () => {
@@ -60,7 +76,13 @@ const Login = (): React.ReactElement => {
   };
 
   // graphql {
-  const onGoogleLoginSuccess = async (tokenId: string) => {}
+  const onGoogleLoginSuccess = async (idToken: string) => {
+    const user: AuthenticatedUser = await authAPIClient.loginWithGoogle(
+      idToken,
+      loginWithGoogle,
+    );
+    setAuthenticatedUser(user);
+  };
   // } graphql
   // rest {
   // const onGoogleLoginSuccess = async (tokenId: string) => {
