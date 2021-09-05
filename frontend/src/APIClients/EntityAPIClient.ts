@@ -136,7 +136,7 @@ const update = async (
   {
     entityData,
   }: {
-    entityData: EntityRequest;
+    entityData: EntityRequest | FormData;
   },
 ): Promise<EntityResponse> => {
   // auth {

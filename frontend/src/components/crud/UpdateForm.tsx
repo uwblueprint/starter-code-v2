@@ -134,7 +134,15 @@ const UpdateForm = (): React.ReactElement => {
     // } graphql
 
     // rest {
-    // const result = await EntityAPIClient.update(formData.id, { entityData });
+    // const multipartFormData = new FormData();
+    // multipartFormData.append("body", JSON.stringify(entityData));
+    // if (fileField) {
+    //   multipartFormData.append("file", fileField);
+    // }
+    // const result = await EntityAPIClient.update(
+    //   formData.id,
+    //   { entityData: multipartFormData }
+    // );
     // } rest
     setData(result);
   };
