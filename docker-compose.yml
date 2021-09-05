@@ -6,8 +6,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-     - ./frontend:/app
-     - /app/node_modules
+      - ./frontend:/app
+      - /app/node_modules
     ports:
       - 3000:3000
     environment:
@@ -40,7 +40,7 @@ services:
     dns:
       - 8.8.8.8
     volumes:
-     - ./backend/python:/app
+      - ./backend/python:/app
     depends_on:
       - db
       - db-test

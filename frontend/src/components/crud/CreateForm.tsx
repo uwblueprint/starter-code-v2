@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+// python {
+import { decamelizeKeys } from "humps";
+// } python
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
 // graphql {
@@ -12,6 +15,7 @@ import {
 
 // rest {
 // import EntityAPIClient, {
+//   EntityRequest,
 //   EntityResponse,
 // } from "../../APIClients/EntityAPIClient";
 // } rest
@@ -68,14 +72,15 @@ const uiSchema = {
 
 // graphql {
 const CREATE_ENTITY = gql`
-  mutation CreateForm_CreateEntity($entity: EntityRequestDTO!) {
-    createEntity(entity: $entity) {
+  mutation CreateForm_CreateEntity($entity: EntityRequestDTO!, $file: Upload) {
+    createEntity(entity: $entity, file: $file) {
       id
       stringField
       intField
       enumField
       stringArrayField
       boolField
+      fileName
     }
   }
 `;
@@ -83,6 +88,7 @@ const CREATE_ENTITY = gql`
 
 const CreateForm = (): React.ReactElement => {
   const [data, setData] = useState<EntityResponse | null>(null);
+  const [fileField, setFileField] = useState<File | null>(null);
 
   // graphql {
   const [createEntity] = useMutation<{ createEntity: EntityResponse }>(
@@ -94,20 +100,47 @@ const CreateForm = (): React.ReactElement => {
     return <p>Created! ✔️</p>;
   }
 
+  const fileChanged = (e: { target: HTMLInputElement }) => {
+    if (e.target.files) {
+      const fileSize = e.target.files[0].size / 1024 / 1024;
+      if (fileSize > 5) {
+        // eslint-disable-next-line no-alert
+        window.alert("Your file exceeds 5MB. Upload a smaller file.");
+      } else {
+        setFileField(e.target.files[0]);
+      }
+    }
+  };
+
   const onSubmit = async ({ formData }: { formData: EntityRequest }) => {
     // graphql {
     const graphQLResult = await createEntity({
-      variables: { entity: formData },
+      variables: { entity: formData, file: fileField },
     });
     const result: EntityResponse | null =
       graphQLResult.data?.createEntity ?? null;
     // } graphql
     // rest {
-    // const result = await EntityAPIClient.create({ formData });
+    // const multipartFormData = new FormData();
+    // // typescript {
+    // multipartFormData.append("body", JSON.stringify(formData));
+    // // } typescript
+    // // python {
+    // multipartFormData.append("body", JSON.stringify(decamelizeKeys(formData)));
+    // // } python
+    // if (fileField) {
+    //   multipartFormData.append("file", fileField);
+    // }
+    // const result = await EntityAPIClient.create({ formData: multipartFormData });
     // } rest
     setData(result);
   };
-  return <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />;
+  return (
+    <>
+      <input type="file" onChange={fileChanged} />
+      <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />
+    </>
+  );
 };
 
 export default CreateForm;

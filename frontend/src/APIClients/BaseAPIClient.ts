@@ -63,7 +63,7 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
   if (config.params) {
     newConfig.params = decamelizeKeys(config.params);
   }
-  if (config.data) {
+  if (config.data && !(config.data instanceof FormData)) {
     newConfig.data = decamelizeKeys(config.data);
   }
   // } python

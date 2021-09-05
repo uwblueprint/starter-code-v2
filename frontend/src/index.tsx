@@ -5,13 +5,9 @@ import jwt from "jsonwebtoken";
 import React from "react";
 import ReactDOM from "react-dom";
 // graphql {
-import {
-  ApolloClient,
-  ApolloProvider,
-  createHttpLink,
-  InMemoryCache,
-} from "@apollo/client";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { createUploadLink } from "apollo-upload-client";
 
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
 import { AuthenticatedUser, DecodedJWT } from "./types/AuthTypes";
@@ -32,7 +28,7 @@ const REFRESH_MUTATION = `
 `;
 
 // graphql {
-const link = createHttpLink({
+const link = createUploadLink({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql`,
   credentials: "include",
 });
@@ -78,7 +74,7 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const apolloClient = new ApolloClient({
-  link: authLink.concat(link),
+  link: authLink.concat(link as any),
   cache: new InMemoryCache(),
 });
 // } graphql

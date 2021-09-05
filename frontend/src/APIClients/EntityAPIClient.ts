@@ -24,12 +24,13 @@ export type EntityResponse = {
   stringArrayField: string[];
   enumField: EnumField;
   boolField: boolean;
+  fileName: string;
 };
 
 const create = async ({
   formData,
 }: {
-  formData: EntityRequest;
+  formData: EntityRequest | FormData;
 }): Promise<EntityResponse> => {
   // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
@@ -76,6 +77,29 @@ const get = async (): Promise<EntityResponse[]> => {
   }
 };
 
+const getFile = async (uuid: string): Promise<string> => {
+  // auth {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  // } auth
+  try {
+    // auth {
+    const { data } = await baseAPIClient.get(`/entities/files/${uuid}`, {
+      headers: { Authorization: bearerToken },
+    });
+    // } auth
+
+    // no-auth {
+    // const { data } = await baseAPIClient.get(`/entities/files/${uuid}`);
+    // } no-auth
+    return data.fileURL || data.fileUrl;
+  } catch (error) {
+    return error;
+  }
+};
+
 const getCSV = async (): Promise<string> => {
   // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
@@ -112,7 +136,7 @@ const update = async (
   {
     entityData,
   }: {
-    entityData: EntityRequest;
+    entityData: EntityRequest | FormData;
   },
 ): Promise<EntityResponse> => {
   // auth {
@@ -137,4 +161,4 @@ const update = async (
   }
 };
 
-export default { create, get, getCSV, update };
+export default { create, get, getFile, getCSV, update };
