@@ -43,7 +43,7 @@ def create_app(config_name):
 
     app.config[
         "SQLALCHEMY_DATABASE_URI"
-    ] = "postgres://{username}:{password}@{host}:5432/{db}".format(
+    ] = "postgresql://{username}:{password}@{host}:5432/{db}".format(
         username=os.getenv("POSTGRES_USER"),
         password=os.getenv("POSTGRES_PASSWORD"),
         host=(
