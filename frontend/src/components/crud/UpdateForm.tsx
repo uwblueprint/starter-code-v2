@@ -138,8 +138,8 @@ const UpdateForm = (): React.ReactElement => {
       }
     }
   };
-  // } file-storage
 
+  // } file-storage
   const onSubmit = async ({ formData }: { formData: EntityResponse }) => {
     const { id, ...entityData } = formData;
 

@@ -129,8 +129,8 @@ const CreateForm = (): React.ReactElement => {
       }
     }
   };
-  // } file-storage
 
+  // } file-storage
   const onSubmit = async ({ formData }: { formData: EntityRequest }) => {
     // graphql {
     // no-file-storage {

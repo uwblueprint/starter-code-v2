@@ -243,8 +243,8 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
     downloadFile(data, "file");
     // } rest
   };
-  // } file-storage
 
+  // } file-storage
   const downloadEntitiesCSV = async () => {
     if (entities) {
       // graphql {
