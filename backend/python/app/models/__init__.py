@@ -4,7 +4,6 @@ from mongoengine import connect
 
 db = SQLAlchemy()
 migrate = Migrate()
-erase_db_and_sync = False
 
 
 def init_app(app):
@@ -14,6 +13,8 @@ def init_app(app):
     app.app_context().push()
     db.init_app(app)
     migrate.init_app(app, db)
+
+    erase_db_and_sync = app.config["TESTING"]
 
     if erase_db_and_sync:
         # drop tables
