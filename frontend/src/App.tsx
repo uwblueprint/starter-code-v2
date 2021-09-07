@@ -19,6 +19,7 @@ import SampleContext, {
 import sampleContextReducer from "./reducers/SampleContextReducer";
 import SampleContextDispatcherContext from "./contexts/SampleContextDispatcherContext";
 import EditTeamInfoPage from "./components/pages/EditTeamPage";
+import HooksDemo from "./components/pages/HooksDemo";
 
 import { AuthenticatedUser } from "./types/AuthTypes";
 import * as Routes from "./constants/Routes";
@@ -52,6 +53,7 @@ const App = (): React.ReactElement => {
             <Switch>
               <Route exact path={Routes.LOGIN_PAGE} component={Login} />
               <Route exact path={Routes.SIGNUP_PAGE} component={Signup} />
+              <Route exact path={Routes.HOOKS_PAGE} component={HooksDemo} />
               <PrivateRoute exact path={Routes.HOME_PAGE} component={Default} />
               <PrivateRoute
                 exact
