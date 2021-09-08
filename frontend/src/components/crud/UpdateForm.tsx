@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+// python {
+import { decamelizeKeys } from "humps";
+// } python
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
 // graphql {
@@ -72,6 +75,7 @@ const uiSchema = {
 };
 
 // graphql {
+// no-file-storage {
 const UPDATE_ENTITY = gql`
   mutation UpdateForm_UpdateEntity($id: ID!, $entity: EntityRequestDTO!) {
     updateEntity(id: $id, entity: $entity) {
@@ -84,10 +88,33 @@ const UPDATE_ENTITY = gql`
     }
   }
 `;
+// } no-file-storage
+// file-storage {
+const UPDATE_ENTITY = gql`
+  mutation UpdateForm_UpdateEntity(
+    $id: ID!
+    $entity: EntityRequestDTO!
+    $file: Upload
+  ) {
+    updateEntity(id: $id, entity: $entity, file: $file) {
+      id
+      stringField
+      intField
+      enumField
+      stringArrayField
+      boolField
+      fileName
+    }
+  }
+`;
+// } file-storage
 
 // } graphql
 const UpdateForm = (): React.ReactElement => {
   const [data, setData] = useState<EntityResponse | null>(null);
+  // file-storage {
+  const [fileField, setFileField] = useState<File | null>(null);
+  // } file-storage
 
   // graphql {
   const [updateEntity] = useMutation<{ updateEntity: EntityResponse }>(
@@ -99,22 +126,75 @@ const UpdateForm = (): React.ReactElement => {
     return <p>Updated! ✔️</p>;
   }
 
+  // file-storage {
+  const fileChanged = (e: { target: HTMLInputElement }) => {
+    if (e.target.files) {
+      const fileSize = e.target.files[0].size / 1024 / 1024;
+      if (fileSize > 5) {
+        // eslint-disable-next-line no-alert
+        window.alert("Your file exceeds 5MB. Upload a smaller file.");
+      } else {
+        setFileField(e.target.files[0]);
+      }
+    }
+  };
+
+  // } file-storage
   const onSubmit = async ({ formData }: { formData: EntityResponse }) => {
     const { id, ...entityData } = formData;
 
     // graphql {
+    // no-file-storage {
     const graphQLResult = await updateEntity({
       variables: { id: formData.id, entity: entityData as EntityRequest },
     });
+    // } no-file-storage
+    // file-storage {
+    const graphQLResult = await updateEntity({
+      variables: {
+        id: formData.id,
+        entity: entityData as EntityRequest,
+        file: fileField,
+      },
+    });
+    // } file-storage
     const result: EntityResponse | null =
       graphQLResult.data?.updateEntity ?? null;
     // } graphql
     // rest {
+    // no-file-storage {
     const result = await EntityAPIClient.update(formData.id, { entityData });
+    // } no-file-storage
+    // file-storage {
+    const multipartFormData = new FormData();
+    // typescript {
+    multipartFormData.append("body", JSON.stringify(entityData));
+    // } typescript
+    // python {
+    multipartFormData.append("body", JSON.stringify(decamelizeKeys(entityData)));
+    // } python
+    if (fileField) {
+      multipartFormData.append("file", fileField);
+    }
+    const result = await EntityAPIClient.update(
+      formData.id,
+      { entityData: multipartFormData }
+    );
+    // } file-storage
     // } rest
     setData(result);
   };
+  // no-file-storage {
   return <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />;
+  // } no-file-storage
+  // file-storage {
+  return (
+    <>
+      <input type="file" onChange={fileChanged} />
+      <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />
+    </>
+  );
+  // } file-storage
 };
 
 export default UpdateForm;

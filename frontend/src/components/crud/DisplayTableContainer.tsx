@@ -7,8 +7,9 @@ import React, { useState, useEffect } from "react";
 // } rest
 import BTable from "react-bootstrap/Table";
 import { HeaderGroup, useTable, Column } from "react-table";
+
 // graphql {
-import { gql, useQuery, useLazyQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
@@ -19,25 +20,39 @@ import EntityAPIClient, {
 } from "../../APIClients/EntityAPIClient";
 // } rest
 import { downloadCSV } from "../../utils/CSVUtils";
+// file-storage {
+import { downloadFile } from "../../utils/FileUtils";
+// } file-storage
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
-const convert = (entityReponse: EntityResponse): EntityData => {
+const convert = (entityResponse: EntityResponse): EntityData => {
   return {
-    id: entityReponse.id,
-    stringField: entityReponse.stringField,
-    intField: entityReponse.intField,
-    stringArrayField: entityReponse.stringArrayField,
-    enumField: entityReponse.enumField,
-    boolField: entityReponse.boolField.toString(),
+    id: entityResponse.id,
+    stringField: entityResponse.stringField,
+    intField: entityResponse.intField,
+    stringArrayField: entityResponse.stringArrayField,
+    enumField: entityResponse.enumField,
+    boolField: entityResponse.boolField.toString(),
+    // file-storage {
+    fileName: entityResponse.fileName,
+    // } file-storage
   };
 };
 
 type TableProps = {
   data: EntityData[];
+  // file-storage {
+  downloadEntityFile: any;
+  // } file-storage
 };
 
+// no-file-storage {
 const columns: Column<EntityData>[] = [
+// } no-file-storage
+// file-storage {
+const createColumns = (downloadEntityFile: any): Column<EntityData>[] => [
+// } file-storage
   {
     Header: "id",
 
@@ -69,8 +84,27 @@ const columns: Column<EntityData>[] = [
 
     accessor: "boolField",
   },
+  // file-storage {
+  {
+    Header: "fileName",
+
+    accessor: "fileName",
+
+    // eslint-disable-next-line react/display-name
+    Cell: ({ cell }: any) =>
+      cell.row.values.fileName ? (
+        <button
+          type="button"
+          onClick={() => downloadEntityFile(cell.row.values.fileName)}
+        >
+          Download
+        </button>
+      ) : null,
+  },
+  // } file-storage
 ];
 
+// no-file-storage {
 const DisplayTable = ({ data }: TableProps) => {
   const {
     getTableProps,
@@ -81,6 +115,22 @@ const DisplayTable = ({ data }: TableProps) => {
 
     prepareRow,
   } = useTable<EntityData>({ columns, data });
+// } no-file-storage
+// file-storage {
+const DisplayTable = ({ data, downloadEntityFile }: TableProps) => {
+  const {
+    getTableProps,
+
+    headerGroups,
+
+    rows,
+
+    prepareRow,
+  } = useTable<EntityData>({
+    columns: createColumns(downloadEntityFile),
+    data,
+  });
+// } file-storage
 
   return (
     <BTable
@@ -131,6 +181,9 @@ const ENTITIES = gql`
       enumField
       stringArrayField
       boolField
+      // file-storage {
+      fileName
+      // } file-storage
     }
   }
 `;
@@ -141,22 +194,25 @@ const ENTITIESCSV = gql`
   }
 `;
 
+// file-storage {
+const FILE = gql`
+  query DisplayTableContainer_File($fileUUID: ID!) {
+    file(fileUUID: $fileUUID)
+  }
+`;
+
+// } file-storage
 // } graphql
 const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   const [entities, setEntities] = useState<EntityData[] | null>(null);
 
   // graphql {
+  const apolloClient = useApolloClient();
+
   useQuery(ENTITIES, {
     fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
       setEntities(data.entities.map((d: EntityResponse) => convert(d)));
-    },
-  });
-
-  const [getEntitiesCSV] = useLazyQuery(ENTITIESCSV, {
-    fetchPolicy: "cache-and-network",
-    onCompleted: (data) => {
-      downloadCSV(data.entitiesCSV, "export.csv");
     },
   });
   // } graphql
@@ -172,10 +228,30 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   }, []);
   // } rest
 
+  // file-storage {
+  const downloadEntityFile = async (fileUUID: string) => {
+    // graphql {
+    const { data } = await apolloClient.query({
+      query: FILE,
+      variables: { fileUUID },
+    });
+    downloadFile(data.file, "file");
+    // } graphql
+
+    // rest {
+    const data = await EntityAPIClient.getFile(fileUUID);
+    downloadFile(data, "file");
+    // } rest
+  };
+
+  // } file-storage
   const downloadEntitiesCSV = async () => {
     if (entities) {
       // graphql {
-      getEntitiesCSV();
+      const { data } = await apolloClient.query({
+        query: ENTITIESCSV,
+      });
+      downloadCSV(data.entitiesCSV, "export.csv");
       // } graphql
       // rest {
       const csvString = await EntityAPIClient.getCSV();
@@ -192,7 +268,12 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
       <button type="button" onClick={downloadEntitiesCSV}>
         Download CSV
       </button>
+      // no-file-storage {
       {entities && <DisplayTable data={entities} />}
+      // } no-file-storage
+      // file-storage {
+      {entities && <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />}
+      // } file-storage
     </>
   );
 };

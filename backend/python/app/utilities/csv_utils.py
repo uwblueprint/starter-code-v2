@@ -120,7 +120,10 @@ def generate_csv_from_list(dict_list, **kwargs):
     :return: csv string
     :rtype: str
     """
-    field_names = dict_list[0].keys()
+    field_names = {
+        key: None
+        for d in dict_list for key in d.keys()
+    }.keys()
 
     if kwargs.get("field", None):
         field_names = kwargs["field"]
