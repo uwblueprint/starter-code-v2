@@ -44,7 +44,7 @@ export const validateFileType = (mimetype: string): boolean => {
 export const getApiValidationError = (
   fieldName: string,
   type: Type,
-  isArray: boolean = false,
+  isArray = false,
 ): string => {
   return `The ${fieldName} is not a ${type}${isArray ? " Array" : ""}`;
 };
