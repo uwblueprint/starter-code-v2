@@ -29,6 +29,7 @@ import SampleContext, {
 import sampleContextReducer from "./reducers/SampleContextReducer";
 import SampleContextDispatcherContext from "./contexts/SampleContextDispatcherContext";
 import EditTeamInfoPage from "./components/pages/EditTeamPage";
+import HooksDemo from "./components/pages/HooksDemo";
 
 // auth {
 import { AuthenticatedUser } from "./types/AuthTypes";
@@ -87,6 +88,11 @@ const App = (): React.ReactElement => {
                 path={Routes.EDIT_TEAM_PAGE}
                 component={EditTeamInfoPage}
               />
+              <PrivateRoute
+                exact
+                path={Routes.HOOKS_PAGE}
+                component={HooksDemo}
+              />
               <Route exact path="*" component={NotFound} />
             </Switch>
           </Router>
@@ -106,6 +112,7 @@ const App = (): React.ReactElement => {
             <Route exact path={Routes.UPDATE_ENTITY_PAGE} component={UpdatePage} />
             <Route exact path={Routes.DISPLAY_ENTITY_PAGE} component={DisplayPage} />
             <Route exact path={Routes.EDIT_TEAM_PAGE} component={EditTeamInfoPage} />
+            <Route exact path={Routes.HOOKS_PAGE} component={HooksDemo} />
             <Route exact path="*" component={NotFound} />
           </Switch>
         </Router>
