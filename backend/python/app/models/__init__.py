@@ -10,7 +10,6 @@ from mongoengine import connect
 # postgresql {
 db = SQLAlchemy()
 migrate = Migrate()
-erase_db_and_sync = False
 
 
 # } postgresql
@@ -24,6 +23,8 @@ def init_app(app):
     # postgresql {
     db.init_app(app)
     migrate.init_app(app, db)
+
+    erase_db_and_sync = app.config["TESTING"]
 
     if erase_db_and_sync:
         # drop tables

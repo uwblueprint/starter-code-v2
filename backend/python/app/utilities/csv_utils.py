@@ -120,14 +120,6 @@ def generate_csv_from_list(dict_list, **kwargs):
     :return: csv string
     :rtype: str
     """
-    field_names = {
-        key: None
-        for d in dict_list for key in d.keys()
-    }.keys()
-
-    if kwargs.get("field", None):
-        field_names = kwargs["field"]
-
     if kwargs.get("transform", None):
         dict_list = transform_function(dict_list, kwargs["transform"])
 
@@ -144,6 +136,11 @@ def generate_csv_from_list(dict_list, **kwargs):
         dict_list = [flatten_lists_in_dict(dict) for dict in dict_list]
 
     output = io.StringIO()
+    field_names = (
+        {key: None for d in dict_list for key in d.keys()}.keys()
+        if not kwargs.get("field", None)
+        else kwargs["field"]
+    )
     writer = csv.DictWriter(output, fieldnames=field_names)
 
     if kwargs.get("header", None):

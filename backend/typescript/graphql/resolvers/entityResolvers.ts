@@ -15,7 +15,7 @@ import {
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../../services/interfaces/IEntityService";
-import { generateCSV } from "../../utilities/csvUtils";
+import { generateCSV } from "../../utilities/CSVUtils";
 
 // no-file-storage {
 const entityService = new EntityService();

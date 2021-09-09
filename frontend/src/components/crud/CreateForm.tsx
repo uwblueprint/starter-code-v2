@@ -106,6 +106,7 @@ const CreateForm = (): React.ReactElement => {
   // file-storage {
   const [fileField, setFileField] = useState<File | null>(null);
   // } file-storage
+  const [formFields, setFormFields] = useState<EntityRequest | null>(null);
 
   // graphql {
   const [createEntity] = useMutation<{ createEntity: EntityResponse }>(
@@ -167,13 +168,31 @@ const CreateForm = (): React.ReactElement => {
     setData(result);
   };
   // no-file-storage {
-  return <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />;
+  return (
+    <Form
+      formData={formFields}
+      schema={schema}
+      uiSchema={uiSchema}
+      onChange={({ formData }: { formData: EntityRequest }) =>
+        setFormFields(formData)
+      }
+      onSubmit={onSubmit}
+    />
+  );
   // } no-file-storage
   // file-storage {
   return (
     <>
       <input type="file" onChange={fileChanged} />
-      <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />
+      <Form
+        formData={formFields}
+        schema={schema}
+        uiSchema={uiSchema}
+        onChange={({ formData }: { formData: EntityRequest }) =>
+          setFormFields(formData)
+        }
+        onSubmit={onSubmit}
+      />
     </>
   );
   // } file-storage

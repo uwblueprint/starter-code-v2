@@ -43,11 +43,15 @@ class AuthService implements IAuthService {
       const googleUser = await FirebaseRestClient.signInWithGoogleOAuth(
         idToken,
       );
+      // googleUser.idToken refers to the Firebase Auth access token for the user
       const token = {
         accessToken: googleUser.idToken,
         refreshToken: googleUser.refreshToken,
       };
+      // If user already has a login with this email, just return the token
       try {
+        // Note: an error message will be logged from UserService if this lookup fails.
+        // You may want to silence the logger for this special OAuth user lookup case
         const user = await this.userService.getUserByEmail(googleUser.email);
         return { ...token, ...user };
       } catch (error) {}
