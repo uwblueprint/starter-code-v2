@@ -35,7 +35,9 @@ class EntityDTO(object):
                         "The items supplied string_array_field are not a string."
                     )
         enum_values = {"A", "B", "C", "D"}
-        if self.enum_field.upper() not in enum_values:
+        if (type(self.enum_field) is not str) or (
+            self.enum_field.upper() not in enum_values
+        ):
             error_list.append("The enum_field supplied is not an enum.")
         if type(self.bool_field) is not bool:
             error_list.append("The bool_field supplied is not a boolean.")

@@ -191,7 +191,7 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   //   const retrieveAndUpdateData = async () => {
   //     const result = await EntityAPIClient.get();
   //     if (result) {
-  //       setData(result.map((r: EntityResponse) => convert(r)));
+  //       setEntities(result.map((r: EntityResponse) => convert(r)));
   //     }
   //   };
   //   retrieveAndUpdateData();

@@ -11,7 +11,7 @@ import {
   validateFileType,
   getFileTypeValidationError,
 } from "../../middlewares/validators/util";
-import { generateCSV } from "../../utilities/csvUtils";
+import { generateCSV } from "../../utilities/CSVUtils";
 
 const defaultBucket = process.env.DEFAULT_BUCKET || "";
 const fileStorageService = new FileStorageService(defaultBucket);

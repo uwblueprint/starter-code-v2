@@ -89,6 +89,7 @@ const CREATE_ENTITY = gql`
 const CreateForm = (): React.ReactElement => {
   const [data, setData] = useState<EntityResponse | null>(null);
   const [fileField, setFileField] = useState<File | null>(null);
+  const [formFields, setFormFields] = useState<EntityRequest | null>(null);
 
   // graphql {
   const [createEntity] = useMutation<{ createEntity: EntityResponse }>(
@@ -138,7 +139,15 @@ const CreateForm = (): React.ReactElement => {
   return (
     <>
       <input type="file" onChange={fileChanged} />
-      <Form schema={schema} uiSchema={uiSchema} onSubmit={onSubmit} />
+      <Form
+        formData={formFields}
+        schema={schema}
+        uiSchema={uiSchema}
+        onChange={({ formData }: { formData: EntityRequest }) =>
+          setFormFields(formData)
+        }
+        onSubmit={onSubmit}
+      />
     </>
   );
 };
