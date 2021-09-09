@@ -28,5 +28,3 @@ Send email
 | `htmlBody` | *string* | email body as html |
 
 **Returns:** *Promise*<void\>
-
-Defined in: emailService.ts:9

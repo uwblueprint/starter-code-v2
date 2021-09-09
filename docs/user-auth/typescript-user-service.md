@@ -23,9 +23,9 @@ parent: User Auth
 
 ### createUser
 
-▸ **createUser**(`user`: CreateUserDTO): *Promise*<UserDTO\>
+▸ **createUser**(`user`: *CreateUserDTO*, `authId?`: *string \| null*, `signUpMethod?`: *SignUpMethod*): *Promise*<UserDTO\>
 
-Create a user, email verification configurable
+Create a user
 
 **`throws`** Error if user creation fails
 
@@ -33,13 +33,13 @@ Create a user, email verification configurable
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `user` | CreateUserDTO | the user to be created |
+| `user` | `CreateUserDTO` | the user to be created |
+| `authId?` | `string` | the user's firebase auth id, optional |
+| `signUpMethod?` | `SignUpMethod` | the method user used to signup |
 
 **Returns:** *Promise*<UserDTO\>
 
 a UserDTO with the created user's information
-
-Defined in: userService.ts:57
 
 ___
 
@@ -59,8 +59,6 @@ Delete a user by email
 
 **Returns:** *Promise*<void\>
 
-Defined in: userService.ts:81
-
 ___
 
 ### deleteUserById
@@ -78,8 +76,6 @@ Delete a user by id
 | `userId` | *string* | user's userId |
 
 **Returns:** *Promise*<void\>
-
-Defined in: userService.ts:74
 
 ___
 
@@ -101,8 +97,6 @@ Get authId of user associated with id
 
 user's authId
 
-Defined in: userService.ts:42
-
 ___
 
 ### getUserByEmail
@@ -122,8 +116,6 @@ Get user associated with email
 **Returns:** *Promise*<UserDTO\>
 
 a UserDTO with user's information
-
-Defined in: userService.ts:18
 
 ___
 
@@ -145,8 +137,6 @@ Get user associated with id
 
 a UserDTO with user's information
 
-Defined in: userService.ts:10
-
 ___
 
 ### getUserIdByAuthId
@@ -166,8 +156,6 @@ Get id of user associated with authId
 **Returns:** *Promise*<string\>
 
 id of the user
-
-Defined in: userService.ts:34
 
 ___
 
@@ -189,8 +177,6 @@ Get role of user associated with authId
 
 role of the user
 
-Defined in: userService.ts:26
-
 ___
 
 ### getUsers
@@ -204,8 +190,6 @@ Get all user information (possibly paginated in the future)
 **Returns:** *Promise*<UserDTO[]\>
 
 array of UserDTOs
-
-Defined in: userService.ts:49
 
 ___
 
@@ -228,5 +212,3 @@ Note: the password cannot be updated using this method, use IAuthService.resetPa
 **Returns:** *Promise*<UserDTO\>
 
 a UserDTO with the updated user's information
-
-Defined in: userService.ts:67

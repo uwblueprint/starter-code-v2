@@ -34,8 +34,6 @@ create an Entity with the fields given in the DTO, return created Entity
 
 the created Entity
 
-Defined in: IEntityService.ts:41
-
 ___
 
 ### deleteEntity
@@ -54,8 +52,6 @@ delete the entity with the given id
 
 **Returns:** *Promise*<void\>
 
-Defined in: IEntityService.ts:60
-
 ___
 
 ### getEntities
@@ -69,8 +65,6 @@ retrieve all Entities
 **Returns:** *Promise*<EntityResponseDTO[]\>
 
 returns array of Entities
-
-Defined in: IEntityService.ts:33
 
 ___
 
@@ -92,8 +86,6 @@ retrieve the Entity with the given id
 
 requested Entity
 
-Defined in: IEntityService.ts:25
-
 ___
 
 ### updateEntity
@@ -114,5 +106,3 @@ update the Entity with the given id with fields in the DTO, return updated Entit
 **Returns:** *Promise*<``null`` \| EntityResponseDTO\>
 
 the updated Entity
-
-Defined in: IEntityService.ts:50

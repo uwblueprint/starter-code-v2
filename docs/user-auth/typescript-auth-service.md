@@ -9,13 +9,15 @@ parent: User Auth
 
 ### Methods
 
-- [generateToken](default.md#generatetoken)
-- [isAuthorizedByEmail](default.md#isauthorizedbyemail)
-- [isAuthorizedByRole](default.md#isauthorizedbyrole)
-- [isAuthorizedByUserId](default.md#isauthorizedbyuserid)
-- [renewToken](default.md#renewtoken)
-- [resetPassword](default.md#resetpassword)
-- [revokeTokens](default.md#revoketokens)
+- [generateToken](typescript-auth-service.md#generatetoken)
+- [generateTokenOAuth](typescript-auth-service.md#generatetokenoauth)
+- [isAuthorizedByEmail](typescript-auth-service.md#isauthorizedbyemail)
+- [isAuthorizedByRole](typescript-auth-service.md#isauthorizedbyrole)
+- [isAuthorizedByUserId](typescript-auth-service.md#isauthorizedbyuserid)
+- [renewToken](typescript-auth-service.md#renewtoken)
+- [resetPassword](typescript-auth-service.md#resetpassword)
+- [revokeTokens](typescript-auth-service.md#revoketokens)
+- [sendEmailVerificationLink](typescript-auth-service.md#sendemailverificationlink)
 
 
 ### generateToken
@@ -38,7 +40,25 @@ when supplied user's email and password
 
 AuthDTO object containing the access token, refresh token, and user info
 
-Defined in: authService.ts:12
+___
+
+### generateTokenOAuth
+
+▸ **generateTokenOAuth**(`idToken`: *string*): *Promise*<AuthDTO\>
+
+Generate a short-lived JWT access token and a long-lived refresh token when supplied OAuth ID token
+
+**`throws`** Error if token generation fails
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `idToken` | *string* | user's ID token |
+
+**Returns:** *Promise*<AuthDTO\>
+
+AuthDTO object containing the access token, refresh token, and user info
 
 ___
 
@@ -60,8 +80,6 @@ with the specified email address
 
 true if token valid and authorized, false otherwise
 
-Defined in: authService.ts:64
-
 ___
 
 ### isAuthorizedByRole
@@ -82,8 +100,6 @@ one of the specified roles
 
 true if token valid and authorized, false otherwise
 
-Defined in: authService.ts:44
-
 ___
 
 ### isAuthorizedByUserId
@@ -102,8 +118,6 @@ Determine if the provided access token is valid and issued to the requested user
 **Returns:** *Promise*<boolean\>
 
 true if token valid and authorized, false otherwise
-
-Defined in: authService.ts:52
 
 ___
 
@@ -125,16 +139,13 @@ Generate new access and refresh token pair using the provided refresh token
 
 Token object containing new access and refresh tokens
 
-Defined in: authService.ts:27
-
 ___
 
 ### resetPassword
 
 ▸ **resetPassword**(`email`: *string*): *Promise*<void\>
 
-Generate a password reset link for the user with the given email and send
-the link to that that email address
+Generate a password reset link for the user with the given email and send the link to that email address
 
 **`throws`** Error if unable to generate link or send email
 
@@ -145,8 +156,6 @@ the link to that that email address
 | `email` | *string* | email of user requesting password reset |
 
 **Returns:** *Promise*<void\>
-
-Defined in: authService.ts:35
 
 ___
 
@@ -166,4 +175,20 @@ Revoke all refresh tokens of a user
 
 **Returns:** *Promise*<void\>
 
-Defined in: authService.ts:19
+___
+
+### sendEmailVerificationLink
+
+▸ **sendEmailVerificationLink**(`email`: *string*): Promise<void\>
+
+Generate an email verification link for the user with the given email and send the link to that email address
+
+**`throws`** Error if unable to generate link or send email
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `email` | `string` | email of user that needs to be verified |
+
+**Returns:** *Promise*<void\>

@@ -151,15 +151,19 @@ list of UserDTOs (:rtype: [UserDTO])
 #### create\_user
 
 ```python
-create_user(user)
+create_user(user, auth_id=None, signup_method="PASSWORD")
 ```
 
-Create a user, email verification configurable
+Create a user
 
 **Arguments**:
 
 - `user`: the user to be created
 - :type user: CreateUserDTO
+- `auth_id`: user's Firebase auth id, defaults to None
+- :type auth_id: str, optional
+- `signup_method`: method of signup, either "PASSWORD" or "GOOGLE", defaults to "PASSWORD"
+- :type signup_method: str, optional
 
 **Returns**:
 

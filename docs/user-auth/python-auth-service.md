@@ -9,9 +9,11 @@ parent: User Auth
 
 ### Methods
 * [generate\_token](#interfaces.auth_service.IAuthService.generate_token)
+* [generate\_token\_for\_oauth](#interfaces.auth_service.IAuthService.generate_token_for_oauth)
 * [revoke\_tokens](#interfaces.auth_service.IAuthService.revoke_tokens)
 * [renew\_token](#interfaces.auth_service.IAuthService.renew_token)
 * [reset\_password](#interfaces.auth_service.IAuthService.reset_password)
+* [send\_email\_verification\_link](#interfaces.auth_service.IAuthService.send_email_verification_link)
 * [is\_authorized\_by\_role](#interfaces.auth_service.IAuthService.is_authorized_by_role)
 * [is\_authorized\_by\_user\_id](#interfaces.auth_service.IAuthService.is_authorized_by_user_id)
 * [is\_authorized\_by\_email](#interfaces.auth_service.IAuthService.is_authorized_by_email)
@@ -32,6 +34,28 @@ when supplied user's email and password
 - :type email: str
 - `password`: user's password
 - :type password: str
+
+**Returns**:
+
+AuthDTO object containing the access token, refresh token, and user info (:rtype: AuthDTO)
+
+**Raises**:
+
+- `Exception`: if token generation fails
+
+<a id="interfaces.auth_service.IAuthService.generate_token_for_oauth"></a>
+#### generate\_token\_for\_oauth
+
+```python
+generate_token_for_oauth(id_token)
+```
+
+Generate a short-lived JWT access token and a long-lived refresh token when supplied user's OAuth ID token
+
+**Arguments**:
+
+- `id_token`: user's OAuth ID token
+- :type id_token: str
 
 **Returns**:
 
@@ -94,6 +118,24 @@ and sends the reset link to that email address
 **Arguments**:
 
 - `email`: email of user requesting password reset
+- :type email: str
+
+**Raises**:
+
+- `Exception`: if unable to generate link or send email
+
+<a id="interfaces.auth_service.IAuthService.send_email_verification_link"></a>
+#### send\_email\_verification\_link
+
+```python
+send_email_verification_link(email)
+```
+
+Generates an email verification link for the user with the given email and sends the verification link to that email address
+
+**Arguments**:
+
+- `email`: email of user requesting verification
 - :type email: str
 
 **Raises**:
