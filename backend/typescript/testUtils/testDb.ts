@@ -18,7 +18,8 @@ const mongo = new MongoMemoryServer();
 
 const mongoTest = {
   connect: async (): Promise<void> => {
-    const uri = await mongo.getUri();
+    await mongo.start();
+    const uri = mongo.getUri();
     await mongoose.connect(uri, {
       useUnifiedTopology: true,
       useNewUrlParser: true,

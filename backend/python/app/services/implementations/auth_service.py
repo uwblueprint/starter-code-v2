@@ -48,6 +48,8 @@ class AuthService(IAuthService):
             token = Token(google_user["idToken"], google_user["refreshToken"])
             # If user already has a login with this email, just return the token
             try:
+                # Note: an error message will be logged from UserService if this lookup fails.
+                # You may want to silence the logger for this special OAuth user lookup case
                 user = self.user_service.get_user_by_email(google_user["email"])
                 return AuthDTO(**{**token.__dict__, **user.__dict__})
             except Exception as e:
@@ -183,9 +185,7 @@ class AuthService(IAuthService):
                 decoded_id_token["uid"]
             )
             firebase_user = firebase_admin.auth.get_user(decoded_id_token["uid"])
-            return (
-                firebase_user.email_verified and token_user_id == requested_user_id
-            )
+            return firebase_user.email_verified and token_user_id == requested_user_id
         except:
             return False
 

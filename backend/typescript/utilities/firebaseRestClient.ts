@@ -12,15 +12,34 @@ const FIREBASE_REFRESH_TOKEN_URL =
 const FIREBASE_OAUTH_SIGN_IN_URL =
   "https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp";
 
-type SignInResponse = {
+type PasswordSignInResponse = {
   idToken: string;
   email: string;
   refreshToken: string;
   expiresIn: string;
   localId: string;
   registered: boolean;
+};
+
+type OAuthSignInResponse = {
+  federatedId: string;
+  providerId: string;
+  localId: string;
+  emailVerified: boolean;
+  email: string;
+  oauthIdToken: string;
+  oauthAccessToken: string;
+  oauthTokenSecret: string;
+  rawUserInfo: string;
   firstName: string;
   lastName: string;
+  fullName: string;
+  displayName: string;
+  photoUrl: string;
+  idToken: string;
+  refreshToken: string;
+  expiresIn: string;
+  needConfirmation: boolean;
 };
 
 type RefreshTokenResponse = {
@@ -61,7 +80,9 @@ const FirebaseRestClient = {
       },
     );
 
-    const responseJson: SignInResponse | RequestError = await response.json();
+    const responseJson:
+      | PasswordSignInResponse
+      | RequestError = await response.json();
 
     if (!response.ok) {
       const errorMessage = [
@@ -76,13 +97,15 @@ const FirebaseRestClient = {
     }
 
     return {
-      accessToken: (responseJson as SignInResponse).idToken,
-      refreshToken: (responseJson as SignInResponse).refreshToken,
+      accessToken: (responseJson as PasswordSignInResponse).idToken,
+      refreshToken: (responseJson as PasswordSignInResponse).refreshToken,
     };
   },
 
   // Docs: https://firebase.google.com/docs/reference/rest/auth/#section-sign-in-with-oauth-credential
-  signInWithGoogleOAuth: async (idToken: string): Promise<SignInResponse> => {
+  signInWithGoogleOAuth: async (
+    idToken: string,
+  ): Promise<OAuthSignInResponse> => {
     const response: Response = await fetch(
       `${FIREBASE_OAUTH_SIGN_IN_URL}?key=${process.env.FIREBASE_WEB_API_KEY}`,
       {
@@ -99,7 +122,9 @@ const FirebaseRestClient = {
       },
     );
 
-    const responseJson: SignInResponse | RequestError = await response.json();
+    const responseJson:
+      | OAuthSignInResponse
+      | RequestError = await response.json();
 
     if (!response.ok) {
       const errorMessage = [
@@ -113,7 +138,7 @@ const FirebaseRestClient = {
       throw new Error("Failed to sign-in via Firebase REST API");
     }
 
-    return responseJson as SignInResponse;
+    return responseJson as OAuthSignInResponse;
   },
 
   // Docs: https://firebase.google.com/docs/reference/rest/auth/#section-refresh-token

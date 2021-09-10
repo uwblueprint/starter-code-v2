@@ -6,7 +6,7 @@ import IAuthService from "../../services/interfaces/authService";
 import IEmailService from "../../services/interfaces/emailService";
 import IUserService from "../../services/interfaces/userService";
 import { CreateUserDTO, UpdateUserDTO, UserDTO } from "../../types";
-import { generateCSV } from "../../utilities/csvUtils";
+import { generateCSV } from "../../utilities/CSVUtils";
 
 const userService: IUserService = new UserService();
 const emailService: IEmailService = new EmailService(nodemailerConfig);
