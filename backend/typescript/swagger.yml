@@ -12,6 +12,23 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+  schemas:
+    PasswordLogin:
+      type: object
+      required:
+        - email, password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    OAuthLogin:
+      type: object
+      required:
+        - idToken
+      properties:
+        idToken:
+          type: string
 
 
 paths:
@@ -47,6 +64,10 @@ paths:
                       enum: ["A", "B", "C", "D"]
                     boolField:
                       type: boolean
+                    # file-storage {
+                    fileName:
+                      type: string
+                    # } file-storage
         '401':
           description: Unauthorized
         '500':
@@ -62,6 +83,7 @@ paths:
       requestBody:
         required: true
         content:
+          # no-file-storage {
           application/json:
             schema:
               type: object
@@ -81,6 +103,18 @@ paths:
                   enum: ["A", "B", "C", "D"]
                 boolField:
                   type: boolean
+          # } no-file-storage
+          # file-storage {
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                file:
+                  type: string
+                  format: binary
+          # } file-storage
       responses:
         '201':
           description: Successfully created a new entity
@@ -104,6 +138,10 @@ paths:
                     enum: ["A", "B", "C", "D"]
                   boolField:
                     type: boolean
+                  # file-storage {
+                  fileName:
+                    type: string
+                  # } file-storage
         '401':
           description: Unauthorized
         '500':
@@ -149,6 +187,10 @@ paths:
                     enum: ["A", "B", "C", "D"]
                   boolField:
                     type: boolean
+                  # file-storage {
+                  fileName:
+                    type: string
+                  # } file-storage
         '401':
           description: Unauthorized
         '500':
@@ -173,6 +215,7 @@ paths:
       requestBody:
         required: true
         content:
+          # no-file-storage {
           application/json:
             schema:
               type: object
@@ -192,6 +235,18 @@ paths:
                   enum: ["A", "B", "C", "D"]
                 boolField:
                   type: boolean
+          # } no-file-storage
+          # file-storage {
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                file:
+                  type: string
+                  format: binary
+          # } file-storage
       responses:
         '200':
           description: Successfully edited entity based on ID
@@ -224,12 +279,82 @@ paths:
         '500':
           description: Invalid ID
 
+  # file-storage {
+  /entities/files/{fileName}:
+    get:
+      # auth {
+      security:
+        - bearerAuth: []
+      # } auth
+      parameters:
+        - in: path
+          name: fileName
+          required: true
+          schema:
+            type: string
+          description: The name of the file (UUID) associated with an entity
+      tags:
+        - Entity
+      description: Returns a signed URL to the file associated with an entity
+      responses:
+        '200':
+          description: Successfully returns the signed URL of the file
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - fileURL
+                properties:
+                  fileURL:
+                    type: string
+        '401':
+          description: Unauthorized
+        '500':
+          description: Invalid fileName
+  # } file-storage
     
   /auth/login:
     post:
       tags:
         - Auth
-      description: Login user
+      description: Login user. Supply either both email and password, or an Google OAuth idToken.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/PasswordLogin'
+                - $ref: '#/components/schemas/OAuthLogin'
+      responses:
+        '200':
+          description:  Returns access token in response body and sets refreshToken as an httpOnly cookie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:   
+                  accessToken:
+                    type: string
+                  id:
+                    type: string
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+                  email:
+                    type: string
+                  role:
+                    type: string
+        '500':
+          description: Invalid request
+
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      description: Register a new user
       requestBody:
         required: true
         content:
@@ -237,11 +362,15 @@ paths:
             schema:
               type: object
               required:
-                - email, password
+                - email, password, firstName, lastName
               properties:
                 email:
                   type: string
                 password:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
                   type: string
       responses:
         '200':
@@ -265,7 +394,7 @@ paths:
                     type: string
         '500':
           description: Invalid request
-         
+
 
   /auth/refresh:
     post:
