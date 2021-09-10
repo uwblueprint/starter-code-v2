@@ -8,7 +8,7 @@ parent: User Auth
 # Testing User Auth (API Documentation)
 {:.no_toc}
 
-The easiest way to test user auth is to use either the REST or GraphQL endpoints. Suggested tools include Postman, Insomnia, or cURL for REST, and the GraphQL playground (http://localhost:5000/graphql) for GraphQL. You can also choose to test through the frontend, which calls a subset of these endpoints.
+The easiest way to test user auth is to use either the REST or GraphQL endpoints. Suggested tools include Postman, Insomnia, or cURL for REST, and the GraphQL playground (http://localhost:5000/graphql) or Altair for GraphQL. You can also choose to test through the frontend, which calls a subset of these endpoints.
 
 Note that only Admin users can access user endpoints, and that emails of created users must be unique.
 
@@ -21,11 +21,45 @@ Note that only Admin users can access user endpoints, and that emails of created
 ## REST
 
 ### Login: POST /auth/login
+Both email and password, and Google OAuth logins are supported.
+
 ```
 Request Body:
+// if email and password:
 {
     "email": <user-email>,
     "password": <user-password>
+}
+
+// if Google OAuth:
+{
+  "idToken": <google-oauth-id-token>
+}
+
+Response Header:
+Set-Cookie: refreshToken=<insert-refresh-token>; HttpOnly; SameSite=Strict (prod will also have Secure flag)
+
+Response Body:
+{
+    "accessToken": <insert-access-token>,
+    "id": <insert-user-id>,
+    "email": <insert-email>,
+    "firstName": <insert-first-name>,
+    "lastName": <insert-last-name>,
+    "role": <insert-user-role>
+}
+```
+
+### Register: POST /auth/register
+Registered users have the "User" role. If "Admin" role is desired, create through the POST `/users` endpoint.
+
+```
+Request Body:
+{
+    "firstName": "First",
+    "lastName": "Last",
+    "email": "test@example.org",
+    "password": "password123"
 }
 
 Response Header:
@@ -90,9 +124,12 @@ Response Body:
 ```
 
 ### Get Users: GET /users
+Specify `text/csv` as the `Content-Type` header to receive the response in CSV format.
+
 ```
 Request Header:
 Authorization: Bearer <insert-access-token>
+Content-Type: text/csv OR application/json (default is application/json)
 
 Response Body:
 [
@@ -214,6 +251,39 @@ mutation {
 }
 ```
 
+### Login with Google OAuth
+```graphql
+mutation {
+  loginWithGoogle(idToken: "GOOGLE_OAUTH_ID_TOKEN") {
+      accessToken
+      id
+      firstName
+      lastName
+      email
+      role
+  }
+}
+```
+
+### Register
+```graphql
+mutation Register {
+  register(user: {
+    firstName: "First",
+    lastName: "Last",
+    email: "user@domain.org",
+    password: "password"
+  }) {
+    accessToken
+    id
+    firstName
+    lastName
+    email
+    role
+  }
+}
+```
+
 Note: accessToken must be supplied as an Authorization header for all requests below (except `refresh`).
 
 ### Create User
@@ -252,6 +322,13 @@ query {
     role
     email
   }
+}
+```
+
+### Get Users CSV
+```graphql
+query {
+   usersCSV
 }
 ```
 
