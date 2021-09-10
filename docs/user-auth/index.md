@@ -28,6 +28,8 @@ FIREBASE_WEB_API_KEY=<your-web-api-key>
 FIREBASE_REQUEST_URI=http://localhost
 ```
 
+Please see [Google Sign-in](../google-signin/setup.md) for additional Google OAuth setup instructions.
+
 ## Basic Auth Flow
 
 In contrast with many other UW Blueprint projects that use both the Firebase Client library and Admin SDK to handle authentication, we use the Firebase Admin SDK server-side only. This is done to decouple the frontend and backend and ensure that new `AuthService` implementations can easily be substituted. The login, refresh, and API request flows when using auth is illustrated below. While we use REST endpoints in these diagrams, note that the GraphQL flows are identical.
