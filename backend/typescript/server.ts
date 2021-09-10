@@ -4,6 +4,11 @@ import express from "express";
 // auth {
 import * as firebaseAdmin from "firebase-admin";
 // } auth
+// no-auth {
+// file-storage {
+import * as firebaseAdmin from "firebase-admin";
+// } file-storage
+// } no-auth
 // rest {
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -93,6 +98,14 @@ firebaseAdmin.initializeApp({
 });
 
 // } auth
+// no-auth {
+// file-storage {
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.applicationDefault(),
+});
+
+// } file-storage
+// } no-auth
 app.listen({ port: 5000 }, () => {
   /* eslint-disable-next-line no-console */
   console.info("Server is listening on port 5000!");
