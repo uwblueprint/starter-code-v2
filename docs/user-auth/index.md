@@ -25,6 +25,7 @@ Starter Code comes with `UserService` and `AuthService` pre-built for your use i
 GOOGLE_APPLICATION_CREDENTIALS=firebaseServiceAccount.json
 # Retrieve the API key from the Firebase console
 FIREBASE_WEB_API_KEY=<your-web-api-key>
+FIREBASE_REQUEST_URI=http://localhost
 ```
 
 ## Basic Auth Flow
