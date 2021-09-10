@@ -99,7 +99,12 @@ REACT_APP_BACKEND_URL=http://localhost:5000
 docker-compose up --build
 ```
 
-9. **If using built-in user auth:** Create a seed admin user
+9. **If using Python backend:** run the initial migrations
+```bash
+$ docker exec -it <python-backend-container-name> /bin/bash -c "flask db upgrade"
+```
+
+10. **If using built-in user auth:** Create a seed admin user
    * Go into your Firebase project > Authentication, choose "Email/Password" as sign-in method if prompted (you can change this for your project later). Create a user and note the uid.
    * **If using PostgreSQL:**
    ```bash
@@ -131,7 +136,7 @@ docker-compose up --build
        "role": "Admin"
    }
    ```
-10. After stopping the application, run `git init` to initialize your repository
+11. After stopping the application, run `git init` to initialize your repository
 
 ## Secret Management
 
