@@ -99,7 +99,7 @@ REACT_APP_BACKEND_URL=http://localhost:5000
 docker-compose up --build
 ```
 
-9. **If using Python backend:** run the initial migrations
+9. **If using Python backend with PostgreSQL:** run the initial migrations
 ```bash
 $ docker exec -it <python-backend-container-name> /bin/bash -c "flask db upgrade"
 ```
