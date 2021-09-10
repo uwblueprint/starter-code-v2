@@ -125,6 +125,7 @@ Response Body:
 
 ### Get Users: GET /users
 Specify `text/csv` as the `Content-Type` header to receive the response in CSV format.
+Note: starter code mistakenly used `Content-Type` instead of `Accept`, which is the more suitable header to use for this case. You should change it to `Accept` :)
 
 ```
 Request Header:
