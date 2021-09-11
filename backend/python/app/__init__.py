@@ -2,6 +2,11 @@ import os
 # auth {
 import firebase_admin
 # } auth
+# no-auth {
+# file-storage {
+import firebase_admin
+# } file-storage
+# } no-auth
 
 from flask import Flask
 from flask.cli import ScriptInfo
@@ -66,6 +71,11 @@ def create_app(config_name):
     # } no-file-storage
 
     # } auth
+    # no-auth {
+    # file-storage {
+    firebase_admin.initialize_app(None, {"storageBucket": os.getenv("DEFAULT_BUCKET")})
+    # } file-storage
+    # } no-auth
     from . import models, rest
 
     models.init_app(app)

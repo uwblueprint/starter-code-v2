@@ -13,6 +13,29 @@
         "scheme": "bearer",
         "bearerFormat": "JWT"
       }
+    },
+    "schemas": {
+      "PasswordLogin": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "OAuthLogin": {
+        "type": "object",
+        "required": ["id_token"],
+        "properties": {
+          "id_token": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   // } auth
@@ -66,7 +89,15 @@
                       },
                       "bool_field": {
                         "type": "boolean"
+                      // no-file-storage {
                       }
+                      // } no-file-storage
+                      // file-storage {
+                      },
+                      "file_name": {
+                        "type": "string"
+                      }
+                      // } file-storage
                     }
                   }
                 }
@@ -96,6 +127,7 @@
         "requestBody": {
           "required": true,
           "content": {
+            // no-file-storage {
             "application/json": {
               "schema": {
                 "type": "object",
@@ -130,6 +162,23 @@
                 }
               }
             }
+            // } no-file-storage
+            // file-storage {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+            // } file-storage
           }
         },
         "responses": {
@@ -166,7 +215,15 @@
                     },
                     "bool_field": {
                       "type": "boolean"
+                    // no-file-storage {
                     }
+                    // } no-file-storage
+                    // file-storage {
+                    },
+                    "file_name": {
+                      "type": "string"
+                    }
+                    // } file-storage
                   }
                 }
               }
@@ -239,7 +296,15 @@
                     },
                     "bool_field": {
                       "type": "boolean"
+                    // no-file-storage {
                     }
+                    // } no-file-storage
+                    // file-storage {
+                    },
+                    "file_name": {
+                      "type": "string"
+                    }
+                    // } file-storage
                   }
                 }
               }
@@ -279,6 +344,7 @@
         "requestBody": {
           "required": true,
           "content": {
+            // no-file-storage {
             "application/json": {
               "schema": {
                 "type": "object",
@@ -313,6 +379,23 @@
                 }
               }
             }
+            // } no-file-storage
+            // file-storage {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+            // } file-storage
           }
         },
         "responses": {
@@ -363,13 +446,123 @@
         }
       }
     },
+    // file-storage {
+    "/entities/files/{file_name}": {
+      "get": {
+        // auth {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        // } auth
+        "parameters": [
+          {
+            "in": "path",
+            "name": "file_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the file (UUID) associated with an entity"
+          }
+        ],
+        "tags": [
+          "Entity"
+        ],
+        "description": "Returns a signed URL to the file associated with an entity",
+        "responses": {
+          "200": {
+            "description": "Successfully returns the signed URL of the file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "file_url"
+                  ],
+                  "properties": {
+                    "file_url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Invalid ID"
+          }
+        }
+      }
+    },
+    // } file-storage
     // auth {
     "/auth/login": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "description": "Login user",
+        "description": "Login user. Supply either both email and password, or an Google OAuth id_token.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  { "$ref": "#/components/schemas/PasswordLogin" },
+                  { "$ref": "#/components/schemas/OAuthLogin" }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns access token in response body and sets refreshToken as an httpOnly cookie",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "first_name": {
+                      "type": "string"
+                    },
+                    "last_name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid request"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Register a new user",
         "requestBody": {
           "required": true,
           "content": {
@@ -377,13 +570,19 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "email, password"
+                  "email", "password", "first_name", "last_name"
                 ],
                 "properties": {
                   "email": {
                     "type": "string"
                   },
                   "password": {
+                    "type": "string"
+                  },
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
                     "type": "string"
                   }
                 }
