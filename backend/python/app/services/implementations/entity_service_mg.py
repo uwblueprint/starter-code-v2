@@ -79,7 +79,7 @@ class EntityService(IEntityService):
         try:
             file_name = Entity.objects.get(id=id).file_name
             deleted = Entity.objects(id=id).modify(remove=True)
-            if deleted:
+            if deleted and file_name:
                 self.file_storage_service.delete_file(file_name)
             return id
         except Exception as error:
