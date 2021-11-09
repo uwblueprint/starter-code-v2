@@ -140,7 +140,7 @@ class EntityService implements IEntityService {
     };
   }
 
-  async deleteEntity(id: string): Promise<void> {
+  async deleteEntity(id: string): Promise<string> {
     try {
       const deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
       if (!deletedEntity) {
@@ -149,6 +149,7 @@ class EntityService implements IEntityService {
       if (deletedEntity.fileName) {
         await this.storageService.deleteFile(deletedEntity.fileName);
       }
+      return id;
     } catch (error) {
       Logger.error(`Failed to delete entity. Reason = ${error.message}`);
       throw error;
