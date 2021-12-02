@@ -36,6 +36,6 @@ const mongoTest = {
 export default mongoTest;
 
 export const testSql = new Sequelize(
-  `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.DB_TEST_HOST}:5432/${process.env.POSTGRES_DB}`,
+  `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.DB_HOST}:5432/${process.env.POSTGRES_DB_TEST}`,
   { models: [resolve(__dirname, "../models/*.pgmodel.ts")], logging: false },
 );

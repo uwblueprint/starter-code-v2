@@ -46,10 +46,8 @@ def create_app(config_name):
     ] = "postgresql://{username}:{password}@{host}:5432/{db}".format(
         username=os.getenv("POSTGRES_USER"),
         password=os.getenv("POSTGRES_PASSWORD"),
-        host=(
-            os.getenv("DB_TEST_HOST") if app.config["TESTING"] else os.getenv("DB_HOST")
-        ),
-        db=os.getenv("POSTGRES_DB"),
+        host=os.getenv("DB_HOST"),
+        db=os.getenv("POSTGRES_DB_TEST") if app.config["TESTING"] else os.getenv("POSTGRES_DB_DEV"),
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
