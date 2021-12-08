@@ -272,7 +272,7 @@ paths:
         - Entity
       description: Delete an entity based on its ID
       responses:
-        '204':
+        '200':
           description: Successfully deleted entity based on ID
         '401':
           description: Unauthorized
