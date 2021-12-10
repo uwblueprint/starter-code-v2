@@ -117,10 +117,10 @@ docker ps
 
 ```bash
 # run a bash shell in the container
-docker exec -it <container-name> /bin/bash
+docker exec -it scv2_db /bin/bash
 
 # in container now
-psql -U postgres -d starter-code-v2
+psql -U postgres -d scv2
 
 # in postgres shell, some common commands:
 # display all table names
@@ -134,27 +134,27 @@ SELECT * FROM <table-name>;
 ### Linting & Formatting
 Python backend:
 ```bash
-docker exec -it <container-name> /bin/bash -c "black ."
+docker exec -it scv2_py_backend /bin/bash -c "black ."
 ```
 
 TypeScript backend and frontend:
 ```bash
 # linting & formatting warnings only
-docker exec -it <container-name> /bin/bash -c "yarn lint"
+docker exec -it scv2_ts_backend /bin/bash -c "yarn lint"
 
 # linting with fix & formatting
-docker exec -it <container-name> /bin/bash -c "yarn fix"
+docker exec -it scv2_ts_backend /bin/bash -c "yarn fix"
 ```
 
 ### Running Tests
 Python backend:
 ```bash
-docker exec -it <container-name> /bin/bash -c "pip install -e . && pytest"
+docker exec -it scv2_py_backend /bin/bash -c "pip install -e . && pytest"
 ```
 
 TypeScript backend and frontend:
 ```bash
-docker exec -it <container-name> /bin/bash -c "yarn test"
+docker exec -it scv2_ts_backend /bin/bash -c "yarn test"
 ```
 
 
