@@ -110,7 +110,7 @@ const apolloClient = new ApolloClient({
   link,
   // } no-file-storage
   // file-storage {
-  link as any,
+  link: (link as any),
   // } file-storage
   // } no-auth
   cache: new InMemoryCache(),
