@@ -112,7 +112,12 @@ def create_user():
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
 
+# mongodb {
 @blueprint.route("/<string:user_id>", methods=["PUT"], strict_slashes=False)
+# } mongodb
+# postgresql {
+@blueprint.route("/<int:user_id>", methods=["PUT"], strict_slashes=False)
+# } postgresql
 @require_authorization_by_role({"User", "Admin"})
 @validate_request("UpdateUserDTO")
 def update_user(user_id):
