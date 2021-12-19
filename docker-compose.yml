@@ -2,6 +2,8 @@ version: "3.7"
 
 services:
   frontend:
+    # TODO: rename container for your project
+    container_name: scv2_frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -16,6 +18,8 @@ services:
       - ./frontend/.env
   typescript {
   ts-backend:
+    # TODO: rename container for your project
+    container_name: scv2_ts_backend
     build:
       context: ./backend/typescript
       dockerfile: Dockerfile
@@ -28,14 +32,16 @@ services:
       - 8.8.8.8
     postgresql {
     depends_on:
-      - db
-      - db-test
+      db:
+        condition: service_healthy
     } postgresql
     env_file:
       - ./.env
   } typescript
   python {
   py-backend:
+    # TODO: rename container for your project
+    container_name: scv2_py_backend
     restart: always
     build:
       context: ./backend/python
@@ -48,33 +54,34 @@ services:
       - ./backend/python:/app
     postgresql {
     depends_on:
-      - db
-      - db-test
+      db:
+        condition: service_healthy
     } postgresql
     env_file:
       - ./.env
   } python 
   postgresql {
   db:
+    # TODO: rename container for your project
+    container_name: scv2_db
     image: postgres:12-alpine
     ports:
       - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      - ./db-init:/docker-entrypoint-initdb.d
     env_file:
       - ./.env
-  db-test:
-    image: postgres:12-alpine
-    ports:
-      - 5430:5432
-    volumes:
-      - postgres_data_test:/var/lib/postgresql/data/
-    env_file:
-      - ./.env
-    } postgresql
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=${POSTGRES_DB_DEV},${POSTGRES_DB_TEST}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  } postgresql
 
 postgresql {
 volumes:
   postgres_data:
-  postgres_data_test:
 } postgresql

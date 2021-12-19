@@ -223,7 +223,7 @@ class EntityService(IEntityService):
             # } file-storage
             deleted = Entity.objects(id=id).modify(remove=True)
             # file-storage {
-            if deleted:
+            if deleted and file_name:
                 self.file_storage_service.delete_file(file_name)
             # } file-storage
             return id

@@ -172,7 +172,7 @@ class EntityService implements IEntityService {
     };
   }
 
-  async deleteEntity(id: string): Promise<void> {
+  async deleteEntity(id: string): Promise<string> {
     try {
       const deletedEntity: Entity | null = await MgEntity.findByIdAndDelete(id);
       if (!deletedEntity) {
@@ -183,6 +183,7 @@ class EntityService implements IEntityService {
         await this.storageService.deleteFile(deletedEntity.fileName);
       }
       // } file-storage
+      return id;
     } catch (error) {
       Logger.error(`Failed to delete entity. Reason = ${error.message}`);
       throw error;
@@ -378,7 +379,7 @@ class EntityService implements IEntityService {
     };
   }
 
-  async deleteEntity(id: string): Promise<void> {
+  async deleteEntity(id: string): Promise<string> {
     try {
       // file-storage {
       const entityToDelete = await PgEntity.findByPk(id, { raw: true });
@@ -402,6 +403,7 @@ class EntityService implements IEntityService {
         await this.storageService.deleteFile(entityToDelete.file_name);
       }
       // } file-storage
+      return id;
     } catch (error) {
       Logger.error(`Failed to delete entity. Reason = ${error.message}`);
       throw error;

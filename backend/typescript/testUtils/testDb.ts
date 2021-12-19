@@ -48,7 +48,7 @@ export default mongoTest;
 // postgresql {
 /* eslint-disable-next-line import/prefer-default-export */
 export const testSql = new Sequelize(
-  `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.DB_TEST_HOST}:5432/${process.env.POSTGRES_DB}`,
+  `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.DB_HOST}:5432/${process.env.POSTGRES_DB_TEST}`,
   { models: [resolve(__dirname, "../models/*.model.ts")], logging: false },
 );
 // } postgresql

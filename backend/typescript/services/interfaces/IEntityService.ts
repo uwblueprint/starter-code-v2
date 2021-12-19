@@ -62,7 +62,8 @@ export interface IEntityService {
   /**
    * delete the entity with the given id
    * @param id entity id
+   * @returns id of the entity deleted
    * @throws Error if deletion fails
    */
-  deleteEntity(id: string): Promise<void>;
+  deleteEntity(id: string): Promise<string>;
 }
