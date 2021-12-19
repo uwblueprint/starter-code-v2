@@ -32,7 +32,7 @@ class EntityService implements IEntityService {
     }
 
     return {
-      id: entity.id,
+      id: String(entity.id),
       stringField: entity.string_field,
       intField: entity.int_field,
       enumField: entity.enum_field,
@@ -46,7 +46,7 @@ class EntityService implements IEntityService {
     try {
       const entities: Array<PgEntity> = await PgEntity.findAll({ raw: true });
       return entities.map((entity) => ({
-        id: entity.id,
+        id: String(entity.id),
         stringField: entity.string_field,
         intField: entity.int_field,
         enumField: entity.enum_field,
@@ -84,7 +84,7 @@ class EntityService implements IEntityService {
       throw error;
     }
     return {
-      id: newEntity.id,
+      id: String(newEntity.id),
       stringField: newEntity.string_field,
       intField: newEntity.int_field,
       enumField: newEntity.enum_field,
@@ -146,7 +146,7 @@ class EntityService implements IEntityService {
       throw error;
     }
     return {
-      id: resultingEntity.id,
+      id: String(resultingEntity.id),
       stringField: resultingEntity.string_field,
       intField: resultingEntity.int_field,
       enumField: resultingEntity.enum_field,
