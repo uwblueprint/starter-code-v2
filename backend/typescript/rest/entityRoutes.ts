@@ -18,7 +18,7 @@ const upload = multer({ dest: "uploads/" });
 const entityRouter: Router = Router();
 entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
 
-const defaultBucket = process.env.DEFAULT_BUCKET || "";
+const defaultBucket = process.env.FIREBASE_STORAGE_DEFAULT_BUCKET || "";
 const fileStorageService: IFileStorageService = new FileStorageService(
   defaultBucket,
 );
