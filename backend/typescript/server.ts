@@ -54,8 +54,7 @@ server.applyMiddleware({
   cors: { origin: CORS_ALLOW_LIST, credentials: true },
 });
 
-const eraseDatabaseOnSync = false;
-sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+sequelize.authenticate().then(async () => {
   mongo.connect();
 
   firebaseAdmin.initializeApp({
