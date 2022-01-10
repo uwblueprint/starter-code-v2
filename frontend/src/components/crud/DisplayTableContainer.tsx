@@ -236,7 +236,9 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
       <button type="button" onClick={downloadEntitiesCSV}>
         Download CSV
       </button>
-      {entities && <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />}
+      {entities && (
+        <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />
+      )}
     </>
   );
 };
