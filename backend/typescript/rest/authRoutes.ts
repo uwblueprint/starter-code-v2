@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { CookieOptions, Router } from "express";
 
 import { isAuthorizedByEmail, isAuthorizedByUserId } from "../middlewares/auth";
 import {
@@ -18,6 +18,12 @@ const userService: IUserService = new UserService();
 const emailService: IEmailService = new EmailService(nodemailerConfig);
 const authService: IAuthService = new AuthService(userService, emailService);
 
+const cookieOptions: CookieOptions = {
+  httpOnly: true,
+  sameSite: process.env.PREVIEW_DEPLOY ? "none" : "strict",
+  secure: process.env.NODE_ENV === "production",
+};
+
 /* Returns access token and user info in response body and sets refreshToken as an httpOnly cookie */
 authRouter.post("/login", loginRequestValidator, async (req, res) => {
   try {
@@ -29,11 +35,7 @@ authRouter.post("/login", loginRequestValidator, async (req, res) => {
     const { refreshToken, ...rest } = authDTO;
 
     res
-      .cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
-      })
+      .cookie("refreshToken", refreshToken, cookieOptions)
       .status(200)
       .json(rest);
   } catch (error) {
@@ -61,11 +63,7 @@ authRouter.post("/register", registerRequestValidator, async (req, res) => {
     await authService.sendEmailVerificationLink(req.body.email);
 
     res
-      .cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
-      })
+      .cookie("refreshToken", refreshToken, cookieOptions)
       .status(200)
       .json(rest);
   } catch (error) {
@@ -79,11 +77,7 @@ authRouter.post("/refresh", async (req, res) => {
     const token = await authService.renewToken(req.cookies.refreshToken);
 
     res
-      .cookie("refreshToken", token.refreshToken, {
-        httpOnly: true,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
-      })
+      .cookie("refreshToken", token.refreshToken, cookieOptions)
       .status(200)
       .json({ accessToken: token.accessToken });
   } catch (error) {

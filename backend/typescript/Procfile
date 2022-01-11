@@ -1,0 +1,1 @@
+web: node migrate up && node build/server.js

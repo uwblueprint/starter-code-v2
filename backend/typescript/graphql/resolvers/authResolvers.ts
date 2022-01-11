@@ -15,7 +15,7 @@ const authService: IAuthService = new AuthService(userService, emailService);
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
-  sameSite: "strict",
+  sameSite: process.env.PREVIEW_DEPLOY ? "none" : "strict",
   secure: process.env.NODE_ENV === "production",
 };
 
