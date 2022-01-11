@@ -28,21 +28,23 @@ $ docker ps
 $ docker exec -it <container-name> /bin/bash
 ```
 
-3. If there are example migrations in the `migrations` directory (included with Starter Code), delete them.
-
-4. Create a migration file
+3. Create a migration file
 ```bash
 # in the TypeScript backend container
-$ node migrate create --name <descriptive-migration-name>
+$ node migrate create --name <descriptive-migration-name>.ts
 # if this is your first migration, you may need to specify the folder
-$ node migrate create --name <descriptive-migration-name> --folder migrations
+$ node migrate create --name <descriptive-migration-name>.ts --folder migrations
 ```
 
-5. Replace the contents of the generated migration file with the [Base Migration Template](#base-migration-template) below.
+4. Replace the contents of the generated migration file with the [Base Migration Template](#base-migration-template) below.
 
-6. Add your migration logic. You need to **define both an `up` function that specifies the schema changes you want to make, as well as a `down` function** which specifies the inverse operations to the changes in `up`. You can take a look at the example migrations [below](#templates) and Sequelize's [QueryInterface Docs](https://sequelize.org/master/manual/query-interface.html) for help. The `QueryInterface` exposes methods that can be used to modify the database (e.g. `createTable`, `addColumn`, `removeColumn`, etc). More complicated migration logic could involve using several `QueryInterface` methods. Note that we are using the `sequelize-typescript` wrapper library so there can be slight syntax differences with the docs. For example, we access data types through `DataType` instead of `DataTypes`.
+5. Add your migration logic. You need to **define both an `up` function that specifies the schema changes you want to make, as well as a `down` function** which specifies the inverse operations to the changes in `up`.
 
-7. Run the migration:
+    You can take a look at the example migrations [below](#templates) and Sequelize's [QueryInterface Docs](https://sequelize.org/master/manual/query-interface.html) for help. The `QueryInterface` exposes methods that can be used to modify the database (e.g. `createTable`, `addColumn`, `removeColumn`, etc). More complicated migration logic could involve using several `QueryInterface` methods.
+    
+    Note that we are using the `sequelize-typescript` wrapper library so there can be slight syntax differences with the docs. For example, we access data types through `DataType` instead of `DataTypes`.
+
+6. Run the migration:
 ```bash
 # still in the TypeScript backend container
 $ node migrate up
