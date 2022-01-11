@@ -25,4 +25,5 @@ def init_app(app):
         db.create_all()
 
     # connect to MongoDB
-    connect(host=app.config["MONGODB_URL"])
+    if "MONGODB_URL" in app.config:
+        connect(host=app.config["MONGODB_URL"])
