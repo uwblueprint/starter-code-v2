@@ -33,6 +33,6 @@ This allows emails outside the Blueprint org to login.
 <img width="1076" alt="image" src="https://user-images.githubusercontent.com/37782734/132542811-668331d0-2f4c-4ad5-9dd2-432c2937ca76.png">
 
 10. Add the OAuth Client ID to your frontend .env file. Otherwise, your Google login button will be greyed out on the frontend.
-```
+```bash
 REACT_APP_OAUTH_CLIENT_ID=<insert-your-client-id>
 ```
