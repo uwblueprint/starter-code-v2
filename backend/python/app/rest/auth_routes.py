@@ -17,15 +17,22 @@ user_service = UserService(current_app.logger)
 email_service = EmailService(
     current_app.logger,
     {
-        "refresh_token": os.getenv("EMAIL_REFRESH_TOKEN"),
+        "refresh_token": os.getenv("MAILER_REFRESH_TOKEN"),
         "token_uri": "https://oauth2.googleapis.com/token",
-        "client_id": os.getenv("EMAIL_CLIENT_ID"),
-        "client_secret": os.getenv("EMAIL_CLIENT_SECRET"),
+        "client_id": os.getenv("MAILER_CLIENT_ID"),
+        "client_secret": os.getenv("MAILER_CLIENT_SECRET"),
     },
-    "name@domain.org",  # must replace
+    os.getenv("MAILER_USER"),
     "Display Name",  # must replace
 )
 auth_service = AuthService(current_app.logger, user_service, email_service)
+
+cookie_options = {
+    "httponly": True,
+    "samesite": ("None" if os.getenv("PREVIEW_DEPLOY") else "Strict"),
+    "secure": (os.getenv("FLASK_CONFIG") == "production"),
+}
+
 blueprint = Blueprint("auth", __name__, url_prefix="/auth")
 
 
@@ -55,8 +62,7 @@ def login():
         response.set_cookie(
             "refreshToken",
             value=auth_dto.refresh_token,
-            httponly=True,
-            secure=(os.getenv("FLASK_CONFIG") == "production"),
+            **cookie_options,
         )
         return response, 200
     except Exception as e:
@@ -94,8 +100,7 @@ def register():
         response.set_cookie(
             "refreshToken",
             value=auth_dto.refresh_token,
-            httponly=True,
-            secure=(os.getenv("FLASK_CONFIG") == "production"),
+            **cookie_options,
         )
         return response, 200
     except Exception as e:
@@ -114,8 +119,7 @@ def refresh():
         response.set_cookie(
             "refreshToken",
             value=token.refresh_token,
-            httponly=True,
-            secure=(os.getenv("FLASK_CONFIG") == "production"),
+            **cookie_options,
         )
         return response, 200
     except Exception as e:

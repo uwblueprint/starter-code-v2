@@ -16,6 +16,11 @@ import { AuthenticatedUser } from "../../types/AuthTypes";
 
 type GoogleResponse = GoogleLoginResponse | GoogleLoginResponseOffline;
 
+type GoogleErrorResponse = {
+  error: string;
+  details: string;
+};
+
 // graphql {
 const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
@@ -137,8 +142,10 @@ const Login = (): React.ReactElement => {
               window.alert(response);
             }
           }}
-          // eslint-disable-next-line no-alert
-          onFailure={(error) => window.alert(error)}
+          onFailure={(error: GoogleErrorResponse) =>
+            // eslint-disable-next-line no-alert
+            window.alert(JSON.stringify(error))
+          }
         />
       </form>
       <div>

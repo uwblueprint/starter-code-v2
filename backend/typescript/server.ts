@@ -37,7 +37,12 @@ import userRouter from "./rest/userRoutes";
 import schema from "./graphql";
 
 // } graphql
-const CORS_ALLOW_LIST = ["http://localhost:3000"];
+const CORS_ALLOW_LIST = [
+  "http://localhost:3000",
+  "https://uw-blueprint-starter-code.firebaseapp.com",
+  "https://uw-blueprint-starter-code.web.app",
+  /^https:\/\/uw-blueprint-starter-code--pr.*\.web\.app$/,
+];
 
 const CORS_OPTIONS: cors.CorsOptions = {
   origin: CORS_ALLOW_LIST,
@@ -84,8 +89,7 @@ server.applyMiddleware({
 
 // } graphql
 // postgresql {
-const eraseDatabaseOnSync = false;
-sequelize.sync({ force: eraseDatabaseOnSync });
+sequelize.authenticate();
 
 // } postgresql
 // mongodb {
@@ -94,19 +98,33 @@ mongo.connect();
 // } mongodb
 // auth {
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.applicationDefault(),
+  credential: firebaseAdmin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    privateKey: process.env.FIREBASE_SVC_ACCOUNT_PRIVATE_KEY?.replace(
+      /\\n/g,
+      "\n",
+    ),
+    clientEmail: process.env.FIREBASE_SVC_ACCOUNT_CLIENT_EMAIL,
+  }),
 });
 
 // } auth
 // no-auth {
 // file-storage {
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.applicationDefault(),
+  credential: firebaseAdmin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    privateKey: process.env.FIREBASE_SVC_ACCOUNT_PRIVATE_KEY?.replace(
+      /\\n/g,
+      "\n",
+    ),
+    clientEmail: process.env.FIREBASE_SVC_ACCOUNT_CLIENT_EMAIL,
+  }),
 });
 
 // } file-storage
 // } no-auth
-app.listen({ port: 5000 }, () => {
+app.listen({ port: process.env.PORT || 5000 }, () => {
   /* eslint-disable-next-line no-console */
-  console.info("Server is listening on port 5000!");
+  console.info(`Server is listening on port ${process.env.PORT || 5000}!`);
 });

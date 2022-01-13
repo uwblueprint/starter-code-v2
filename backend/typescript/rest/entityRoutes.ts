@@ -31,7 +31,7 @@ entityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
 const entityService: IEntityService = new EntityService();
 // } no-file-storage
 // file-storage {
-const defaultBucket = process.env.DEFAULT_BUCKET || "";
+const defaultBucket = process.env.FIREBASE_STORAGE_DEFAULT_BUCKET || "";
 const fileStorageService: IFileStorageService = new FileStorageService(
   defaultBucket,
 );
