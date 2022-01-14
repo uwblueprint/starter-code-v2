@@ -36,5 +36,6 @@ def init_app(app):
     # } postgresql
     # mongodb {
     # connect to MongoDB
-    connect(host=app.config["MONGODB_URL"])
+    if "MONGODB_URL" in app.config:
+        connect(host=app.config["MONGODB_URL"])
     # } mongodb

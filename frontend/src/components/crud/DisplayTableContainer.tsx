@@ -272,7 +272,9 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
       {entities && <DisplayTable data={entities} />}
       // } no-file-storage
       // file-storage {
-      {entities && <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />}
+      {entities && (
+        <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />
+      )}
       // } file-storage
     </>
   );

@@ -1,0 +1,83 @@
+name: Deploy backend to Heroku dev environment
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/python/**"
+
+jobs:
+  deploy:
+    if: ${{ false }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set Heroku login credentials
+        run: |
+          cat > ~/.netrc <<EOF
+            machine api.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+            machine git.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+          EOF
+        env:
+          HEROKU_API_KEY: "${{ secrets.HEROKU_API_KEY }}"
+          HEROKU_EMAIL: "${{ secrets.HEROKU_EMAIL }}"
+      - name: Add Heroku git remote
+        run: heroku git:remote --app $HEROKU_APP_NAME
+        env:
+          HEROKU_APP_NAME: "${{ secrets.DEV_PROJECT_ID }}"
+      - name: Set Heroku config vars
+        run: |
+          mongodb {
+          heroku config:set MG_DATABASE_URL="${{ secrets.DEV_MG_DATABASE_URL }}" -a $HEROKU_APP_NAME && \
+          } mongodb
+          auth {
+          heroku config:set FIREBASE_WEB_API_KEY="${{ secrets.DEV_FIREBASE_WEB_API_KEY }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_REQUEST_URI="${{ secrets.DEV_FIREBASE_REQUEST_URI }}" -a $HEROKU_APP_NAME && \
+          file-storage {
+          heroku config:set FIREBASE_STORAGE_DEFAULT_BUCKET="${{ secrets.DEV_FIREBASE_STORAGE_DEFAULT_BUCKET }}" -a $HEROKU_APP_NAME && \
+          } file-storage
+          heroku config:set FIREBASE_PROJECT_ID="${{ secrets.DEV_PROJECT_ID }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_PRIVATE_KEY_ID="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_PRIVATE_KEY_ID }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_PRIVATE_KEY="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_PRIVATE_KEY }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_CLIENT_EMAIL="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_CLIENT_EMAIL }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_CLIENT_ID="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_CLIENT_ID }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_AUTH_URI="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_AUTH_URI }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_TOKEN_URI="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_TOKEN_URI }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_CLIENT_X509_CERT_URL="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_CLIENT_X509_CERT_URL }}" -a $HEROKU_APP_NAME && \
+          } auth
+          no-auth {
+          file-storage {
+          heroku config:set FIREBASE_WEB_API_KEY="${{ secrets.DEV_FIREBASE_WEB_API_KEY }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_REQUEST_URI="${{ secrets.DEV_FIREBASE_REQUEST_URI }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_STORAGE_DEFAULT_BUCKET="${{ secrets.DEV_FIREBASE_STORAGE_DEFAULT_BUCKET }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_PROJECT_ID="${{ secrets.DEV_PROJECT_ID }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_PRIVATE_KEY_ID="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_PRIVATE_KEY_ID }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_PRIVATE_KEY="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_PRIVATE_KEY }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_CLIENT_EMAIL="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_CLIENT_EMAIL }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_CLIENT_ID="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_CLIENT_ID }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_AUTH_URI="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_AUTH_URI }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_TOKEN_URI="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_TOKEN_URI }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FIREBASE_SVC_ACCOUNT_CLIENT_X509_CERT_URL="${{ secrets.DEV_FIREBASE_SVC_ACCOUNT_CLIENT_X509_CERT_URL }}" -a $HEROKU_APP_NAME && \
+          } file-storage
+          } no-auth
+          heroku config:set MAILER_USER="${{ secrets.DEV_MAILER_USER }}" -a $HEROKU_APP_NAME && \
+          heroku config:set MAILER_CLIENT_ID="${{ secrets.DEV_MAILER_CLIENT_ID }}" -a $HEROKU_APP_NAME && \
+          heroku config:set MAILER_CLIENT_SECRET="${{ secrets.DEV_MAILER_CLIENT_SECRET }}" -a $HEROKU_APP_NAME && \
+          heroku config:set MAILER_REFRESH_TOKEN="${{ secrets.DEV_MAILER_REFRESH_TOKEN }}" -a $HEROKU_APP_NAME && \
+          heroku config:set PREVIEW_DEPLOY=true -a $HEROKU_APP_NAME && \
+          heroku config:set FLASK_CONFIG="${{ secrets.DEV_FLASK_CONFIG }}" -a $HEROKU_APP_NAME && \
+          heroku config:set FLASK_APP=app -a $HEROKU_APP_NAME
+        env:
+          HEROKU_APP_NAME: "${{ secrets.DEV_PROJECT_ID }}"
+      - name: Push to Heroku
+        run: git push heroku `git subtree split --prefix backend/python`:main --force

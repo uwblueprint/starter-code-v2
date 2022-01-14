@@ -364,7 +364,7 @@ class UserService implements IUserService {
     }
 
     return {
-      id: user.id,
+      id: String(user.id),
       firstName: user.first_name,
       lastName: user.last_name,
       email: firebaseUser.email ?? "",
@@ -391,7 +391,7 @@ class UserService implements IUserService {
     }
 
     return {
-      id: user.id,
+      id: String(user.id),
       firstName: user.first_name,
       lastName: user.last_name,
       email: firebaseUser.email ?? "",
@@ -422,7 +422,7 @@ class UserService implements IUserService {
       if (!user) {
         throw new Error(`user with authId ${authId} not found.`);
       }
-      return user.id;
+      return String(user.id);
     } catch (error) {
       Logger.error(`Failed to get user id. Reason = ${error.message}`);
       throw error;
@@ -461,7 +461,7 @@ class UserService implements IUserService {
           }
 
           return {
-            id: user.id,
+            id: String(user.id),
             firstName: user.first_name,
             lastName: user.last_name,
             email: firebaseUser.email ?? "",
@@ -524,7 +524,7 @@ class UserService implements IUserService {
     }
 
     return {
-      id: newUser.id,
+      id: String(newUser.id),
       firstName: newUser.first_name,
       lastName: newUser.last_name,
       email: firebaseUser.email ?? "",
