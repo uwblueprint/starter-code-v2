@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      # Ignore files from third-party packages, e.g. Swagger
+      - 'backend/python/app/static'
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - 'backend/python/app/static'
+
   schedule:
     # Scheduled workflows run on the latest commit on the default or base branch.
     # The shortest interval you can run scheduled workflows is once every 15 minutes.
