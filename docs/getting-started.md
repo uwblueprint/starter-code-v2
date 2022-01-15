@@ -166,6 +166,8 @@ $ docker exec -it <python-backend-container-name> /bin/bash -c "flask db upgrade
 
 12. After stopping the application, run `git init` to initialize your repository
 
+13. As create-bp-app's code pre-processor may have changed the formatting of some files, run [linters](#linting-and-formatting) to identify and correct any issues
+
 ## Secret Management
 
 To set up secret management tools, please follow this [guide](https://www.notion.so/uwblueprintexecs/Secret-Management-2d5b59ef0987415e93ec951ce05bf03e).
