@@ -1,5 +1,6 @@
 import fs from "fs";
 import { FileUpload } from "graphql-upload";
+/* eslint-disable-next-line import/no-extraneous-dependencies */
 import { ReadStream } from "fs-capacitor";
 import EntityService from "../../services/implementations/EntityServiceMg";
 import FileStorageService from "../../services/implementations/fileStorageService";
@@ -30,26 +31,32 @@ const writeFile = (readStream: ReadStream, filePath: string): Promise<void> => {
 
 const entityResolvers = {
   Query: {
-    entity: async (_req: any, { id }: { id: string }) => {
+    entity: async (
+      _req: undefined,
+      { id }: { id: string },
+    ): Promise<EntityResponseDTO> => {
       return entityService.getEntity(id);
     },
-    entities: async () => {
+    entities: async (): Promise<EntityResponseDTO[]> => {
       return entityService.getEntities();
     },
-    entitiesCSV: async () => {
+    entitiesCSV: async (): Promise<string> => {
       const entities = await entityService.getEntities();
       const csv = await generateCSV<EntityResponseDTO>({ data: entities });
       return csv;
     },
-    file: async (_req: any, { fileUUID }: { fileUUID: string }) => {
+    file: async (
+      _req: undefined,
+      { fileUUID }: { fileUUID: string },
+    ): Promise<string> => {
       return fileStorageService.getFile(fileUUID);
     },
   },
   Mutation: {
     createEntity: async (
-      _req: any,
+      _req: undefined,
       { entity, file }: { entity: EntityRequestDTO; file: Promise<FileUpload> },
-    ) => {
+    ): Promise<EntityResponseDTO> => {
       let filePath = "";
       let fileContentType = "";
       if (file) {
@@ -77,13 +84,13 @@ const entityResolvers = {
       return newEntity;
     },
     updateEntity: async (
-      _req: any,
+      _req: undefined,
       {
         id,
         entity,
         file,
       }: { id: string; entity: EntityRequestDTO; file: Promise<FileUpload> },
-    ) => {
+    ): Promise<EntityResponseDTO | null> => {
       let filePath = "";
       let fileContentType = "";
       if (file) {
@@ -110,7 +117,10 @@ const entityResolvers = {
       }
       return updatedEntity;
     },
-    deleteEntity: async (_req: any, { id }: { id: string }) => {
+    deleteEntity: async (
+      _req: undefined,
+      { id }: { id: string },
+    ): Promise<string> => {
       return entityService.deleteEntity(id);
     },
   },
