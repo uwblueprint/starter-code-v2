@@ -38,10 +38,12 @@ const convert = (entityResponse: EntityResponse): EntityData => {
 
 type TableProps = {
   data: EntityData[];
-  downloadEntityFile: any;
+  downloadEntityFile: (fileUUID: string) => void;
 };
 
-const createColumns = (downloadEntityFile: any): Column<EntityData>[] => [
+const createColumns = (
+  downloadEntityFile: (fileUUID: string) => void,
+): Column<EntityData>[] => [
   {
     Header: "id",
 
@@ -78,8 +80,9 @@ const createColumns = (downloadEntityFile: any): Column<EntityData>[] => [
 
     accessor: "fileName",
 
-    // eslint-disable-next-line react/display-name
+    // eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
     Cell: ({ cell }: any) =>
+      // TODO: lookup the proper type of the prop
       cell.row.values.fileName ? (
         <button
           type="button"

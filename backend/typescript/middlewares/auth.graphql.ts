@@ -10,6 +10,8 @@ import { Role } from "../types";
 const authService: IAuthService = new AuthService(new UserService());
 
 /* Determine if request is authorized based on accessToken validity and role of client */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const isAuthorizedByRole = (roles: Set<Role>) => {
   return async (
     resolve: (

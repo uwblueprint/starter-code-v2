@@ -74,6 +74,7 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const apolloClient = new ApolloClient({
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   link: authLink.concat(link as any),
   cache: new InMemoryCache(),
 });

@@ -147,6 +147,7 @@ class UserService implements IUserService {
 
     try {
       if (signUpMethod === "GOOGLE") {
+        /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
         firebaseUser = await firebaseAdmin.auth().getUser(authId!);
       } else {
         // signUpMethod === PASSWORD

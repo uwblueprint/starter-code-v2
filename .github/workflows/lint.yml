@@ -1,0 +1,65 @@
+name: Lint codebase
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+      - "backend/typescript/**"
+      - "backend/python/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+      - "backend/typescript/**"
+      - "backend/python/**"
+
+jobs:
+  run-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Filter changed files
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            frontend:
+              - "frontend/**"
+            typescript-backend:
+              - "backend/typescript/**"
+            python-backend:
+              - "backend/python/**"
+      
+      - name: Set up Node.js
+        if: steps.changes.outputs.frontend == 'true' || steps.changes.outputs.typescript-backend == 'true'
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.15.5"
+          cache: "yarn"
+          cache-dependency-path: |
+            frontend/yarn.lock
+            backend/typescript/yarn.lock
+
+      - name: Install Node.js dependencies
+        if: steps.changes.outputs.frontend == 'true' || steps.changes.outputs.typescript-backend == 'true'
+        run: yarn --cwd ./frontend --prefer-offline && yarn --cwd ./backend/typescript --prefer-offline
+
+      - name: Lint frontend
+        if: steps.changes.outputs.frontend == 'true'
+        working-directory: ./frontend
+        run: yarn lint
+
+      - name: Lint TypeScript backend
+        if: steps.changes.outputs.typescript-backend == 'true'
+        working-directory: ./backend/typescript
+        run: yarn lint
+      
+      - name: Lint Python backend
+        if: steps.changes.outputs.python-backend == 'true'
+        working-directory: ./backend/python
+        run: pip install black && python -m black --check .
