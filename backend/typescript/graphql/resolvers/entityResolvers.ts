@@ -1,6 +1,7 @@
 // file-storage {
 import fs from "fs";
 import { FileUpload } from "graphql-upload";
+/* eslint-disable-next-line import/no-extraneous-dependencies */
 import { ReadStream } from "fs-capacitor";
 import {
   validateFileType,
@@ -39,33 +40,39 @@ const writeFile = (readStream: ReadStream, filePath: string): Promise<void> => {
 
 const entityResolvers = {
   Query: {
-    entity: async (_req: any, { id }: { id: string }) => {
+    entity: async (
+      _req: undefined,
+      { id }: { id: string },
+    ): Promise<EntityResponseDTO> => {
       return entityService.getEntity(id);
     },
-    entities: async () => {
+    entities: async (): Promise<EntityResponseDTO[]> => {
       return entityService.getEntities();
     },
-    entitiesCSV: async () => {
+    entitiesCSV: async (): Promise<string> => {
       const entities = await entityService.getEntities();
       const csv = await generateCSV<EntityResponseDTO>({ data: entities });
       return csv;
     },
     // file-storage {
-    file: async (_req: any, { fileUUID }: { fileUUID: string }) => {
+    file: async (
+      _req: undefined,
+      { fileUUID }: { fileUUID: string },
+    ): Promise<string> => {
       return fileStorageService.getFile(fileUUID);
     },
     // } file-storage
   },
   Mutation: {
     createEntity: async (
-      _req: any,
+      _req: undefined,
       // file-storage {
       { entity, file }: { entity: EntityRequestDTO; file: Promise<FileUpload> },
       // } file-storage
       // no-file-storage {
       { entity }: { entity: EntityRequestDTO },
       // } no-file-storage
-    ) => {
+    ): Promise<EntityResponseDTO> => {
       // file-storage {
       let filePath = "";
       let fileContentType = "";
@@ -104,7 +111,7 @@ const entityResolvers = {
       // } no-file-storage
     },
     updateEntity: async (
-      _req: any,
+      _req: undefined,
       // file-storage {
       {
         id,
@@ -115,7 +122,7 @@ const entityResolvers = {
       // no-file-storage {
       { id, entity }: { id: string; entity: EntityRequestDTO },
       // } no-file-storage
-    ) => {
+    ): Promise<EntityResponseDTO | null> => {
       // file-storage {
       let filePath = "";
       let fileContentType = "";
@@ -153,7 +160,10 @@ const entityResolvers = {
       });
       // } no-file-storage
     },
-    deleteEntity: async (_req: any, { id }: { id: string }) => {
+    deleteEntity: async (
+      _req: undefined,
+      { id }: { id: string },
+    ): Promise<string> => {
       return entityService.deleteEntity(id);
     },
   },

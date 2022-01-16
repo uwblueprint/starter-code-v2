@@ -10,6 +10,8 @@ const allowableContentTypes = new Set([
 ]);
 
 // } file-storage
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const validatePrimitive = (value: any, type: Type): boolean => {
   if (value === undefined || value === null) return false;
 

@@ -102,6 +102,7 @@ const apolloClient = new ApolloClient({
   link: authLink.concat(link),
   // } no-file-storage
   // file-storage {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   link: authLink.concat(link as any),
   // } file-storage
   // } auth
@@ -110,6 +111,7 @@ const apolloClient = new ApolloClient({
   link,
   // } no-file-storage
   // file-storage {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   link: (link as any),
   // } file-storage
   // } no-auth

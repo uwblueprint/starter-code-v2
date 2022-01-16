@@ -1,5 +1,14 @@
 import * as winston from "winston";
 
+type Logger = {
+  error: (message: string) => void;
+  warn: (message: string) => void;
+  info: (message: string) => void;
+  http: (message: string) => void;
+  verbose: (message: string) => void;
+  debug: (message: string) => void;
+};
+
 const WinstonLogger: winston.Logger = winston.createLogger({
   level: "info",
   format: winston.format.combine(
@@ -16,7 +25,7 @@ if (process.env.NODE_ENV !== "production") {
   WinstonLogger.add(new winston.transports.Console());
 }
 
-const logger = (fileName: string) => {
+const logger = (fileName: string): Logger => {
   return {
     error: (message: string) => {
       WinstonLogger.error(`[${fileName}] ${message}`);

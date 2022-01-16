@@ -8,7 +8,7 @@ import { Role } from "../types";
 
 const authService: IAuthService = new AuthService(new UserService());
 
-export const getAccessToken = (req: Request) => {
+export const getAccessToken = (req: Request): string | null => {
   const authHeaderParts = req.headers.authorization?.split(" ");
   if (
     authHeaderParts &&
@@ -21,6 +21,7 @@ export const getAccessToken = (req: Request) => {
 };
 
 /* Determine if request is authorized based on accessToken validity and role of client */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const isAuthorizedByRole = (roles: Set<Role>) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = getAccessToken(req);
@@ -90,7 +91,7 @@ import { Role } from "../types";
 
 const authService: IAuthService = new AuthService(new UserService());
 
-export const getAccessToken = (req: Request) => {
+export const getAccessToken = (req: Request): string | null => {
   const authHeaderParts = req.headers.authorization?.split(" ");
   if (
     authHeaderParts &&
@@ -103,6 +104,8 @@ export const getAccessToken = (req: Request) => {
 };
 
 /* Determine if request is authorized based on accessToken validity and role of client */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const isAuthorizedByRole = (roles: Set<Role>) => {
   return async (
     resolve: (
