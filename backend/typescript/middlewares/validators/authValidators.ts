@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { getApiValidationError, validatePrimitive } from "./util";
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable-next-line import/prefer-default-export */
 export const loginRequestValidator = async (
   req: Request,
