@@ -2,7 +2,7 @@
 import { snakeCase } from "lodash";
 // } postgresql
 
-import User from "../../../models/user.model";
+import UserModel from "../../../models/user.model";
 import UserService from "../userService";
 
 import { UserDTO } from "../../../types";
@@ -57,7 +57,7 @@ describe("mongo userService", (): void => {
   });
 
   it("getUsers", async () => {
-    await User.insertMany(testUsers);
+    await UserModel.insertMany(testUsers);
 
     const res = await userService.getUsers();
 
@@ -93,7 +93,7 @@ describe("pg userService", () => {
       return userSnakeCase;
     });
 
-    await User.bulkCreate(users);
+    await UserModel.bulkCreate(users);
 
     const res = await userService.getUsers();
 
