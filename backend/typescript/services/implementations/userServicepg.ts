@@ -1,6 +1,7 @@
 import * as firebaseAdmin from "firebase-admin";
 import IUserService from "../interfaces/userService";
 import { CreateUserDTO, Role, UpdateUserDTO, UserDTO } from "../../types";
+import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
 import User from "../../models/user.pgmodel";
 
@@ -20,8 +21,8 @@ class PGUserService implements IUserService {
         throw new Error(`userId ${userId} not found.`);
       }
       firebaseUser = await firebaseAdmin.auth().getUser(user.auth_id);
-    } catch (error) {
-      Logger.error(`Failed to get user. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to get user. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
 
@@ -47,8 +48,8 @@ class PGUserService implements IUserService {
       if (!user) {
         throw new Error(`userId with authID ${firebaseUser.uid} not found.`);
       }
-    } catch (error) {
-      Logger.error(`Failed to get user. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to get user. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
 
@@ -70,8 +71,10 @@ class PGUserService implements IUserService {
         throw new Error(`userId with authId ${authId} not found.`);
       }
       return user.role;
-    } catch (error) {
-      Logger.error(`Failed to get user role. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to get user role. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }
@@ -85,8 +88,8 @@ class PGUserService implements IUserService {
         throw new Error(`user with authId ${authId} not found.`);
       }
       return String(user.id);
-    } catch (error) {
-      Logger.error(`Failed to get user id. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to get user id. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -98,8 +101,8 @@ class PGUserService implements IUserService {
         throw new Error(`userId ${userId} not found.`);
       }
       return user.auth_id;
-    } catch (error) {
-      Logger.error(`Failed to get authId. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to get authId. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -131,8 +134,8 @@ class PGUserService implements IUserService {
           };
         }),
       );
-    } catch (error) {
-      Logger.error(`Failed to get users. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to get users. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
 
@@ -169,10 +172,10 @@ class PGUserService implements IUserService {
       } catch (postgresError) {
         try {
           await firebaseAdmin.auth().deleteUser(firebaseUser.uid);
-        } catch (firebaseError) {
+        } catch (firebaseError: unknown) {
           const errorMessage = [
             "Failed to rollback Firebase user creation after Postgres user creation failure. Reason =",
-            firebaseError.message,
+            getErrorMessage(firebaseError),
             "Orphaned authId (Firebase uid) =",
             firebaseUser.uid,
           ];
@@ -181,8 +184,8 @@ class PGUserService implements IUserService {
 
         throw postgresError;
       }
-    } catch (error) {
-      Logger.error(`Failed to create user. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to create user. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
 
@@ -238,10 +241,10 @@ class PGUserService implements IUserService {
               where: { id: userId },
             },
           );
-        } catch (postgresError) {
+        } catch (postgresError: unknown) {
           const errorMessage = [
             "Failed to rollback Postgres user update after Firebase user update failure. Reason =",
-            postgresError.message,
+            getErrorMessage(postgresError),
             "Postgres user id with possibly inconsistent data =",
             oldUser.id,
           ];
@@ -250,8 +253,8 @@ class PGUserService implements IUserService {
 
         throw error;
       }
-    } catch (error) {
-      Logger.error(`Failed to update user. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to update user. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
 
@@ -292,10 +295,10 @@ class PGUserService implements IUserService {
             auth_id: deletedUser.auth_id,
             role: deletedUser.role,
           });
-        } catch (postgresError) {
+        } catch (postgresError: unknown) {
           const errorMessage = [
             "Failed to rollback Postgres user deletion after Firebase user deletion failure. Reason =",
-            postgresError.message,
+            getErrorMessage(postgresError),
             "Firebase uid with non-existent Postgres record =",
             deletedUser.auth_id,
           ];
@@ -304,8 +307,8 @@ class PGUserService implements IUserService {
 
         throw error;
       }
-    } catch (error) {
-      Logger.error(`Failed to delete user. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to delete user. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -344,10 +347,10 @@ class PGUserService implements IUserService {
             auth_id: deletedUser.auth_id,
             role: deletedUser.role,
           });
-        } catch (postgresError) {
+        } catch (postgresError: unknown) {
           const errorMessage = [
             "Failed to rollback Postgres user deletion after Firebase user deletion failure. Reason =",
-            postgresError.message,
+            getErrorMessage(postgresError),
             "Firebase uid with non-existent Postgres record =",
             deletedUser.auth_id,
           ];
@@ -356,8 +359,8 @@ class PGUserService implements IUserService {
 
         throw error;
       }
-    } catch (error) {
-      Logger.error(`Failed to delete user. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to delete user. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
   }
