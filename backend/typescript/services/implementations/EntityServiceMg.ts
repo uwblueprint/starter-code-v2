@@ -7,6 +7,7 @@ import {
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
 import IFileStorageService from "../interfaces/fileStorageService";
+import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
@@ -26,8 +27,8 @@ class EntityService implements IEntityService {
       if (!entity) {
         throw new Error(`Entity id ${id} not found`);
       }
-    } catch (error) {
-      Logger.error(`Failed to get entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to get entity. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
 
@@ -54,8 +55,10 @@ class EntityService implements IEntityService {
         boolField: entity.boolField,
         fileName: entity.fileName,
       }));
-    } catch (error) {
-      Logger.error(`Failed to get entities. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to get entities. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }
@@ -72,8 +75,10 @@ class EntityService implements IEntityService {
         );
       }
       newEntity = await MgEntity.create({ ...entity, fileName });
-    } catch (error) {
-      Logger.error(`Failed to create entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to create entity. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
     return {
@@ -125,8 +130,10 @@ class EntityService implements IEntityService {
       if (!updatedEntity) {
         throw new Error(`Entity id ${id} not found`);
       }
-    } catch (error) {
-      Logger.error(`Failed to update entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to update entity. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
     return {
@@ -150,8 +157,10 @@ class EntityService implements IEntityService {
         await this.storageService.deleteFile(deletedEntity.fileName);
       }
       return id;
-    } catch (error) {
-      Logger.error(`Failed to delete entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to delete entity. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }
