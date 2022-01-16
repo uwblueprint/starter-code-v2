@@ -26,7 +26,11 @@ def validate_request(dto_class_name):
     def validate_dto(api_func):
         @wraps(api_func)
         def wrapper(*args, **kwargs):
-            if request.content_type == "application/json":
+            if (
+                request.content_type
+                and len(request.content_type.split(";")) > 0
+                and request.content_type.split(";")[0] == "application/json"
+            ):
                 dto = dtos[dto_class_name](**request.json)
             else:
                 req_body = request.form.get("body", default=None)
