@@ -10,6 +10,7 @@ import {
   // } file-storage
   validatePrimitive,
 } from "./util";
+import { getErrorMessage } from "../../utilities/errorUtils";
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable-next-line import/prefer-default-export */
@@ -22,8 +23,8 @@ export const entityRequestDtoValidator = async (
   let body;
   try {
     body = JSON.parse(req.body.body);
-  } catch (e) {
-    return res.status(400).send(e.message);
+  } catch (e: unknown) {
+    return res.status(400).send(getErrorMessage(e));
   }
   // } file-storage
   // no-file-storage {
