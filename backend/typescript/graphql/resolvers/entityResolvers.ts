@@ -3,12 +3,13 @@ import fs from "fs";
 import { FileUpload } from "graphql-upload";
 /* eslint-disable-next-line import/no-extraneous-dependencies */
 import { ReadStream } from "fs-capacitor";
+import multer from "multer";
 import {
   validateFileType,
   getFileTypeValidationError,
 } from "../../middlewares/validators/util";
 // } file-storage
-import EntityService from "../../services/implementations/EntityService";
+import EntityService from "../../services/implementations/entityService";
 // file-storage {
 import FileStorageService from "../../services/implementations/fileStorageService";
 // } file-storage
@@ -25,6 +26,8 @@ const entityService = new EntityService();
 const defaultBucket = process.env.FIREBASE_STORAGE_DEFAULT_BUCKET || "";
 const fileStorageService = new FileStorageService(defaultBucket);
 const entityService = new EntityService(fileStorageService);
+
+multer({ dest: "uploads/" });
 
 const writeFile = (readStream: ReadStream, filePath: string): Promise<void> => {
   return new Promise((resolve, reject) => {
