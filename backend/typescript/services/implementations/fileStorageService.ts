@@ -1,6 +1,7 @@
 import { storage } from "firebase-admin";
 
 import IFileStorageService from "../interfaces/fileStorageService";
+import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
@@ -28,8 +29,10 @@ class FileStorageService implements IFileStorageService {
         expires: expirationDate,
       });
       return res[0];
-    } catch (error) {
-      Logger.error(`Failed to retrieve file. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to retrieve file. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }
@@ -49,8 +52,8 @@ class FileStorageService implements IFileStorageService {
         destination: fileName,
         metadata: { contentType },
       });
-    } catch (error) {
-      Logger.error(`Failed to upload file. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to upload file. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -70,8 +73,8 @@ class FileStorageService implements IFileStorageService {
         destination: fileName,
         metadata: { contentType },
       });
-    } catch (error) {
-      Logger.error(`Failed to update file. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to update file. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -84,8 +87,8 @@ class FileStorageService implements IFileStorageService {
         throw new Error(`File name ${fileName} does not exist`);
       }
       await currentBlob.delete();
-    } catch (error) {
-      Logger.error(`Failed to delete file. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to delete file. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
   }

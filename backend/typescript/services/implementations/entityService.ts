@@ -12,6 +12,7 @@ import {
 // file-storage {
 import IFileStorageService from "../interfaces/fileStorageService";
 // } file-storage
+import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
@@ -33,8 +34,8 @@ class EntityService implements IEntityService {
       if (!entity) {
         throw new Error(`Entity id ${id} not found`);
       }
-    } catch (error) {
-      Logger.error(`Failed to get entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to get entity. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
 
@@ -65,8 +66,10 @@ class EntityService implements IEntityService {
         fileName: entity.fileName,
         // } file-storage
       }));
-    } catch (error) {
-      Logger.error(`Failed to get entities. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to get entities. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }
@@ -90,8 +93,10 @@ class EntityService implements IEntityService {
       // no-file-storage {
       newEntity = await MgEntity.create(entity);
       // } no-file-storage
-    } catch (error) {
-      Logger.error(`Failed to create entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to create entity. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
     return {
@@ -155,8 +160,10 @@ class EntityService implements IEntityService {
       if (!updatedEntity) {
         throw new Error(`Entity id ${id} not found`);
       }
-    } catch (error) {
-      Logger.error(`Failed to update entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to update entity. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
     return {
@@ -184,8 +191,10 @@ class EntityService implements IEntityService {
       }
       // } file-storage
       return id;
-    } catch (error) {
-      Logger.error(`Failed to delete entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to delete entity. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }
@@ -208,6 +217,7 @@ import {
 // file-storage {
 import IFileStorageService from "../interfaces/fileStorageService";
 // } file-storage
+import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
@@ -229,8 +239,8 @@ class EntityService implements IEntityService {
       if (!entity) {
         throw new Error(`Entity id ${id} not found`);
       }
-    } catch (error) {
-      Logger.error(`Failed to get entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(`Failed to get entity. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
 
@@ -261,8 +271,10 @@ class EntityService implements IEntityService {
         fileName: entity.file_name,
         // } file-storage
       }));
-    } catch (error) {
-      Logger.error(`Failed to get entities. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to get entities. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }
@@ -292,8 +304,10 @@ class EntityService implements IEntityService {
         file_name: fileName,
         // } file-storage
       });
-    } catch (error) {
-      Logger.error(`Failed to create entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to create entity. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
     return {
@@ -362,8 +376,10 @@ class EntityService implements IEntityService {
         throw new Error(`Entity id ${id} not found`);
       }
       [, [resultingEntity]] = updateResult;
-    } catch (error) {
-      Logger.error(`Failed to update entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to update entity. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
     return {
@@ -404,8 +420,10 @@ class EntityService implements IEntityService {
       }
       // } file-storage
       return id;
-    } catch (error) {
-      Logger.error(`Failed to delete entity. Reason = ${error.message}`);
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to delete entity. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }
