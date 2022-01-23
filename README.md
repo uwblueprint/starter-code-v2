@@ -22,7 +22,7 @@ The provided frontend is a React application written in TypeScript.
 * Email service
 * File storage service
 * CSV export utilities
-* Out of the box support for frontend deployment to Firebase Hosting via CI/CD pipelines
+* Out of the box support for deployment to Firebase Hosting (frontend) and Heroku (backend) via CI/CD pipelines
 * Lots of examples of programming best practices in both the frontend and backend
 
 
@@ -65,6 +65,11 @@ Please follow the instructions in this [guide](https://uwblueprint.github.io/sta
 ### Prerequisites
 
 * Install Docker Desktop ([MacOS](https://docs.docker.com/docker-for-mac/install/) | [Windows (Home)](https://docs.docker.com/docker-for-windows/install-windows-home/) | [Windows (Pro, Enterprise, Education)](https://docs.docker.com/docker-for-windows/install/) | [Linux](https://docs.docker.com/engine/install/#server)) and ensure that it is running
+```bash
+# these commands should give error-free output
+docker info
+docker-compose --version
+```
 * Ask a member of the Internal Tools team to be added to our Firebase and MongoDB Atlas projects
 * Set up Vault client for secret management, see instructions [here](https://www.notion.so/uwblueprintexecs/Secret-Management-2d5b59ef0987415e93ec951ce05bf03e)
 
@@ -80,11 +85,9 @@ cd starter-code-v2
 ```
 vault kv get -format=json kv/internal-tools | python update_secret_files.py
 ```
-3. Generate a Firebase service account private key. Go to our project in the [Firebase console](https://console.firebase.google.com), click "Project settings" > "Service accounts" > "Generate private key", wait for a file to be downloaded. Copy the file into `/backend/typescript/` **and** `/backend/python`, and rename both to **`firebaseServiceAccount.json`**
-4. Comment out one of the backend services in `docker-compose.yml`
-5. In the root `.env` file, change the name of the MongoDB database according to the backend you're using: either `typescript-test` or `python-test`
-6. If using the Python backend, update the email address and display name on lines 23-24 in `backend/python/app/rest/auth_routes.py` to be `internaltools@uwblueprint.org` and `Internal Tools` respectively
-7. Run the application
+3. Comment out one of the backend services in `docker-compose.yml`
+4. In the root `.env` file, change the name of the MongoDB database according to the backend you're using: either `typescript-test` or `python-test`
+5. Run the application
 ```bash
 docker-compose up --build
 ```
