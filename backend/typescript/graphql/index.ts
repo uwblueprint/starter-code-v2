@@ -1,6 +1,8 @@
 import { makeExecutableSchema, gql } from "apollo-server-express";
 import { applyMiddleware } from "graphql-middleware";
 import { merge } from "lodash";
+import { createRateLimitRule } from "graphql-rate-limit";
+import { shield } from "graphql-shield";
 
 import {
   isAuthorizedByEmail,
@@ -56,4 +58,23 @@ const graphQLMiddlewares = {
   },
 };
 
-export default applyMiddleware(executableSchema, graphQLMiddlewares);
+const rateLimitRule = createRateLimitRule({
+  identifyContext: (ctx) => ctx.id,
+  formatError: () => "Too many requests, please try again later.",
+});
+
+const rateLimiters = shield(
+  {},
+  {
+    fallbackRule: rateLimitRule({
+      window: "1m",
+      max: 15,
+    }),
+  },
+);
+
+export default applyMiddleware(
+  executableSchema,
+  graphQLMiddlewares,
+  rateLimiters,
+);

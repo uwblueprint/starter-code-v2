@@ -5,6 +5,8 @@ import firebase_admin
 from flask import Flask
 from flask.cli import ScriptInfo
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from logging.config import dictConfig
 
@@ -46,6 +48,8 @@ def create_app(config_name):
     ]
     app.config["CORS_SUPPORTS_CREDENTIALS"] = True
     CORS(app)
+
+    Limiter(app, key_func=get_remote_address, default_limits=["15 per minute"])
 
     if os.getenv("FLASK_CONFIG") != "production":
         app.config[
