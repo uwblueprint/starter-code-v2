@@ -139,12 +139,12 @@ const UpdateForm = (): React.ReactElement => {
 
     // rest {
     // const multipartFormData = new FormData();
-    // // typescript {
+    // typescript {
     // multipartFormData.append("body", JSON.stringify(entityData));
-    // // } typescript
-    // // python {
+    // } typescript
+    // python {
     // multipartFormData.append("body", JSON.stringify(decamelizeKeys(entityData)));
-    // // } python
+    // } python
     // if (fileField) {
     //   multipartFormData.append("file", fileField);
     // }
