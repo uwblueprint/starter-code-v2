@@ -28,9 +28,13 @@ const CORS_OPTIONS: cors.CorsOptions = {
 
 const swaggerDocument = YAML.load("swagger.yml");
 
+const defaultMinuteRateLimit = parseInt(
+  process.env.BACKEND_API_DEFAULT_PER_MINUTE_RATE_LIMIT || "15",
+  10,
+);
 const limiter = RateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 15,
+  max: defaultMinuteRateLimit,
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });

@@ -63,12 +63,17 @@ const rateLimitRule = createRateLimitRule({
   formatError: () => "Too many requests, please try again later.",
 });
 
+const defaultMinuteRateLimit = parseInt(
+  process.env.BACKEND_API_DEFAULT_PER_MINUTE_RATE_LIMIT || "15",
+  10,
+);
+
 const rateLimiters = shield(
   {},
   {
     fallbackRule: rateLimitRule({
       window: "1m",
-      max: 15,
+      max: defaultMinuteRateLimit,
     }),
   },
 );

@@ -49,7 +49,14 @@ def create_app(config_name):
     app.config["CORS_SUPPORTS_CREDENTIALS"] = True
     CORS(app)
 
-    Limiter(app, key_func=get_remote_address, default_limits=["15 per minute"])
+    default_minute_rate_limit = (
+        os.getenv("BACKEND_API_DEFAULT_PER_MINUTE_RATE_LIMIT") or 15
+    )
+    Limiter(
+        app,
+        key_func=get_remote_address,
+        default_limits=[f"{default_minute_rate_limit} per minute"],
+    )
 
     if os.getenv("FLASK_CONFIG") != "production":
         app.config[
