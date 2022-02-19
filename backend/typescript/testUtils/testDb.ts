@@ -11,11 +11,7 @@ const mongoTest = {
   connect: async (): Promise<void> => {
     await mongo.start();
     const uri = mongo.getUri();
-    await mongoose.connect(uri, {
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-      useFindAndModify: false,
-    });
+    mongoose.createConnection(uri).asPromise();
   },
 
   disconnect: async (): Promise<void> => {
