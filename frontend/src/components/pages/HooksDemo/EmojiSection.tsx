@@ -3,7 +3,7 @@ import React, { forwardRef } from "react";
 type Props = {
   title: string;
   description: string;
-  notes?: [string];
+  notes?: string[];
   emoji: string;
   onClick?: (emoji: string) => void;
 };

@@ -1,7 +1,7 @@
 export type SampleContextType = {
   teamName: string;
   numTerms: number;
-  members: [string];
+  members: string[];
   isActive: boolean;
 };
 
@@ -16,7 +16,7 @@ export type SampleContextAction =
     }
   | {
       type: "EDIT_MEMBERS";
-      value: [string];
+      value: string[];
     }
   | {
       type: "EDIT_IS_ACTIVE";

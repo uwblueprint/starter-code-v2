@@ -3,11 +3,11 @@ import { Readable, TransformOptions } from "stream";
 
 type GenerateCSVParams<T> = {
   data: Readonly<T> | ReadonlyArray<T> | Readable;
-  fields?: [string];
+  fields?: string[];
   transformFunction?: (item: T) => Record<string, unknown>;
   flattenObjects?: boolean;
   flattenArrays?: boolean;
-  pathsToUnwind?: [string];
+  pathsToUnwind?: string[];
   opts?: json2csv.Options<T>;
   transformOpts?: TransformOptions;
 };
