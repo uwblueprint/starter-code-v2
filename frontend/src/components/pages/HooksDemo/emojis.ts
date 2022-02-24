@@ -2,7 +2,7 @@ export type EmojiInfo = {
   name: string;
   emoji: string;
   description: string;
-  uses?: string[];
+  uses?: [string];
 };
 
 export const EMOJIS: EmojiInfo[] = [

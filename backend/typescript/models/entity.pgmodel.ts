@@ -14,7 +14,7 @@ export default class Entity extends Model {
   enum_field!: Letters;
 
   @Column({ type: DataType.ARRAY(DataType.STRING) })
-  string_array_field!: string[];
+  string_array_field!: [string];
 
   @Column
   bool_field!: boolean;
