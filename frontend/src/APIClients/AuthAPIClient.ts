@@ -144,13 +144,18 @@ const logout = async (
   authenticatedUserId: string,
   logoutFunction: LogoutFunction,
 ): Promise<boolean> => {
-  const result = await logoutFunction({
-    variables: { userId: authenticatedUserId },
-  });
   let success = false;
-  if (result.data?.logout === null) {
-    success = true;
-    localStorage.removeItem(AUTHENTICATED_USER_KEY);
+  try {
+    const result = await logoutFunction({
+      variables: { userId: authenticatedUserId },
+    });
+    if (result.data?.logout === null) {
+      success = true;
+      localStorage.removeItem(AUTHENTICATED_USER_KEY);
+    }
+  } catch (e: unknown) {
+    // eslint-disable-next-line no-alert
+    window.alert("Failed to logout");
   }
   return success;
 };
@@ -175,12 +180,17 @@ type RefreshFunction = (
 >;
 
 const refresh = async (refreshFunction: RefreshFunction): Promise<boolean> => {
-  const result = await refreshFunction();
   let success = false;
-  const token = result.data?.refresh;
-  if (token) {
-    success = true;
-    setLocalStorageObjProperty(AUTHENTICATED_USER_KEY, "accessToken", token);
+  try {
+    const result = await refreshFunction();
+    const token = result.data?.refresh;
+    if (token) {
+      success = true;
+      setLocalStorageObjProperty(AUTHENTICATED_USER_KEY, "accessToken", token);
+    }
+  } catch (e: unknown) {
+    // eslint-disable-next-line no-alert
+    window.alert("Failed to refresh credentials");
   }
   return success;
 };

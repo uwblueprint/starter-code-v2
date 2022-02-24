@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import RateLimit from "express-rate-limit";
 import * as firebaseAdmin from "firebase-admin";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -27,11 +28,23 @@ const CORS_OPTIONS: cors.CorsOptions = {
 
 const swaggerDocument = YAML.load("swagger.yml");
 
+const defaultMinuteRateLimit = parseInt(
+  process.env.BACKEND_API_DEFAULT_PER_MINUTE_RATE_LIMIT || "15",
+  10,
+);
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: defaultMinuteRateLimit,
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
 const app = express();
 app.use(cookieParser());
 app.use(cors(CORS_OPTIONS));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// app.use(limiter);
 
 app.use("/auth", authRouter);
 app.use("/entities", entityRouter);

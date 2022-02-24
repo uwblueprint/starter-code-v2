@@ -123,12 +123,12 @@ const CreateForm = (): React.ReactElement => {
     // } graphql
     // rest {
     // const multipartFormData = new FormData();
-    // // typescript {
+    // typescript {
     // multipartFormData.append("body", JSON.stringify(formData));
-    // // } typescript
-    // // python {
+    // } typescript
+    // python {
     // multipartFormData.append("body", JSON.stringify(decamelizeKeys(formData)));
-    // // } python
+    // } python
     // if (fileField) {
     //   multipartFormData.append("file", fileField);
     // }
