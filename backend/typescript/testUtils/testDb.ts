@@ -11,7 +11,7 @@ const mongoTest = {
   connect: async (): Promise<void> => {
     await mongo.start();
     const uri = mongo.getUri();
-    mongoose.createConnection(uri).asPromise();
+    await mongoose.createConnection(uri);
   },
 
   disconnect: async (): Promise<void> => {
