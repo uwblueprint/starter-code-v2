@@ -55,7 +55,8 @@ server.applyMiddleware({
 });
 
 sequelize.authenticate().then(async () => {
-  mongo.connect();
+  // returns a promise with mongoose v6
+  await mongo.connect();
 
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert({
