@@ -51,9 +51,6 @@ def validate_request(dto_class_name):
                 req["file"] = request.files.get("file", default=None)
                 dto = dtos[dto_class_name](**req)
             # } file-storage
-            # no-file-storage {
-            dto = dtos[dto_class_name](**request.json)
-            # } no-file-storage
             error_message = dto.validate()
             if error_message:
                 return (

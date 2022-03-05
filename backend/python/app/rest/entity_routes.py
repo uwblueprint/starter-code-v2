@@ -89,9 +89,6 @@ def create_entity():
             req["file"] = request.files.get("file", default=None)
             body = EntityDTO(**req)
         # } file-storage
-        # no-file-storage {
-        body = EntityDTO(**request.json)
-        # } no-file-storage
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
@@ -116,9 +113,6 @@ def update_entity(id):
             req_file = request.files.get("file", default=None)
             body = EntityDTO(**req, file=req_file)
         # } file-storage
-        # no-file-storage {
-        body = EntityDTO(**request.json)
-        # } no-file-storage
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
@@ -183,9 +177,6 @@ def create_entity():
             req["file"] = request.files.get("file", default=None)
             body = EntityDTO(**req)
         # } file-storage
-        # no-file-storage {
-        body = EntityDTO(**request.json)
-        # } no-file-storage
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
@@ -210,9 +201,6 @@ def update_entity(id):
             req["file"] = request.files.get("file", default=None)
             body = EntityDTO(**req)
         # } file-storage
-        # no-file-storage {
-        body = EntityDTO(**request.json)
-        # } no-file-storage
     except Exception as e:
         error_message = getattr(e, "message", None)
         return jsonify({"error": (error_message if error_message else str(e))}), 500
