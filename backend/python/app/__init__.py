@@ -3,11 +3,6 @@ import re
 # auth {
 import firebase_admin
 # } auth
-# no-auth {
-# file-storage {
-import firebase_admin
-# } file-storage
-# } no-auth
 
 from flask import Flask
 from flask.cli import ScriptInfo
