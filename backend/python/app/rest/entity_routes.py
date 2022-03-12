@@ -30,11 +30,6 @@ file_storage_service = FileStorageService(current_app.logger)
 entity_service = EntityService(current_app.logger, file_storage_service)
 
 # } file-storage
-# no-file-storage {
-# define instance of EntityService
-entity_service = EntityService(current_app.logger)
-
-# } no-file-storage
 # defines a shared URL prefix for all routes
 blueprint = Blueprint("entity", __name__, url_prefix="/entities")
 
