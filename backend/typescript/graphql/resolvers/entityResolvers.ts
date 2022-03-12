@@ -1,4 +1,3 @@
-// file-storage {
 import fs from "fs";
 import { FileUpload } from "graphql-upload";
 /* eslint-disable-next-line import/no-extraneous-dependencies */
@@ -8,21 +7,14 @@ import {
   validateFileType,
   getFileTypeValidationError,
 } from "../../middlewares/validators/util";
-// } file-storage
 import EntityService from "../../services/implementations/entityService";
-// file-storage {
 import FileStorageService from "../../services/implementations/fileStorageService";
-// } file-storage
 import {
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../../services/interfaces/IEntityService";
 import { generateCSV } from "../../utilities/CSVUtils";
 
-// no-file-storage {
-const entityService = new EntityService();
-// } no-file-storage
-// file-storage {
 const defaultBucket = process.env.FIREBASE_STORAGE_DEFAULT_BUCKET || "";
 const fileStorageService = new FileStorageService(defaultBucket);
 const entityService = new EntityService(fileStorageService);
@@ -39,7 +31,6 @@ const writeFile = (readStream: ReadStream, filePath: string): Promise<void> => {
     out.on("error", (err) => reject(err));
   });
 };
-// } file-storage
 
 const entityResolvers = {
   Query: {
@@ -57,26 +48,18 @@ const entityResolvers = {
       const csv = await generateCSV<EntityResponseDTO>({ data: entities });
       return csv;
     },
-    // file-storage {
     file: async (
       _req: undefined,
       { fileUUID }: { fileUUID: string },
     ): Promise<string> => {
       return fileStorageService.getFile(fileUUID);
     },
-    // } file-storage
   },
   Mutation: {
     createEntity: async (
       _req: undefined,
-      // file-storage {
       { entity, file }: { entity: EntityRequestDTO; file: Promise<FileUpload> },
-      // } file-storage
-      // no-file-storage {
-      { entity }: { entity: EntityRequestDTO },
-      // } no-file-storage
     ): Promise<EntityResponseDTO> => {
-      // file-storage {
       let filePath = "";
       let fileContentType = "";
       if (file) {
@@ -102,31 +85,15 @@ const entityResolvers = {
         fs.unlinkSync(filePath);
       }
       return newEntity;
-      // } file-storage
-      // no-file-storage {
-      return entityService.createEntity({
-        stringField: entity.stringField,
-        intField: entity.intField,
-        enumField: entity.enumField,
-        stringArrayField: entity.stringArrayField,
-        boolField: entity.boolField,
-      });
-      // } no-file-storage
     },
     updateEntity: async (
       _req: undefined,
-      // file-storage {
       {
         id,
         entity,
         file,
       }: { id: string; entity: EntityRequestDTO; file: Promise<FileUpload> },
-      // } file-storage
-      // no-file-storage {
-      { id, entity }: { id: string; entity: EntityRequestDTO },
-      // } no-file-storage
     ): Promise<EntityResponseDTO | null> => {
-      // file-storage {
       let filePath = "";
       let fileContentType = "";
       if (file) {
@@ -152,16 +119,6 @@ const entityResolvers = {
         fs.unlinkSync(filePath);
       }
       return updatedEntity;
-      // } file-storage
-      // no-file-storage {
-      return entityService.updateEntity(id, {
-        stringField: entity.stringField,
-        intField: entity.intField,
-        enumField: entity.enumField,
-        stringArrayField: entity.stringArrayField,
-        boolField: entity.boolField,
-      });
-      // } no-file-storage
     },
     deleteEntity: async (
       _req: undefined,

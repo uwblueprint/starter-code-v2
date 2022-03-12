@@ -5,7 +5,6 @@ info:
   description: An API for the TypeScript Backend of Starter Code
 
 
-auth {
 # Authentication 
 components:
   securitySchemes:
@@ -30,16 +29,13 @@ components:
       properties:
         idToken:
           type: string
-} auth
 
 
 paths:
   /entities:
     get:
-      auth {
       security:
         - bearerAuth: []
-      } auth
       tags:
         - Entity
       description: Returns a list of entities
@@ -68,10 +64,8 @@ paths:
                       enum: ["A", "B", "C", "D"]
                     boolField:
                       type: boolean
-                    file-storage {
                     fileName:
                       type: string
-                    } file-storage
         '401':
           description: Unauthorized
         '500':
@@ -79,38 +73,14 @@ paths:
 
 
     post:
-      auth {
       security:
         - bearerAuth: []
-      } auth
       tags:
         - Entity
       description: Create a new entity
       requestBody:
         required: true
         content:
-          no-file-storage {
-          application/json:
-            schema:
-              type: object
-              required:
-                - intField, stringField, boolField, enumField, stringArrayField
-              properties:
-                intField:
-                  type: integer
-                stringField:
-                  type: string
-                stringArrayField:
-                  type: array
-                  items:
-                    type: string
-                enumField:
-                  type: string
-                  enum: ["A", "B", "C", "D"]
-                boolField:
-                  type: boolean
-          } no-file-storage
-          file-storage {
           multipart/form-data:
             schema:
               type: object
@@ -120,7 +90,6 @@ paths:
                 file:
                   type: string
                   format: binary
-          } file-storage
       responses:
         '201':
           description: Successfully created a new entity
@@ -144,10 +113,8 @@ paths:
                     enum: ["A", "B", "C", "D"]
                   boolField:
                     type: boolean
-                  file-storage {
                   fileName:
                     type: string
-                  } file-storage
         '401':
           description: Unauthorized
         '500':
@@ -156,10 +123,8 @@ paths:
   
   /entities/{id}:
     get:
-      auth {
       security:
         - bearerAuth: []
-      } auth
       parameters:
         - in: path
           name: id
@@ -195,10 +160,8 @@ paths:
                     enum: ["A", "B", "C", "D"]
                   boolField:
                     type: boolean
-                  file-storage {
                   fileName:
                     type: string
-                  } file-storage
         '401':
           description: Unauthorized
         '500':
@@ -206,10 +169,8 @@ paths:
 
 
     put:
-      auth {
       security:
         - bearerAuth: []
-      } auth
       parameters:
         - in: path
           name: id
@@ -225,28 +186,6 @@ paths:
       requestBody:
         required: true
         content:
-          no-file-storage {
-          application/json:
-            schema:
-              type: object
-              required:
-                - intField, stringField, boolField, enumField, stringArrayField
-              properties:
-                intField:
-                  type: integer
-                stringField:
-                  type: string
-                stringArrayField:
-                  type: array
-                  items:
-                    type: string
-                enumField:
-                  type: string
-                  enum: ["A", "B", "C", "D"]
-                boolField:
-                  type: boolean
-          } no-file-storage
-          file-storage {
           multipart/form-data:
             schema:
               type: object
@@ -256,7 +195,6 @@ paths:
                 file:
                   type: string
                   format: binary
-          } file-storage
       responses:
         '200':
           description: Successfully edited entity based on ID
@@ -267,10 +205,8 @@ paths:
 
 
     delete:
-      auth {
       security:
         - bearerAuth: []
-      } auth
       parameters:
         - in: path
           name: id
@@ -291,13 +227,10 @@ paths:
         '500':
           description: Invalid ID
 
-  file-storage {
   /entities/files/{fileName}:
     get:
-      auth {
       security:
         - bearerAuth: []
-      } auth
       parameters:
         - in: path
           name: fileName
@@ -324,9 +257,7 @@ paths:
           description: Unauthorized
         '500':
           description: Invalid fileName
-  } file-storage
 
-auth {    
   /auth/login:
     post:
       tags:
@@ -667,4 +598,3 @@ auth {
           description: Unauthorized
         '500':
           description: Invalid request
-} auth
