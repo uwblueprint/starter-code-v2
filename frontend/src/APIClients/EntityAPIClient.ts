@@ -2,6 +2,15 @@ import baseAPIClient from "./BaseAPIClient";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { getLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 
+
+/* 
+See in-line comments on how to remove auth if you are not using it 
+
+Look for comments that start with "NoAuth" and follow instructions
+
+If you are using Auth you can remove these comments
+*/ 
+
 enum EnumField {
   "A",
   "B",
@@ -32,22 +41,20 @@ const create = async ({
 }: {
   formData: EntityRequest | FormData;
 }): Promise<EntityResponse> => {
-  // auth {
+
+  // NoAuth: Remove bearer token
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
+
   try {
-    // auth {
+    // NoAuth: Use option 2 for data variable
     const { data } = await baseAPIClient.post("/entities", formData, {
       headers: { Authorization: bearerToken },
     });
-    // } auth
-
-    // no-auth {
     // const { data } = await baseAPIClient.post("/entities", formData);
-    // } no-auth
+
     return data;
   } catch (error) {
     return error;
@@ -55,22 +62,17 @@ const create = async ({
 };
 
 const get = async (): Promise<EntityResponse[]> => {
-  // auth {
+  // NoAuth: Remove bearer token
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
   try {
-    // auth {
+    // NoAuth: Use option 2 for data variable
     const { data } = await baseAPIClient.get("/entities", {
       headers: { Authorization: bearerToken },
     });
-    // } auth
-
-    // no-auth {
     // const { data } = await baseAPIClient.get("/entities");
-    // } no-auth
     return data;
   } catch (error) {
     return error;
@@ -78,22 +80,17 @@ const get = async (): Promise<EntityResponse[]> => {
 };
 
 const getFile = async (uuid: string): Promise<string> => {
-  // auth {
+  // NoAuth: Remove bearer token
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
   try {
-    // auth {
+    // NoAuth: Use option 2 for data variable
     const { data } = await baseAPIClient.get(`/entities/files/${uuid}`, {
       headers: { Authorization: bearerToken },
     });
-    // } auth
-
-    // no-auth {
     // const { data } = await baseAPIClient.get(`/entities/files/${uuid}`);
-    // } no-auth
     return data.fileURL || data.fileUrl;
   } catch (error) {
     return error;
@@ -101,30 +98,25 @@ const getFile = async (uuid: string): Promise<string> => {
 };
 
 const getCSV = async (): Promise<string> => {
-  // auth {
+  // NoAuth: Remove bearer token
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
   try {
-    // auth {
+    // NoAuth: Use option 2 for data variable
     const { data } = await baseAPIClient.get("/entities", {
       // Following line is necessary to set the Content-Type header
       // Reference: https://github.com/axios/axios/issues/86
       data: null,
       headers: { Authorization: bearerToken, "Content-Type": "text/csv" },
     });
-    // } auth
-
-    // no-auth {
     // const { data } = await baseAPIClient.get("/entities", {
     //   // Following line is necessary to set the Content-Type header
     //   // Reference: https://github.com/axios/axios/issues/86
     //   data: null,
     //   headers: { "Content-Type": "text/csv" },
     // });
-    // } no-auth
     return data;
   } catch (error) {
     return error;
@@ -139,22 +131,17 @@ const update = async (
     entityData: EntityRequest | FormData;
   },
 ): Promise<EntityResponse> => {
-  // auth {
+  // NoAuth: Remove bearer token
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
   try {
-    // auth {
+    // NoAuth: Use option 2 for data variable
     const { data } = await baseAPIClient.put(`/entities/${id}`, entityData, {
       headers: { Authorization: bearerToken },
     });
-    // } auth
-
-    // no-auth {
     // const { data } = await baseAPIClient.put(`/entities/${id}`, entityData);
-    // } no-auth
     return data;
   } catch (error) {
     return error;
