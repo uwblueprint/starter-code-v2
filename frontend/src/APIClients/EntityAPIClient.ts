@@ -1,8 +1,6 @@
 import baseAPIClient from "./BaseAPIClient";
-// auth {
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { getLocalStorageObjProperty } from "../utils/LocalStorageUtils";
-// } auth
 
 enum EnumField {
   "A",
@@ -26,36 +24,25 @@ export type EntityResponse = {
   stringArrayField: string[];
   enumField: EnumField;
   boolField: boolean;
-  // file-storage {
-  fileName: string;
-  // } file-storage
+  fileName: string; //Can be removed if not using file storage
 };
 
 const create = async ({
   formData,
 }: {
-  // no-file-storage {
-  formData: EntityRequest;
-  // } no-file-storage
-  // file-storage {
+  // Change "FormData" to "EntityRequest" if not using file-storage
   formData: FormData;
-  // } file-storage
 }): Promise<EntityResponse> => {
-  // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
   try {
-    // auth {
+
+    //Remove "Authorization if not using Auth"
     const { data } = await baseAPIClient.post("/entities", formData, {
       headers: { Authorization: bearerToken },
     });
-    // } auth
-    // no-auth {
-    const { data } = await baseAPIClient.post("/entities", formData);
-    // } no-auth
     return data;
   } catch (error) {
     return error;
@@ -63,45 +50,29 @@ const create = async ({
 };
 
 const get = async (): Promise<EntityResponse[]> => {
-  // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
   try {
-    // auth {
     const { data } = await baseAPIClient.get("/entities", {
       headers: { Authorization: bearerToken },
     });
-    // } auth
-    // no-auth {
-    const { data } = await baseAPIClient.get("/entities");
-    // } no-auth
     return data;
   } catch (error) {
     return error;
   }
 };
 
-// file-storage {
 const getFile = async (uuid: string): Promise<string> => {
-  // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
   try {
-    // auth {
     const { data } = await baseAPIClient.get(`/entities/files/${uuid}`, {
       headers: { Authorization: bearerToken },
     });
-    // } auth
-
-    // no-auth {
-    const { data } = await baseAPIClient.get(`/entities/files/${uuid}`);
-    // } no-auth
     // typescript {
     return data.fileURL
     // } typescript
@@ -113,32 +84,18 @@ const getFile = async (uuid: string): Promise<string> => {
   }
 };
 
-// } file-storage
 const getCSV = async (): Promise<string> => {
-  // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
   try {
-    // auth {
     const { data } = await baseAPIClient.get("/entities", {
       // Following line is necessary to set the Content-Type header
       // Reference: https://github.com/axios/axios/issues/86
       data: null,
       headers: { Authorization: bearerToken, "Content-Type": "text/csv" },
     });
-    // } auth
-
-    // no-auth {
-    const { data } = await baseAPIClient.get("/entities", {
-      // Following line is necessary to set the Content-Type header
-      // Reference: https://github.com/axios/axios/issues/86
-      data: null,
-      headers: { "Content-Type": "text/csv" },
-    });
-    // } no-auth
     return data;
   } catch (error) {
     return error;
@@ -150,38 +107,22 @@ const update = async (
   {
     entityData,
   }: {
-    // no-file-storage {
-    entityData: EntityRequest;
-    // } no-file-storage
-    // file-storage {
-    entityData: FormData;
-    // } file-storage
+  // Change "FormData" to "EntityRequest" if not using file-storage
+  formData: FormData;
   },
 ): Promise<EntityResponse> => {
-  // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  // } auth
   try {
-    // auth {
     const { data } = await baseAPIClient.put(`/entities/${id}`, entityData, {
       headers: { Authorization: bearerToken },
     });
-    // } auth
-    // no-auth {
-    const { data } = await baseAPIClient.put(`/entities/${id}`, entityData);
-    // } no-auth
     return data;
   } catch (error) {
     return error;
   }
 };
 
-// no-file-storage {
-export default { create, get, getCSV, update };
-// } no-file-storage
-// file-storage {
 export default { create, get, getFile, getCSV, update };
-// } file-storage
