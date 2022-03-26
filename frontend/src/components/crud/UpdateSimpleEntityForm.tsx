@@ -100,9 +100,9 @@ const UpdateSimpleEntityForm = (): React.ReactElement => {
   );
 
   // graphql {
-  const [updateEntity] = useMutation<{ updateEntity: SimpleEntityResponse }>(
-    UPDATE_SIMPLE_ENTITY,
-  );
+  const [updateSimpleEntity] = useMutation<{
+    updateSimpleEntity: SimpleEntityResponse;
+  }>(UPDATE_SIMPLE_ENTITY);
 
   // } graphql
   if (data) {
@@ -113,11 +113,11 @@ const UpdateSimpleEntityForm = (): React.ReactElement => {
     const { id, ...entityData } = formData;
 
     // graphql {
-    const graphQLResult = await updateEntity({
+    const graphQLResult = await updateSimpleEntity({
       variables: { id: formData.id, entity: entityData as SimpleEntityRequest },
     });
     const result: SimpleEntityResponse | null =
-      graphQLResult.data?.updateEntity ?? null;
+      graphQLResult.data?.updateSimpleEntity ?? null;
     // } graphql
     // rest {
     const result = await SimpleEntityAPIClient.update(formData.id, {

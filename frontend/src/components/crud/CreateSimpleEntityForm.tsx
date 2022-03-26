@@ -93,9 +93,9 @@ const CreateSimpleEntityForm = (): React.ReactElement => {
   );
 
   // graphql {
-  const [createEntity] = useMutation<{ createEntity: SimpleEntityResponse }>(
-    CREATE_SIMPLE_ENTITY,
-  );
+  const [createSimpleEntity] = useMutation<{
+    createSimpleEntity: SimpleEntityResponse;
+  }>(CREATE_SIMPLE_ENTITY);
 
   // } graphql
   if (data) {
@@ -104,11 +104,11 @@ const CreateSimpleEntityForm = (): React.ReactElement => {
 
   const onSubmit = async ({ formData }: { formData: SimpleEntityRequest }) => {
     // graphql {
-    const graphQLResult = await createEntity({
+    const graphQLResult = await createSimpleEntity({
       variables: { entity: formData },
     });
     const result: SimpleEntityResponse | null =
-      graphQLResult.data?.createEntity ?? null;
+      graphQLResult.data?.createSimpleEntity ?? null;
     // } graphql
     // rest {
     const result = await SimpleEntityAPIClient.create({ formData });
