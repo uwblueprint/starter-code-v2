@@ -139,7 +139,7 @@ const SIMPLE_ENTITIES = gql`
 
 const SIMPLE_ENTITIESCSV = gql`
   query DisplaySimpleEntitiesTableContainer_EntitiesCSV {
-    entitiesCSV
+    simpleEntitiesCSV
   }
 `;
 
