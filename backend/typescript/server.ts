@@ -28,6 +28,7 @@ import { sequelize } from "./models";
 import authRouter from "./rest/authRoutes";
 // } auth
 import entityRouter from "./rest/entityRoutes";
+import simpleEntityRouter from "./rest/simpleEntityRoutes";
 // auth {
 import userRouter from "./rest/userRoutes";
 // } auth
@@ -64,6 +65,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRouter);
 // } auth
 app.use("/entities", entityRouter);
+app.use("/simpleEntities", simpleEntityRouter);
 // auth {
 app.use("/users", userRouter);
 // } auth
