@@ -15,11 +15,11 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import CreatePage from "./components/pages/CreatePage";
 import Default from "./components/pages/Default";
 import DisplayPage from "./components/pages/DisplayPage";
-import CreateSimpleEntityPage from "./components/pages/CreateSimpleEntityPage";
-import DisplaySimpleEntitiesPage from "./components/pages/DisplaySimpleEntitiesPage";
+import SimpleEntityCreatePage from "./components/pages/SimpleEntityCreatePage";
+import SimpleEntityDisplayPage from "./components/pages/SimpleEntityDisplayPage";
 import NotFound from "./components/pages/NotFound";
 import UpdatePage from "./components/pages/UpdatePage";
-import UpdateSimpleEntityPage from "./components/pages/UpdateSimpleEntityPage";
+import SimpleEntityUpdatePage from "./components/pages/SimpleEntityUpdatePage";
 import * as Routes from "./constants/Routes";
 // auth {
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
@@ -89,17 +89,17 @@ const App = (): React.ReactElement => {
               <PrivateRoute
                 exact
                 path={Routes.CREATE_SIMPLE_ENTITY_PAGE}
-                component={CreateSimpleEntityPage}
+                component={SimpleEntityCreatePage}
               />
               <PrivateRoute
                 exact
                 path={Routes.UPDATE_SIMPLE_ENTITY_PAGE}
-                component={UpdateSimpleEntityPage}
+                component={SimpleEntityUpdatePage}
               />
               <PrivateRoute
                 exact
                 path={Routes.DISPLAY_SIMPLE_ENTITY_PAGE}
-                component={DisplaySimpleEntitiesPage}
+                component={SimpleEntityDisplayPage}
               />
               <PrivateRoute
                 exact

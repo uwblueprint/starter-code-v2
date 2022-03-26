@@ -71,7 +71,7 @@ const uiSchema = {
 
 // graphql {
 const CREATE_SIMPLE_ENTITY = gql`
-  mutation CreateSimpleEntityForm_CreateSimpleEntity(
+  mutation SimpleEntityCreateForm_CreateSimpleEntity(
     $entity: SimpleEntityRequestDTO!
   ) {
     createSimpleEntity(entity: $entity) {
@@ -86,7 +86,7 @@ const CREATE_SIMPLE_ENTITY = gql`
 `;
 
 // } graphql
-const CreateSimpleEntityForm = (): React.ReactElement => {
+const SimpleEntityCreateForm = (): React.ReactElement => {
   const [data, setData] = useState<SimpleEntityResponse | null>(null);
   const [formFields, setFormFields] = useState<SimpleEntityRequest | null>(
     null,
@@ -128,4 +128,4 @@ const CreateSimpleEntityForm = (): React.ReactElement => {
   );
 };
 
-export default CreateSimpleEntityForm;
+export default SimpleEntityCreateForm;

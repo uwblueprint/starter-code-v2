@@ -77,7 +77,7 @@ const uiSchema = {
 
 // graphql {
 const UPDATE_SIMPLE_ENTITY = gql`
-  mutation UpdateSimpleEntityForm_UpdateSimpleEntity(
+  mutation SimpleEntityUpdateForm_UpdateSimpleEntity(
     $id: ID!
     $entity: SimpleEntityRequestDTO!
   ) {
@@ -93,7 +93,7 @@ const UPDATE_SIMPLE_ENTITY = gql`
 `;
 
 // } graphql
-const UpdateSimpleEntityForm = (): React.ReactElement => {
+const SimpleEntityUpdateForm = (): React.ReactElement => {
   const [data, setData] = useState<SimpleEntityResponse | null>(null);
   const [formFields, setFormFields] = useState<SimpleEntityRequest | null>(
     null,
@@ -139,4 +139,4 @@ const UpdateSimpleEntityForm = (): React.ReactElement => {
   );
 };
 
-export default UpdateSimpleEntityForm;
+export default SimpleEntityUpdateForm;

@@ -1,15 +1,15 @@
 import React from "react";
-import UpdateSimpleEntityForm from "../crud/UpdateSimpleEntityForm";
+import SimpleEntityUpdateForm from "../crud/SimpleEntityUpdateForm";
 import MainPageButton from "../common/MainPageButton";
 
-const UpdateSimpleEntityPage = (): React.ReactElement => {
+const SimpleEntityUpdatePage = (): React.ReactElement => {
   return (
     <div style={{ textAlign: "center", width: "25%", margin: "0px auto" }}>
       <h1>Default Page</h1>
       <MainPageButton />
-      <UpdateSimpleEntityForm />
+      <SimpleEntityUpdateForm />
     </div>
   );
 };
 
-export default UpdateSimpleEntityPage;
+export default SimpleEntityUpdatePage;

@@ -1,15 +1,15 @@
 import React from "react";
-import DisplaySimpleEntitiesTableContainer from "../crud/DisplaySimpleEntitiesTableContainer";
+import SimpleEntityCreateForm from "../crud/SimpleEntityCreateForm";
 import MainPageButton from "../common/MainPageButton";
 
-const GetSimpleEntitiesPage = (): React.ReactElement => {
+const SimpleEntityCreatePage = (): React.ReactElement => {
   return (
     <div style={{ textAlign: "center", width: "25%", margin: "0px auto" }}>
       <h1>Default Page</h1>
       <MainPageButton />
-      <DisplaySimpleEntitiesTableContainer />
+      <SimpleEntityCreateForm />
     </div>
   );
 };
 
-export default GetSimpleEntitiesPage;
+export default SimpleEntityCreatePage;

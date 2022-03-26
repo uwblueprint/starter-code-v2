@@ -73,7 +73,7 @@ const columns: Column<EntityData>[] = [
   },
 ];
 
-const DisplaySimpleEntitiesTable = ({ data }: TableProps) => {
+const SimpleEntityDisplayTable = ({ data }: TableProps) => {
   const {
     getTableProps,
 
@@ -125,7 +125,7 @@ const DisplaySimpleEntitiesTable = ({ data }: TableProps) => {
 
 // graphql {
 const SIMPLE_ENTITIES = gql`
-  query DisplaySimpleEntitiesTableContainer_SimpleEntities {
+  query SimpleEntityDisplayTableContainer_SimpleEntities {
     simpleEntities {
       id
       stringField
@@ -138,13 +138,13 @@ const SIMPLE_ENTITIES = gql`
 `;
 
 const SIMPLE_ENTITIESCSV = gql`
-  query DisplaySimpleEntitiesTableContainer_EntitiesCSV {
+  query SimpleEntityDisplayTableContainer_SimpleEntitiesCSV {
     simpleEntitiesCSV
   }
 `;
 
 // } graphql
-const DisplaySimpleEntitiesTableContainer: React.FC = (): React.ReactElement | null => {
+const SimpleEntityDisplayTableContainer: React.FC = (): React.ReactElement | null => {
   const [entities, setEntities] = useState<EntityData[] | null>(null);
 
   // graphql {
@@ -194,9 +194,9 @@ const DisplaySimpleEntitiesTableContainer: React.FC = (): React.ReactElement | n
       <button type="button" onClick={downloadEntitiesCSV}>
         Download CSV
       </button>
-      {entities && <DisplaySimpleEntitiesTable data={entities} />}
+      {entities && <SimpleEntityDisplayTable data={entities} />}
     </>
   );
 };
 
-export default DisplaySimpleEntitiesTableContainer;
+export default SimpleEntityDisplayTableContainer;
