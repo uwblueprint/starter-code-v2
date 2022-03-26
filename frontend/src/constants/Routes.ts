@@ -14,4 +14,10 @@ export const CREATE_ENTITY_PAGE = "/entity/create";
 
 export const UPDATE_ENTITY_PAGE = "/entity/update";
 
+export const DISPLAY_SIMPLE_ENTITY_PAGE = "/simpleEntity";
+
+export const CREATE_SIMPLE_ENTITY_PAGE = "/simpleEntity/create";
+
+export const UPDATE_SIMPLE_ENTITY_PAGE = "/simpleEntity/update";
+
 export const HOOKS_PAGE = "/hooks";
