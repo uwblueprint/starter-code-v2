@@ -74,7 +74,7 @@ const CREATE_SIMPLE_ENTITY = gql`
   mutation CreateSimpleEntityForm_CreateSimpleEntity(
     $entity: SimpleEntityRequestDTO!
   ) {
-    createEntity(entity: $entity) {
+    createSimpleEntity(entity: $entity) {
       id
       stringField
       intField
