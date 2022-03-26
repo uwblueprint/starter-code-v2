@@ -153,7 +153,9 @@ const DisplaySimpleEntitiesTableContainer: React.FC = (): React.ReactElement | n
   useQuery(SIMPLE_ENTITIES, {
     fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
-      setEntities(data.entities.map((d: SimpleEntityResponse) => convert(d)));
+      setEntities(
+        data.simpleEntities.map((d: SimpleEntityResponse) => convert(d)),
+      );
     },
   });
   // } graphql
@@ -175,7 +177,7 @@ const DisplaySimpleEntitiesTableContainer: React.FC = (): React.ReactElement | n
       const { data } = await apolloClient.query({
         query: SIMPLE_ENTITIESCSV,
       });
-      downloadCSV(data.entitiesCSV, "export.csv");
+      downloadCSV(data.simpleEntitiesCSV, "export.csv");
       // } graphql
       // rest {
       const csvString = await SimpleEntityAPIClient.getCSV();

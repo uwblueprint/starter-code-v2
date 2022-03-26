@@ -15,6 +15,8 @@ import authType from "./types/authType";
 // } auth
 import entityResolvers from "./resolvers/entityResolvers";
 import entityType from "./types/entityType";
+import simpleEntityResolvers from "./resolvers/simpleEntityResolvers";
+import simpleEntityType from "./types/simpleEntityType";
 // auth {
 import userResolvers from "./resolvers/userResolvers";
 import userType from "./types/userType";
@@ -34,8 +36,8 @@ const mutation = gql`
 
 // no-auth {
 const executableSchema = makeExecutableSchema({
-  typeDefs: [query, mutation, entityType],
-  resolvers: merge(entityResolvers),
+  typeDefs: [query, mutation, entityType, simpleEntityType],
+  resolvers: merge(entityResolvers, simpleEntityResolvers),
 });
 
 export default executableSchema;
@@ -43,8 +45,13 @@ export default executableSchema;
 // } no-auth
 // auth {
 const executableSchema = makeExecutableSchema({
-  typeDefs: [query, mutation, authType, entityType, userType],
-  resolvers: merge(authResolvers, entityResolvers, userResolvers),
+  typeDefs: [query, mutation, authType, entityType, simpleEntityType, userType],
+  resolvers: merge(
+    authResolvers,
+    entityResolvers,
+    simpleEntityResolvers,
+    userResolvers,
+  ),
 });
 
 const authorizedByAllRoles = () =>
@@ -55,6 +62,8 @@ const graphQLMiddlewares = {
   Query: {
     entity: authorizedByAllRoles(),
     entities: authorizedByAllRoles(),
+    simpleEntity: authorizedByAllRoles(),
+    simpleEntities: authorizedByAllRoles(),
     userById: authorizedByAdmin(),
     userByEmail: authorizedByAdmin(),
     users: authorizedByAdmin(),
@@ -63,6 +72,9 @@ const graphQLMiddlewares = {
     createEntity: authorizedByAllRoles(),
     updateEntity: authorizedByAllRoles(),
     deleteEntity: authorizedByAllRoles(),
+    createSimpleEntity: authorizedByAllRoles(),
+    updateSimpleEntity: authorizedByAllRoles(),
+    deleteSimpleEntity: authorizedByAllRoles(),
     createUser: authorizedByAdmin(),
     updateUser: authorizedByAdmin(),
     deleteUserById: authorizedByAdmin(),
