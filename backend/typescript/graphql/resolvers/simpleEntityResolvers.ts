@@ -9,16 +9,16 @@ const simpleEntityService = new SimpleEntityService();
 
 const entityResolvers = {
   Query: {
-    entity: async (
+    simpleEntity: async (
       _req: undefined,
       { id }: { id: string },
     ): Promise<SimpleEntityResponseDTO> => {
       return simpleEntityService.getEntity(id);
     },
-    entities: async (): Promise<SimpleEntityResponseDTO[]> => {
+    simpleEntities: async (): Promise<SimpleEntityResponseDTO[]> => {
       return simpleEntityService.getEntities();
     },
-    entitiesCSV: async (): Promise<string> => {
+    simpleEntitiesCSV: async (): Promise<string> => {
       const entities = await simpleEntityService.getEntities();
       const csv = await generateCSV<SimpleEntityResponseDTO>({
         data: entities,
@@ -27,7 +27,7 @@ const entityResolvers = {
     },
   },
   Mutation: {
-    createEntity: async (
+    createSimpleEntity: async (
       _req: undefined,
       { entity }: { entity: SimpleEntityRequestDTO },
     ): Promise<SimpleEntityResponseDTO> => {
@@ -39,7 +39,7 @@ const entityResolvers = {
         boolField: entity.boolField,
       });
     },
-    updateEntity: async (
+    updateSimpleEntity: async (
       _req: undefined,
       { id, entity }: { id: string; entity: SimpleEntityRequestDTO },
     ): Promise<SimpleEntityResponseDTO | null> => {
@@ -51,7 +51,7 @@ const entityResolvers = {
         boolField: entity.boolField,
       });
     },
-    deleteEntity: async (
+    deleteSimpleEntity: async (
       _req: undefined,
       { id }: { id: string },
     ): Promise<string> => {

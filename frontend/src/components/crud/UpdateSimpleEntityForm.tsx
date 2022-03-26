@@ -81,7 +81,7 @@ const UPDATE_SIMPLE_ENTITY = gql`
     $id: ID!
     $entity: SimpleEntityRequestDTO!
   ) {
-    updateEntity(id: $id, entity: $entity) {
+    updateSimpleEntity(id: $id, entity: $entity) {
       id
       stringField
       intField

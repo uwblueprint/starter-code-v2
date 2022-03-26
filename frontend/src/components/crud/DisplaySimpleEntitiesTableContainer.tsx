@@ -126,7 +126,7 @@ const DisplaySimpleEntitiesTable = ({ data }: TableProps) => {
 // graphql {
 const SIMPLE_ENTITIES = gql`
   query DisplaySimpleEntitiesTableContainer_SimpleEntities {
-    entities {
+    simpleEntities {
       id
       stringField
       intField
