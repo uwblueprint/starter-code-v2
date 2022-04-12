@@ -500,7 +500,7 @@
       }
     },
     // } file-storage
-    "/simpleEntities": {
+    "/simple-entities": {
       "get": {
         "security": [
           {
@@ -660,7 +660,7 @@
         }
       }
     },
-    "/simpleEntities/{id}": {
+    "/simple-entities/{id}": {
       "get": {
         "security": [
           {
