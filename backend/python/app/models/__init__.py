@@ -15,6 +15,7 @@ migrate = Migrate()
 # } postgresql
 def init_app(app):
     from .entity import Entity
+    from .simple_entity import SimpleEntity
     # auth {
     from .user import User
     # } auth

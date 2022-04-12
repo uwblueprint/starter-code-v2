@@ -3,7 +3,7 @@ from sqlalchemy import inspect
 from sqlalchemy.orm.properties import ColumnProperty
 
 from . import db
-from .enum import enum
+from .enum import simple_entity_enum
 
 # common columns and methods across multiple data models can be added via a Mixin class:
 # https://docs.sqlalchemy.org/en/13/orm/extensions/declarative/mixins.html
@@ -21,7 +21,7 @@ class SimpleEntity(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     string_field = db.Column(db.String, nullable=False)
     int_field = db.Column(db.Integer, nullable=False)
-    enum_field = db.Column(enum, nullable=False)
+    enum_field = db.Column(simple_entity_enum, nullable=False)
     string_array_field = db.Column(db.ARRAY(db.String), nullable=False)
     bool_field = db.Column(db.Boolean, nullable=False)
 
