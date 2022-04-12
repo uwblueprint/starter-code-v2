@@ -1,7 +1,5 @@
 // mongodb {
-// file-storage {
 import { v4 as uuidv4 } from "uuid";
-// } file-storage
 
 import MgEntity, { Entity } from "../../models/entity.model";
 import {
@@ -9,22 +7,18 @@ import {
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
-// file-storage {
 import IFileStorageService from "../interfaces/fileStorageService";
-// } file-storage
 import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
 
 class EntityService implements IEntityService {
-  // file-storage {
   storageService: IFileStorageService;
 
   constructor(storageService: IFileStorageService) {
     this.storageService = storageService;
   }
-  // } file-storage
 
   /* eslint-disable class-methods-use-this */
   async getEntity(id: string): Promise<EntityResponseDTO> {
@@ -46,9 +40,7 @@ class EntityService implements IEntityService {
       enumField: entity.enumField,
       stringArrayField: entity.stringArrayField,
       boolField: entity.boolField,
-      // file-storage {
       fileName: entity.fileName,
-      // } file-storage
     };
   }
 
@@ -62,9 +54,7 @@ class EntityService implements IEntityService {
         enumField: entity.enumField,
         stringArrayField: entity.stringArrayField,
         boolField: entity.boolField,
-        // file-storage {
         fileName: entity.fileName,
-        // } file-storage
       }));
     } catch (error: unknown) {
       Logger.error(
@@ -76,11 +66,8 @@ class EntityService implements IEntityService {
 
   async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
     let newEntity: Entity | null;
-    // file-storage {
     const fileName = entity.filePath ? uuidv4() : "";
-    // } file-storage
     try {
-      // file-storage {
       if (entity.filePath) {
         await this.storageService.createFile(
           fileName,
@@ -89,10 +76,6 @@ class EntityService implements IEntityService {
         );
       }
       newEntity = await MgEntity.create({ ...entity, fileName });
-      // } file-storage
-      // no-file-storage {
-      newEntity = await MgEntity.create(entity);
-      // } no-file-storage
     } catch (error: unknown) {
       Logger.error(
         `Failed to create entity. Reason = ${getErrorMessage(error)}`,
@@ -106,9 +89,7 @@ class EntityService implements IEntityService {
       enumField: newEntity.enumField,
       stringArrayField: newEntity.stringArrayField,
       boolField: newEntity.boolField,
-      // file-storage {
       fileName,
-      // } file-storage
     };
   }
 
@@ -117,11 +98,8 @@ class EntityService implements IEntityService {
     entity: EntityRequestDTO,
   ): Promise<EntityResponseDTO | null> {
     let updatedEntity: Entity | null;
-    // file-storage {
     let fileName = "";
-    // } file-storage
     try {
-      // file-storage {
       const currentEntity = await MgEntity.findById(id, "fileName");
       const currentFileName = currentEntity?.fileName;
       if (entity.filePath) {
@@ -150,13 +128,6 @@ class EntityService implements IEntityService {
           runValidators: true,
         },
       );
-      // } file-storage
-      // no-file-storage {
-      updatedEntity = await MgEntity.findByIdAndUpdate(id, entity, {
-        new: true,
-        runValidators: true,
-      });
-      // } no-file-storage
       if (!updatedEntity) {
         throw new Error(`Entity id ${id} not found`);
       }
@@ -173,9 +144,7 @@ class EntityService implements IEntityService {
       enumField: updatedEntity.enumField,
       stringArrayField: updatedEntity.stringArrayField,
       boolField: updatedEntity.boolField,
-      // file-storage {
       fileName,
-      // } file-storage
     };
   }
 
@@ -185,11 +154,9 @@ class EntityService implements IEntityService {
       if (!deletedEntity) {
         throw new Error(`Entity id ${id} not found`);
       }
-      // file-storage {
       if (deletedEntity.fileName) {
         await this.storageService.deleteFile(deletedEntity.fileName);
       }
-      // } file-storage
       return id;
     } catch (error: unknown) {
       Logger.error(
@@ -204,9 +171,7 @@ export default EntityService;
 
 // } mongodb
 // postgresql {
-// file-storage {
 import { v4 as uuidv4 } from "uuid";
-// } file-storage
 
 import PgEntity from "../../models/entity.model";
 import {
@@ -214,22 +179,18 @@ import {
   EntityRequestDTO,
   EntityResponseDTO,
 } from "../interfaces/IEntityService";
-// file-storage {
 import IFileStorageService from "../interfaces/fileStorageService";
-// } file-storage
 import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
 
 const Logger = logger(__filename);
 
 class EntityService implements IEntityService {
-  // file-storage {
   storageService: IFileStorageService;
 
   constructor(storageService: IFileStorageService) {
     this.storageService = storageService;
   }
-  // } file-storage
 
   /* eslint-disable class-methods-use-this */
   async getEntity(id: string): Promise<EntityResponseDTO> {
@@ -251,9 +212,7 @@ class EntityService implements IEntityService {
       enumField: entity.enum_field,
       stringArrayField: entity.string_array_field,
       boolField: entity.bool_field,
-      // file-storage {
       fileName: entity.file_name,
-      // } file-storage
     };
   }
 
@@ -267,9 +226,7 @@ class EntityService implements IEntityService {
         enumField: entity.enum_field,
         stringArrayField: entity.string_array_field,
         boolField: entity.bool_field,
-        // file-storage {
         fileName: entity.file_name,
-        // } file-storage
       }));
     } catch (error: unknown) {
       Logger.error(
@@ -281,11 +238,8 @@ class EntityService implements IEntityService {
 
   async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
     let newEntity: PgEntity | null;
-    // file-storage {
     const fileName = entity.filePath ? uuidv4() : "";
-    // } file-storage
     try {
-      // file-storage {
       if (entity.filePath) {
         await this.storageService.createFile(
           fileName,
@@ -293,16 +247,13 @@ class EntityService implements IEntityService {
           entity.fileContentType,
         );
       }
-      // } file-storage
       newEntity = await PgEntity.create({
         string_field: entity.stringField,
         int_field: entity.intField,
         enum_field: entity.enumField,
         string_array_field: entity.stringArrayField,
         bool_field: entity.boolField,
-        // file-storage {
         file_name: fileName,
-        // } file-storage
       });
     } catch (error: unknown) {
       Logger.error(
@@ -317,9 +268,7 @@ class EntityService implements IEntityService {
       enumField: newEntity.enum_field,
       stringArrayField: newEntity.string_array_field,
       boolField: newEntity.bool_field,
-      // file-storage {
       fileName,
-      // } file-storage
     };
   }
 
@@ -329,11 +278,8 @@ class EntityService implements IEntityService {
   ): Promise<EntityResponseDTO | null> {
     let resultingEntity: PgEntity | null;
     let updateResult: [number, PgEntity[]] | null;
-    // file-storage {
     let fileName = "";
-    // } file-storage
     try {
-      // file-storage {
       const currentEntity = await PgEntity.findByPk(id, {
         raw: true,
         attributes: ["file_name"],
@@ -357,7 +303,6 @@ class EntityService implements IEntityService {
       } else if (currentFileName) {
         await this.storageService.deleteFile(currentFileName);
       }
-      // } file-storage
       updateResult = await PgEntity.update(
         {
           string_field: entity.stringField,
@@ -365,9 +310,7 @@ class EntityService implements IEntityService {
           enum_field: entity.enumField,
           string_array_field: entity.stringArrayField,
           bool_field: entity.boolField,
-          // file-storage {
           file_name: fileName,
-          // } file-storage
         },
         { where: { id }, returning: true },
       );
@@ -389,36 +332,23 @@ class EntityService implements IEntityService {
       enumField: resultingEntity.enum_field,
       stringArrayField: resultingEntity.string_array_field,
       boolField: resultingEntity.bool_field,
-      // file-storage {
       fileName,
-      // } file-storage
     };
   }
 
   async deleteEntity(id: string): Promise<string> {
     try {
-      // file-storage {
       const entityToDelete = await PgEntity.findByPk(id, { raw: true });
-      // } file-storage
       const deleteResult: number | null = await PgEntity.destroy({
         where: { id },
       });
 
-      // file-storage {
       if (!entityToDelete || !deleteResult) {
         throw new Error(`Entity id ${id} not found`);
       }
-      // } file-storage
-      // no-file-storage {
-      if (!deleteResult) {
-        throw new Error(`Entity id ${id} not found`);
-      }
-      // } no-file-storage
-      // file-storage {
       if (entityToDelete.file_name) {
         await this.storageService.deleteFile(entityToDelete.file_name);
       }
-      // } file-storage
       return id;
     } catch (error: unknown) {
       Logger.error(
