@@ -122,9 +122,8 @@ const CreateForm = (): React.ReactElement => {
     // } graphql
     // rest {
 
-
-    //If not using file-storage remove all multipart code and replace the results line with
-    //const result = await EntityAPIClient.create({ formData });
+    // If not using file-storage remove all multipart code and replace the results line with
+    // const result = await EntityAPIClient.create({ formData });
     const multipartFormData = new FormData();
     // typescript {
     multipartFormData.append("body", JSON.stringify(formData));
@@ -135,14 +134,16 @@ const CreateForm = (): React.ReactElement => {
     if (fileField) {
       multipartFormData.append("file", fileField);
     }
-    const result = await EntityAPIClient.create({ formData: multipartFormData });
+    const result = await EntityAPIClient.create({
+      formData: multipartFormData,
+    });
 
     // } rest
     setData(result);
   };
   return (
-    <> 
-      {/* Remove the next line if not using file-storage*/}
+    <>
+      {/* Remove the next line if not using file-storage */}
       <input type="file" onChange={fileChanged} />
       <Form
         formData={formFields}

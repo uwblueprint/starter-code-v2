@@ -24,7 +24,7 @@ export type EntityResponse = {
   stringArrayField: string[];
   enumField: EnumField;
   boolField: boolean;
-  fileName: string; //Can be removed if not using file storage
+  fileName: string; // Can be removed if not using file storage
 };
 
 const create = async ({
@@ -38,8 +38,7 @@ const create = async ({
     "accessToken",
   )}`;
   try {
-
-    //Remove "Authorization if not using Auth"
+    // Remove "Authorization if not using Auth"
     const { data } = await baseAPIClient.post("/entities", formData, {
       headers: { Authorization: bearerToken },
     });
@@ -74,7 +73,7 @@ const getFile = async (uuid: string): Promise<string> => {
       headers: { Authorization: bearerToken },
     });
     // typescript {
-    return data.fileURL
+    return data.fileURL;
     // } typescript
     // python {
     return data.fileUrl;
@@ -107,8 +106,8 @@ const update = async (
   {
     entityData,
   }: {
-  // Change "FormData" to "EntityRequest" if not using file-storage
-  formData: FormData;
+    // Change "FormData" to "EntityRequest" if not using file-storage
+    entityData: FormData;
   },
 ): Promise<EntityResponse> => {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(

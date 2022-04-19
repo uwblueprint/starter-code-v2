@@ -27,7 +27,7 @@ import EditTeamInfoPage from "./components/pages/EditTeamPage";
 import HooksDemo from "./components/pages/HooksDemo";
 
 const App = (): React.ReactElement => {
-  //Can remove the following 2 lines if not using auth
+  // Can remove the following 2 lines if not using auth
   const currentUser: AuthenticatedUser = getLocalStorageObj<AuthenticatedUser>(
     AUTHENTICATED_USER_KEY,
   );
