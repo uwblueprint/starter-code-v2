@@ -230,7 +230,7 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
       <button type="button" onClick={downloadEntitiesCSV}>
         Download CSV
       </button>
-      {/* Replace code below if if not using file-storage with "{entities && <DisplayTable data={entities} />}"*/}
+      {/* Replace code below if if not using file-storage with "{entities && <DisplayTable data={entities} />}" */}
       {entities && (
         <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />
       )}

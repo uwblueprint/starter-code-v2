@@ -32,7 +32,7 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
   const newConfig = { ...config };
 
   // if access token in header has expired, do a refresh
-  //Remove the "authHeadersParts" and the following if statement if not using Auth
+  // Remove the "authHeadersParts" and the following if statement if not using Auth
   const authHeaderParts = config.headers.Authorization?.split(" ");
   if (
     authHeaderParts &&

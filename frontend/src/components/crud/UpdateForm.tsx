@@ -143,8 +143,8 @@ const UpdateForm = (): React.ReactElement => {
     // } graphql
     // rest {
 
-    //If not using file-storage remove all multipart code and replace the results line with
-    //const result = await EntityAPIClient.update(formData.id, { entityData });
+    // If not using file-storage remove all multipart code and replace the results line with
+    // const result = await EntityAPIClient.update(formData.id, { entityData });
     const multipartFormData = new FormData();
     // typescript {
     multipartFormData.append("body", JSON.stringify(entityData));
