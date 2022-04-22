@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-// python {
+/* python {
 import { decamelizeKeys } from "humps";
-// } python
+python { */
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
 // graphql {
@@ -169,19 +169,21 @@ const UpdateForm = (): React.ReactElement => {
     // } no-file-storage
     // file-storage {
     const multipartFormData = new FormData();
-    // typescript {
+    /* typescript {
     multipartFormData.append("body", JSON.stringify(entityData));
-    // } typescript
-    // python {
-    multipartFormData.append("body", JSON.stringify(decamelizeKeys(entityData)));
-    // } python
+    } typescript */
+    /* python {
+    multipartFormData.append(
+      "body",
+      JSON.stringify(decamelizeKeys(entityData)),
+    );
+    python { */
     if (fileField) {
       multipartFormData.append("file", fileField);
     }
-    const result = await EntityAPIClient.update(
-      formData.id,
-      { entityData: multipartFormData }
-    );
+    const result = await EntityAPIClient.update(formData.id, {
+      entityData: multipartFormData,
+    });
     // } file-storage
     // } rest
     setData(result);

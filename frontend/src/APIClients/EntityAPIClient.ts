@@ -102,12 +102,12 @@ const getFile = async (uuid: string): Promise<string> => {
     // no-auth {
     const { data } = await baseAPIClient.get(`/entities/files/${uuid}`);
     // } no-auth
-    // typescript {
+    /* typescript {
     return data.fileURL
-    // } typescript
-    // python {
+    } typescript */
+    /* python {
     return data.fileUrl;
-    // } python
+    python { */
   } catch (error) {
     return error;
   }
