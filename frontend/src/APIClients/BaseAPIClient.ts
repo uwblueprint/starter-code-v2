@@ -5,13 +5,10 @@ import axios, { AxiosRequestConfig } from "axios";
 import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { camelizeKeys, decamelizeKeys } from "humps";
 // } python
-// auth {
 import jwt from "jsonwebtoken";
-
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { DecodedJWT } from "../types/AuthTypes";
 import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
-// } auth
 
 const baseAPIClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -34,8 +31,8 @@ baseAPIClient.interceptors.response.use((response: AxiosResponse) => {
 baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
   const newConfig = { ...config };
 
-  // auth {
   // if access token in header has expired, do a refresh
+  // Remove the "authHeadersParts" and the following if statement if not using Auth
   const authHeaderParts = config.headers.Authorization?.split(" ");
   if (
     authHeaderParts &&
@@ -66,7 +63,6 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
     }
   }
 
-  // } auth
   // python {
   if (config.params) {
     newConfig.params = decamelizeKeys(config.params);

@@ -20,9 +20,7 @@ import EntityAPIClient, {
 } from "../../APIClients/EntityAPIClient";
 // } rest
 import { downloadCSV } from "../../utils/CSVUtils";
-// file-storage {
-import { downloadFile } from "../../utils/FileUtils";
-// } file-storage
+import { downloadFile } from "../../utils/FileUtils"; // Can remove if not using file-storage
 
 type EntityData = Omit<EntityResponse, "boolField"> & { boolField: string };
 
@@ -34,64 +32,46 @@ const convert = (entityResponse: EntityResponse): EntityData => {
     stringArrayField: entityResponse.stringArrayField,
     enumField: entityResponse.enumField,
     boolField: entityResponse.boolField.toString(),
-    // file-storage {
-    fileName: entityResponse.fileName,
-    // } file-storage
+    fileName: entityResponse.fileName, // Can remove if not using file-storage
   };
 };
 
 type TableProps = {
   data: EntityData[];
-  // file-storage {
-  downloadEntityFile: (fileUUID: string) => void;
-  // } file-storage
+  downloadEntityFile: (fileUUID: string) => void; // Can remove if not using file-storage
 };
 
-// no-file-storage {
-const columns: Column<EntityData>[] = [
-// } no-file-storage
-// file-storage {
 const createColumns = (
   downloadEntityFile: (fileUUID: string) => void,
 ): Column<EntityData>[] => [
-// } file-storage
   {
     Header: "id",
-
     accessor: "id", // accessor is the "key" in the data
   },
   {
     Header: "stringField",
-
     accessor: "stringField", // accessor is the "key" in the data
   },
-
   {
     Header: "integerField",
-
     accessor: "intField",
   },
   {
     Header: "stringArrayField",
-
     accessor: "stringArrayField",
   },
   {
     Header: "enumField",
-
     accessor: "enumField",
   },
   {
     Header: "boolField",
-
     accessor: "boolField",
   },
-  // file-storage {
+  // Remove the column below if not using file-storage
   {
     Header: "fileName",
-
     accessor: "fileName",
-
     // eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
     Cell: ({ cell }: any) =>
       // TODO: lookup the proper type of the prop
@@ -104,36 +84,18 @@ const createColumns = (
         </button>
       ) : null,
   },
-  // } file-storage
 ];
 
-// no-file-storage {
-const DisplayTable = ({ data }: TableProps) => {
-  const {
-    getTableProps,
-
-    headerGroups,
-
-    rows,
-
-    prepareRow,
-  } = useTable<EntityData>({ columns, data });
-// } no-file-storage
-// file-storage {
 const DisplayTable = ({ data, downloadEntityFile }: TableProps) => {
   const {
     getTableProps,
-
     headerGroups,
-
     rows,
-
     prepareRow,
   } = useTable<EntityData>({
     columns: createColumns(downloadEntityFile),
     data,
   });
-// } file-storage
 
   return (
     <BTable
@@ -175,6 +137,7 @@ const DisplayTable = ({ data, downloadEntityFile }: TableProps) => {
 };
 
 // graphql {
+// Can remove fileName not using file-storage
 const ENTITIES = gql`
   query DisplayTableContainer_Entities {
     entities {
@@ -184,9 +147,7 @@ const ENTITIES = gql`
       enumField
       stringArrayField
       boolField
-      // file-storage {
       fileName
-      // } file-storage
     }
   }
 `;
@@ -197,14 +158,13 @@ const ENTITIESCSV = gql`
   }
 `;
 
-// file-storage {
+// Can remove if not using file-storage
 const FILE = gql`
   query DisplayTableContainer_File($fileUUID: ID!) {
     file(fileUUID: $fileUUID)
   }
 `;
 
-// } file-storage
 // } graphql
 const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   const [entities, setEntities] = useState<EntityData[] | null>(null);
@@ -231,7 +191,7 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
   }, []);
   // } rest
 
-  // file-storage {
+  // Can remove if not using file-storage
   const downloadEntityFile = async (fileUUID: string) => {
     // graphql {
     const { data } = await apolloClient.query({
@@ -247,7 +207,6 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
     // } rest
   };
 
-  // } file-storage
   const downloadEntitiesCSV = async () => {
     if (entities) {
       // graphql {
@@ -271,14 +230,10 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
       <button type="button" onClick={downloadEntitiesCSV}>
         Download CSV
       </button>
-      // no-file-storage {
-      {entities && <DisplayTable data={entities} />}
-      // } no-file-storage
-      // file-storage {
+      {/* Replace code below if if not using file-storage with "{entities && <DisplayTable data={entities} />}" */}
       {entities && (
         <DisplayTable data={entities} downloadEntityFile={downloadEntityFile} />
       )}
-      // } file-storage
     </>
   );
 };

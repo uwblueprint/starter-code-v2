@@ -70,21 +70,6 @@ const uiSchema = {
 };
 
 // graphql {
-// no-file-storage {
-const CREATE_ENTITY = gql`
-  mutation CreateForm_CreateEntity($entity: EntityRequestDTO!) {
-    createEntity(entity: $entity) {
-      id
-      stringField
-      intField
-      enumField
-      stringArrayField
-      boolField
-    }
-  }
-`;
-// } no-file-storage
-// file-storage {
 const CREATE_ENTITY = gql`
   mutation CreateForm_CreateEntity($entity: EntityRequestDTO!, $file: Upload) {
     createEntity(entity: $entity, file: $file) {
@@ -98,14 +83,11 @@ const CREATE_ENTITY = gql`
     }
   }
 `;
-// } file-storage
 
 // } graphql
 const CreateForm = (): React.ReactElement => {
   const [data, setData] = useState<EntityResponse | null>(null);
-  // file-storage {
   const [fileField, setFileField] = useState<File | null>(null);
-  // } file-storage
   const [formFields, setFormFields] = useState<EntityRequest | null>(null);
 
   // graphql {
@@ -118,7 +100,6 @@ const CreateForm = (): React.ReactElement => {
     return <p>Created! ✔️</p>;
   }
 
-  // file-storage {
   const fileChanged = (e: { target: HTMLInputElement }) => {
     if (e.target.files) {
       const fileSize = e.target.files[0].size / 1024 / 1024;
@@ -131,27 +112,18 @@ const CreateForm = (): React.ReactElement => {
     }
   };
 
-  // } file-storage
   const onSubmit = async ({ formData }: { formData: EntityRequest }) => {
     // graphql {
-    // no-file-storage {
-    const graphQLResult = await createEntity({
-      variables: { entity: formData },
-    });
-    // } no-file-storage
-    // file-storage {
     const graphQLResult = await createEntity({
       variables: { entity: formData, file: fileField },
     });
-    // } file-storage
     const result: EntityResponse | null =
       graphQLResult.data?.createEntity ?? null;
     // } graphql
     // rest {
-    // no-file-storage {
-    const result = await EntityAPIClient.create({ formData });
-    // } no-file-storage
-    // file-storage {
+
+    // If not using file-storage remove all multipart code and replace the results line with
+    // const result = await EntityAPIClient.create({ formData });
     const multipartFormData = new FormData();
     // typescript {
     multipartFormData.append("body", JSON.stringify(formData));
@@ -162,27 +134,16 @@ const CreateForm = (): React.ReactElement => {
     if (fileField) {
       multipartFormData.append("file", fileField);
     }
-    const result = await EntityAPIClient.create({ formData: multipartFormData });
-    // } file-storage
+    const result = await EntityAPIClient.create({
+      formData: multipartFormData,
+    });
+
     // } rest
     setData(result);
   };
-  // no-file-storage {
-  return (
-    <Form
-      formData={formFields}
-      schema={schema}
-      uiSchema={uiSchema}
-      onChange={({ formData }: { formData: EntityRequest }) =>
-        setFormFields(formData)
-      }
-      onSubmit={onSubmit}
-    />
-  );
-  // } no-file-storage
-  // file-storage {
   return (
     <>
+      {/* Remove the next line if not using file-storage */}
       <input type="file" onChange={fileChanged} />
       <Form
         formData={formFields}
@@ -195,7 +156,6 @@ const CreateForm = (): React.ReactElement => {
       />
     </>
   );
-  // } file-storage
 };
 
 export default CreateForm;

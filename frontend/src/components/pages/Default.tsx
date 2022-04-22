@@ -2,13 +2,10 @@ import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import * as Routes from "../../constants/Routes";
 import SampleContext from "../../contexts/SampleContext";
-
-// auth {
 import Logout from "../auth/Logout";
 import RefreshCredentials from "../auth/RefreshCredentials";
 import ResetPassword from "../auth/ResetPassword";
 
-// } auth
 type ButtonProps = { text: string; path: string };
 
 const Button = ({ text, path }: ButtonProps) => {
@@ -44,11 +41,10 @@ const Default = (): React.ReactElement => {
     <div style={{ textAlign: "center", paddingTop: "20px" }}>
       <h1>Default Page</h1>
       <div className="btn-group" style={{ paddingRight: "10px" }}>
-        // auth {
+        {/* Can remove the next 3 lines if not using auth */}
         <Logout />
         <RefreshCredentials />
         <ResetPassword />
-        // } auth
         <Button text="Create Entity" path={Routes.CREATE_ENTITY_PAGE} />
         <Button text="Update Entity" path={Routes.UPDATE_ENTITY_PAGE} />
         <Button text="Display Entities" path={Routes.DISPLAY_ENTITY_PAGE} />
