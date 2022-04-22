@@ -12,12 +12,12 @@ import {
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
 // } graphql
-// rest {
+/* } rest
 import EntityAPIClient, {
   EntityRequest,
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
-// } rest
+} rest */
 
 const schema: JSONSchema7 = {
   title: "Update Entity",
@@ -163,7 +163,7 @@ const UpdateForm = (): React.ReactElement => {
     const result: EntityResponse | null =
       graphQLResult.data?.updateEntity ?? null;
     // } graphql
-    // rest {
+    /* } rest
     // no-file-storage {
     const result = await EntityAPIClient.update(formData.id, { entityData });
     // } no-file-storage
@@ -185,7 +185,7 @@ const UpdateForm = (): React.ReactElement => {
       entityData: multipartFormData,
     });
     // } file-storage
-    // } rest
+    } rest */
     setData(result);
   };
   // no-file-storage {

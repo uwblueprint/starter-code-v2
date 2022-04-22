@@ -12,12 +12,12 @@ import {
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
 // } graphql
-// rest {
+/* } rest
 import EntityAPIClient, {
   EntityRequest,
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
-// } rest
+} rest */
 
 const schema: JSONSchema7 = {
   title: "Create Entity",
@@ -147,7 +147,7 @@ const CreateForm = (): React.ReactElement => {
     const result: EntityResponse | null =
       graphQLResult.data?.createEntity ?? null;
     // } graphql
-    // rest {
+    /* } rest
     // no-file-storage {
     const result = await EntityAPIClient.create({ formData });
     // } no-file-storage
@@ -166,7 +166,7 @@ const CreateForm = (): React.ReactElement => {
       formData: multipartFormData,
     });
     // } file-storage
-    // } rest
+    } rest */
     setData(result);
   };
   // no-file-storage {
