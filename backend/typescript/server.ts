@@ -19,6 +19,7 @@ import { sequelize } from "./models";
 // rest {
 import authRouter from "./rest/authRoutes";
 import entityRouter from "./rest/entityRoutes";
+import simpleEntityRouter from "./rest/simpleEntityRoutes";
 import userRouter from "./rest/userRoutes";
 
 // } rest
@@ -51,6 +52,7 @@ app.use(express.urlencoded({ extended: true }));
 // rest {
 app.use("/auth", authRouter);
 app.use("/entities", entityRouter);
+app.use("/simpleEntities", simpleEntityRouter);
 app.use("/users", userRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

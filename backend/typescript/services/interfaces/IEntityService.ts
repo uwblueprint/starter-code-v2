@@ -37,7 +37,7 @@ export interface IEntityService {
 
   /**
    * create an Entity with the fields given in the DTO, return created Entity
-   * @param entity user's email
+   * @param entity new Entity
    * @returns the created Entity
    * @throws Error if creation fails
    */
