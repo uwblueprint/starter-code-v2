@@ -258,7 +258,7 @@ paths:
         '500':
           description: Invalid fileName
 
-  /simpleEntities:
+  /simple-entities:
     get:
       security:
         - bearerAuth: []
@@ -353,7 +353,7 @@ paths:
           description: Invalid request
   
   
-  /simpleEntities/{id}:
+  /simple-entities/{id}:
     get:
       security:
         - bearerAuth: []
