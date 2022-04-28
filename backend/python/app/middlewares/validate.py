@@ -43,6 +43,9 @@ def validate_request(dto_class_name):
                 and len(request.content_type.split(";")) > 0
                 and request.content_type.split(";")[0] == "application/json"
             ):
+                # Requests with a JSON body must explicitly specify
+                # application/json as the Content-Type header.
+                # Axios will do this automatically.
                 dto = dtos[dto_class_name](**request.json)
             else:
                 req_body = request.form.get("body", default=None)
