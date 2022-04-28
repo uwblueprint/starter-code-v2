@@ -65,7 +65,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRouter);
 // } auth
 app.use("/entities", entityRouter);
-app.use("/simpleEntities", simpleEntityRouter);
+app.use("/simple-entities", simpleEntityRouter);
 // auth {
 app.use("/users", userRouter);
 // } auth
