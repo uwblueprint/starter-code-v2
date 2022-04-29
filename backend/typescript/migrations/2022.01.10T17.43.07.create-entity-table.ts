@@ -32,12 +32,10 @@ export const up: Migration = async ({ context: sequelize }) => {
       type: DataType.BOOLEAN,
       allowNull: false,
     },
-    // file-storage {
     file_name: {
       type: DataType.STRING,
       allowNull: false,
     },
-    // } file-storage
     createdAt: DataType.DATE,
     updatedAt: DataType.DATE,
   });

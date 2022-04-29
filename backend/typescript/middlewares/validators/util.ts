@@ -1,6 +1,5 @@
 type Type = "string" | "integer" | "boolean";
 
-// file-storage {
 const allowableContentTypes = new Set([
   "text/plain",
   "application/pdf",
@@ -9,7 +8,6 @@ const allowableContentTypes = new Set([
   "image/gif",
 ]);
 
-// } file-storage
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const validatePrimitive = (value: any, type: Type): boolean => {
@@ -41,12 +39,10 @@ export const validateArray = (value: any, type: Type): boolean => {
   );
 };
 
-// file-storage {
 export const validateFileType = (mimetype: string): boolean => {
   return allowableContentTypes.has(mimetype);
 };
 
-// } file-storage
 export const getApiValidationError = (
   fieldName: string,
   type: Type,
@@ -55,9 +51,7 @@ export const getApiValidationError = (
   return `The ${fieldName} is not a ${type}${isArray ? " Array" : ""}`;
 };
 
-// file-storage {
 export const getFileTypeValidationError = (mimetype: string): string => {
   const allowableContentTypesString = [...allowableContentTypes].join(", ");
   return `The file type ${mimetype} is not one of ${allowableContentTypesString}`;
 };
-// } file-storage
