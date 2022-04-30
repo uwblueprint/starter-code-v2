@@ -8,6 +8,7 @@ import json
 from ..resources.create_user_dto import CreateUserDTO
 # } auth
 from ..resources.entity_dto import EntityDTO
+from ..resources.simple_entity_dto import SimpleEntityDTO
 # auth {
 from ..resources.register_user_dto import RegisterUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
@@ -18,6 +19,7 @@ dtos = {
     "CreateUserDTO": CreateUserDTO,
     # } auth
     "EntityDTO": EntityDTO,
+    "SimpleEntityDTO": SimpleEntityDTO,
     # auth {
     "RegisterUserDTO": RegisterUserDTO,
     "UpdateUserDTO": UpdateUserDTO,
@@ -36,12 +38,14 @@ def validate_request(dto_class_name):
     def validate_dto(api_func):
         @wraps(api_func)
         def wrapper(*args, **kwargs):
-            # file-storage {
             if (
                 request.content_type
                 and len(request.content_type.split(";")) > 0
                 and request.content_type.split(";")[0] == "application/json"
             ):
+                # Requests with a JSON body must explicitly specify
+                # application/json as the Content-Type header.
+                # Axios will do this automatically.
                 dto = dtos[dto_class_name](**request.json)
             else:
                 req_body = request.form.get("body", default=None)
@@ -50,10 +54,6 @@ def validate_request(dto_class_name):
                 req = json.loads(req_body)
                 req["file"] = request.files.get("file", default=None)
                 dto = dtos[dto_class_name](**req)
-            # } file-storage
-            # no-file-storage {
-            dto = dtos[dto_class_name](**request.json)
-            # } no-file-storage
             error_message = dto.validate()
             if error_message:
                 return (

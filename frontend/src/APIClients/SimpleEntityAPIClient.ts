@@ -36,7 +36,7 @@ const create = async ({
     "accessToken",
   )}`;
   try {
-    const { data } = await baseAPIClient.post("/simpleEntities", formData, {
+    const { data } = await baseAPIClient.post("/simple-entities", formData, {
       headers: { Authorization: bearerToken },
     });
     return data;
@@ -51,7 +51,7 @@ const get = async (): Promise<SimpleEntityResponse[]> => {
     "accessToken",
   )}`;
   try {
-    const { data } = await baseAPIClient.get("/simpleEntities", {
+    const { data } = await baseAPIClient.get("/simple-entities", {
       headers: { Authorization: bearerToken },
     });
     return data;
@@ -66,7 +66,7 @@ const getCSV = async (): Promise<string> => {
     "accessToken",
   )}`;
   try {
-    const { data } = await baseAPIClient.get("/simpleEntities", {
+    const { data } = await baseAPIClient.get("/simple-entities", {
       // Following line is necessary to set the Content-Type header
       // Reference: https://github.com/axios/axios/issues/86
       data: null,
@@ -92,7 +92,7 @@ const update = async (
   )}`;
   try {
     const { data } = await baseAPIClient.put(
-      `/simpleEntities/${id}`,
+      `/simple-entities/${id}`,
       entityData,
       {
         headers: { Authorization: bearerToken },

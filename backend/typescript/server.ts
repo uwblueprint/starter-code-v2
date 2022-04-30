@@ -52,7 +52,7 @@ app.use(express.urlencoded({ extended: true }));
 // rest {
 app.use("/auth", authRouter);
 app.use("/entities", entityRouter);
-app.use("/simpleEntities", simpleEntityRouter);
+app.use("/simple-entities", simpleEntityRouter);
 app.use("/users", userRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
