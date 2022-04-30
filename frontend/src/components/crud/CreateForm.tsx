@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-// python {
+/* python {
 import { decamelizeKeys } from "humps";
-// } python
+python { */
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
 // graphql {
@@ -12,12 +12,12 @@ import {
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
 // } graphql
-// rest {
+/* } rest
 import EntityAPIClient, {
   EntityRequest,
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
-// } rest
+} rest */
 
 const schema: JSONSchema7 = {
   title: "Create Entity",
@@ -147,24 +147,26 @@ const CreateForm = (): React.ReactElement => {
     const result: EntityResponse | null =
       graphQLResult.data?.createEntity ?? null;
     // } graphql
-    // rest {
+    /* } rest
     // no-file-storage {
     const result = await EntityAPIClient.create({ formData });
     // } no-file-storage
     // file-storage {
     const multipartFormData = new FormData();
-    // typescript {
+    /* typescript {
     multipartFormData.append("body", JSON.stringify(formData));
-    // } typescript
-    // python {
+    } typescript */
+    /* python {
     multipartFormData.append("body", JSON.stringify(decamelizeKeys(formData)));
-    // } python
+    python { */
     if (fileField) {
       multipartFormData.append("file", fileField);
     }
-    const result = await EntityAPIClient.create({ formData: multipartFormData });
+    const result = await EntityAPIClient.create({
+      formData: multipartFormData,
+    });
     // } file-storage
-    // } rest
+    } rest */
     setData(result);
   };
   // no-file-storage {

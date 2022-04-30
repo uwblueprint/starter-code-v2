@@ -25,9 +25,9 @@ const RefreshCredentials = (): React.ReactElement => {
     // graphql {
     const success = await authAPIClient.refresh(refresh);
     // } graphql
-    // rest {
+    /* } rest
     const success = await authAPIClient.refresh();
-    // } rest
+    } rest */
     if (!success) {
       setAuthenticatedUser(null);
     }

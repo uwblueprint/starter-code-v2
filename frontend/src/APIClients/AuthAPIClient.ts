@@ -5,13 +5,13 @@ import {
 } from "@apollo/client";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { AuthenticatedUser } from "../types/AuthTypes";
-// rest {
+/* } rest
 import baseAPIClient from "./BaseAPIClient";
 import {
   getLocalStorageObjProperty,
   setLocalStorageObjProperty,
 } from "../utils/LocalStorageUtils";
-// } rest
+} rest */
 // graphql {
 import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 // } graphql
@@ -189,7 +189,7 @@ export default { login, logout, loginWithGoogle, register, refresh };
 
 // } graphql
 
-// rest {
+/* } rest
 const login = async (
   email: string,
   password: string,
@@ -295,4 +295,4 @@ const refresh = async (): Promise<boolean> => {
 };
 
 export default { login, logout, loginWithGoogle, register, resetPassword, refresh };
-// } rest
+} rest */

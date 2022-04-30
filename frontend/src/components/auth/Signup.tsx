@@ -57,14 +57,14 @@ const Signup = (): React.ReactElement => {
       register,
     );
     // } graphql
-    // rest {
+    /* } rest
     const user: AuthenticatedUser = await authAPIClient.register(
       firstName,
       lastName,
       email,
       password,
     );
-    // } rest
+    } rest */
     setAuthenticatedUser(user);
   };
 

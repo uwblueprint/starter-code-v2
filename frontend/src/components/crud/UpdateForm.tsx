@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-// python {
+/* python {
 import { decamelizeKeys } from "humps";
-// } python
+python { */
 import { JSONSchema7 } from "json-schema";
 import { Form } from "@rjsf/bootstrap-4";
 // graphql {
@@ -12,12 +12,12 @@ import {
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
 // } graphql
-// rest {
+/* } rest
 import EntityAPIClient, {
   EntityRequest,
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
-// } rest
+} rest */
 
 const schema: JSONSchema7 = {
   title: "Update Entity",
@@ -163,27 +163,29 @@ const UpdateForm = (): React.ReactElement => {
     const result: EntityResponse | null =
       graphQLResult.data?.updateEntity ?? null;
     // } graphql
-    // rest {
+    /* } rest
     // no-file-storage {
     const result = await EntityAPIClient.update(formData.id, { entityData });
     // } no-file-storage
     // file-storage {
     const multipartFormData = new FormData();
-    // typescript {
+    /* typescript {
     multipartFormData.append("body", JSON.stringify(entityData));
-    // } typescript
-    // python {
-    multipartFormData.append("body", JSON.stringify(decamelizeKeys(entityData)));
-    // } python
+    } typescript */
+    /* python {
+    multipartFormData.append(
+      "body",
+      JSON.stringify(decamelizeKeys(entityData)),
+    );
+    python { */
     if (fileField) {
       multipartFormData.append("file", fileField);
     }
-    const result = await EntityAPIClient.update(
-      formData.id,
-      { entityData: multipartFormData }
-    );
+    const result = await EntityAPIClient.update(formData.id, {
+      entityData: multipartFormData,
+    });
     // } file-storage
-    // } rest
+    } rest */
     setData(result);
   };
   // no-file-storage {

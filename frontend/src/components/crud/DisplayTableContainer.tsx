@@ -2,9 +2,9 @@
 // graphql {
 import React, { useState } from "react";
 // } graphql
-// rest {
+/* } rest
 import React, { useState, useEffect } from "react";
-// } rest
+} rest */
 import BTable from "react-bootstrap/Table";
 import { HeaderGroup, useTable, Column } from "react-table";
 
@@ -13,12 +13,12 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 
 import { EntityResponse } from "../../APIClients/EntityAPIClient";
 // } graphql
-// rest {
+/* } rest
 
 import EntityAPIClient, {
   EntityResponse,
 } from "../../APIClients/EntityAPIClient";
-// } rest
+} rest */
 import { downloadCSV } from "../../utils/CSVUtils";
 // file-storage {
 import { downloadFile } from "../../utils/FileUtils";
@@ -219,7 +219,7 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
     },
   });
   // } graphql
-  // rest {
+  /* } rest
   useEffect(() => {
     const retrieveAndUpdateData = async () => {
       const result = await EntityAPIClient.get();
@@ -229,7 +229,7 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
     };
     retrieveAndUpdateData();
   }, []);
-  // } rest
+  } rest */
 
   // file-storage {
   const downloadEntityFile = async (fileUUID: string) => {
@@ -241,10 +241,10 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
     downloadFile(data.file, "file");
     // } graphql
 
-    // rest {
+    /* } rest
     const data = await EntityAPIClient.getFile(fileUUID);
     downloadFile(data, "file");
-    // } rest
+    } rest */
   };
 
   // } file-storage
@@ -256,10 +256,10 @@ const DisplayTableContainer: React.FC = (): React.ReactElement | null => {
       });
       downloadCSV(data.entitiesCSV, "export.csv");
       // } graphql
-      // rest {
+      /* } rest
       const csvString = await EntityAPIClient.getCSV();
       downloadCSV(csvString, "export.csv");
-      // } rest
+      } rest */
       // Use the following lines to download CSV using frontend CSV generation instead of API
       // const csvString = await generateCSV<EntityData>({ data: entities });
       // downloadCSV(csvString, "export.csv");

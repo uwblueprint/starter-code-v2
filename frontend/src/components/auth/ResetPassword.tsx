@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 // } graphql
-// rest {
+/* } rest
 import authAPIClient from "../../APIClients/AuthAPIClient";
-// } rest
+} rest */
 import AuthContext from "../../contexts/AuthContext";
 
 // graphql {
@@ -28,9 +28,9 @@ const ResetPassword = (): React.ReactElement => {
     // graphql {
     await resetPassword({ variables: { email: authenticatedUser?.email } });
     // } graphql
-    // rest {
+    /* } rest
     await authAPIClient.resetPassword(authenticatedUser?.email);
-    // } rest
+    } rest */
   };
 
   return (
