@@ -9,4 +9,3 @@
 .vscode
 **/*.cache
 **/*.egg-info
-**/update_secrets
