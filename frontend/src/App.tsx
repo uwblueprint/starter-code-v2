@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
 
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
@@ -22,6 +23,7 @@ import EditTeamInfoPage from "./components/pages/EditTeamPage";
 import HooksDemo from "./components/pages/HooksDemo";
 
 import { AuthenticatedUser } from "./types/AuthTypes";
+import authAPIClient from "./APIClients/AuthAPIClient";
 import * as Routes from "./constants/Routes";
 
 const App = (): React.ReactElement => {
@@ -40,6 +42,28 @@ const App = (): React.ReactElement => {
     sampleContextReducer,
     DEFAULT_SAMPLE_CONTEXT,
   );
+
+  // Refresh authentication here (firebase tokens expire every hour) OR I create a parent component below the AuthContext.Provider
+  const REFRESH = gql`
+  mutation Refresh {
+    refresh
+  }
+`;
+
+  const MINUTE_MS = 3600000;
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const [refresh] = useMutation<{ refresh: string }>(REFRESH);
+      const success = await authAPIClient.refresh(refresh);
+      if (!success) {
+        setAuthenticatedUser(null);
+      }
+    }, MINUTE_MS);
+
+    return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+  }, [])
+
 
   return (
     <SampleContext.Provider value={sampleContext}>
