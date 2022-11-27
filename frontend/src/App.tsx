@@ -43,22 +43,24 @@ const App = (): React.ReactElement => {
     DEFAULT_SAMPLE_CONTEXT,
   );
 
-  // Refresh authentication here (firebase tokens expire every hour) OR I create a parent component below the AuthContext.Provider
   const REFRESH = gql`
     mutation Refresh {
       refresh
     }
   `;
-  const MINUTE_MS = 3600000;
+
+  const HOUR_MS = 3300000;
   const doRefresh = useMutation(REFRESH);
   useEffect(() => {
     const interval = setInterval(async () => {
-      const [refresh] = doRefresh;
-      const success = await authAPIClient.refresh(refresh);
-      if (!success) {
-        setAuthenticatedUser(null);
+      if (currentUser != null) {
+        const [refresh] = doRefresh;
+        const success = await authAPIClient.refresh(refresh);
+        if (!success) {
+          setAuthenticatedUser(null);
+        }
       }
-    }, MINUTE_MS);
+    }, HOUR_MS);
 
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, []);
