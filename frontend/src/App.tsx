@@ -63,7 +63,7 @@ const App = (): React.ReactElement => {
     }, HOUR_MS);
 
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-  }, []);
+  }, [currentUser,doRefresh]);
 
   return (
     <SampleContext.Provider value={sampleContext}>
