@@ -13,7 +13,6 @@ function check_parameters() {
 
         --output_path)
         OUTPUT_PATH=$2
-        echo "here"
         shift
         shift
         ;;
