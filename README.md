@@ -81,13 +81,8 @@ docker-compose --version
 git clone https://github.com/uwblueprint/starter-code-v2.git
 cd starter-code-v2
 ```
-2. Pull secrets from Vault
-```
-./setup_secrets.sh <filename>
-```
-   See our [secret management doc](https://uwblueprint.github.io/starter-code-v2/docs/getting-started#secret-management) for more information
-
-3. Comment out one of the backend services in `docker-compose.yml`
+2. Comment out one of the backend services in `docker-compose.yml`
+3. Follow through our [public docs](https://uwblueprint.github.io/starter-code-v2/docs/getting-started)
 4. In the root `.env` file, change the name of the MongoDB database according to the backend you're using: either `typescript-test` or `python-test`
 5. Run the application
 ```bash
