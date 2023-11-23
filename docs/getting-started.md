@@ -102,7 +102,7 @@ $ npx @uwblueprint/create-bp-app@latest
 
 5. Create a `.env` file in the **frontend** subdirectory and add this value:
 ```bash
-REACT_APP_BACKEND_URL=http://localhost:5000
+REACT_APP_BACKEND_URL=http://localhost:5001
 ```
 
 6. **If using built-in user auth:** follow instructions [here](google-signin/setup.md) to configure Google OAuth. *It is fine to skip this step for now if you don't immediately need this feature, but note that you will see a greyed out Google login button on the sign-in page and an error may be alerted.*
@@ -141,7 +141,7 @@ $ docker exec -it <python-backend-container-name> /bin/bash -c "flask db upgrade
     # E2E test script configs
     TEST_SCRIPT_EMAIL=<test-admin-user-email>
     TEST_SCRIPT_PASSWORD=<test-admin-user-password>
-    TEST_SCRIPT_BACKEND_URL=http://localhost:5000
+    TEST_SCRIPT_BACKEND_URL=http://localhost:5001
     TEST_SCRIPT_NEW_USER_EMAIL=<another-email-address-you-have-access-to>
     ```
 
