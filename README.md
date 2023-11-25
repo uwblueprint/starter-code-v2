@@ -89,7 +89,7 @@ cd starter-code-v2
 docker-compose up --build
 ```
 
-The backend runs at http://localhost:5000 and the frontend runs at http://localhost:3000. By default, we use GraphQL (with TypeScript backend), REST (with Python backend), MongoDB, with user auth.
+The backend runs at http://localhost:5001 (5000 conflicts with airplay on Mac) and the frontend runs at http://localhost:3000. By default, we use GraphQL (with TypeScript backend), REST (with Python backend), MongoDB, with user auth.
 
 
 ## Creating a Release
