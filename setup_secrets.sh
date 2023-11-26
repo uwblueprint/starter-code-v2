@@ -61,6 +61,7 @@ function get_secrets() {
         local secret_val=$(vlt secrets get -plaintext $secret_name)
         local upper_secret_name=$(echo $secret_name | tr '[:lower:]' '[:upper:]')
         local new_env_line="${upper_secret_name}=${secret_val}"
+        echo "Adding ${upper_secret_name} to ${OUTPUT_PATH}"
         echo $new_env_line >> $OUTPUT_PATH
     done
     echo "Successfully adding all variables to ${OUTPUT_PATH}"
