@@ -2,7 +2,7 @@
 OUTPUT_PATH=".env"
 
 function usage() {
-    echo "Invalid parameter, check guide from <link of Maisha documnetation>"
+    echo "Invalid parameter, check guide from https://www.notion.so/uwblueprintexecs/Secret-Management-2d5b59ef0987415e93ec951ce05bf03e#1240f493d1f3495e836c07b3dfd64f28"
 }
 
 function check_parameters() {
@@ -46,16 +46,23 @@ function check_packages() {
 }
 
 function get_secrets() {
+    echo "usage: check guide from https://www.notion.so/uwblueprintexecs/Secret-Management-2d5b59ef0987415e93ec951ce05bf03e#1240f493d1f3495e836c07b3dfd64f28"
     check_packages
     check_parameters "$@"
     local login_message="$(vlt login)"
-    echo $login_message
     if [[ "$login_message" != "Successfully logged in" ]]; then
         echo "Currently not loggin, login first to the vault secret to set up .env file" 
         exit 1
     fi
     local all_secrets_json=$(vlt secrets -format json)
     local all_secrets_names="$(jq -r '.[]."name"' <<< ${all_secrets_json})"
+
+    if [ -e "$OUTPUT_PATH" ]; then
+        echo "Provided file already exist: New Secrets will be append at the end of $OUTPUT_PATH"
+    else
+        echo "New file $OUTPUT_PATH will be created to store secrets"
+    fi
+
     for secret_name in $(echo $all_secrets_names);
     do
         local secret_val=$(vlt secrets get -plaintext $secret_name)
