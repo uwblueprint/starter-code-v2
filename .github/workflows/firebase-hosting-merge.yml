@@ -20,9 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: echo "REACT_APP_BACKEND_URL=${{ secrets.DEV_BACKEND_URL }}" > .env
-      auth {
       - run: echo "REACT_APP_OAUTH_CLIENT_ID=${{ secrets.DEV_OAUTH_CLIENT_ID }}" >> .env
-      } auth
       - run: rm -rf node_modules && yarn install --frozen-lockfile && yarn build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

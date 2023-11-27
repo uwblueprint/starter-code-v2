@@ -14,7 +14,6 @@ const RESET_PASSWORD = gql`
   }
 `;
 
-// } graphql
 const ResetPassword = (): React.ReactElement => {
   const { authenticatedUser } = useContext(AuthContext);
 

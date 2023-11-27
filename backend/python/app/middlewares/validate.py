@@ -1,29 +1,17 @@
 from flask import jsonify, request
 from functools import wraps
-# file-storage {
 import json
 
-# } file-storage
-# auth {
 from ..resources.create_user_dto import CreateUserDTO
-# } auth
 from ..resources.entity_dto import EntityDTO
-from ..resources.simple_entity_dto import SimpleEntityDTO
-# auth {
 from ..resources.register_user_dto import RegisterUserDTO
 from ..resources.update_user_dto import UpdateUserDTO
-# } auth
 
 dtos = {
-    # auth {
     "CreateUserDTO": CreateUserDTO,
-    # } auth
     "EntityDTO": EntityDTO,
-    "SimpleEntityDTO": SimpleEntityDTO,
-    # auth {
     "RegisterUserDTO": RegisterUserDTO,
     "UpdateUserDTO": UpdateUserDTO,
-    # } auth
 }
 
 
@@ -43,9 +31,6 @@ def validate_request(dto_class_name):
                 and len(request.content_type.split(";")) > 0
                 and request.content_type.split(";")[0] == "application/json"
             ):
-                # Requests with a JSON body must explicitly specify
-                # application/json as the Content-Type header.
-                # Axios will do this automatically.
                 dto = dtos[dto_class_name](**request.json)
             else:
                 req_body = request.form.get("body", default=None)

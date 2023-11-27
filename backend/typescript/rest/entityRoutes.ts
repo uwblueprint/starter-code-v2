@@ -1,15 +1,16 @@
 import { Router } from "express";
 import fs from "fs";
 import multer from "multer";
+// import EntityServiceMg from "../services/implementations/EntityServiceMg";
+import EntityServicePg from "../services/implementations/EntityServicePg";
 import { isAuthorizedByRole } from "../middlewares/auth";
-import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
-import EntityService from "../services/implementations/entityService";
-import FileStorageService from "../services/implementations/fileStorageService";
-import IFileStorageService from "../services/interfaces/fileStorageService";
 import {
   EntityResponseDTO,
   IEntityService,
 } from "../services/interfaces/IEntityService";
+import { entityRequestDtoValidator } from "../middlewares/validators/entityValidators";
+import IFileStorageService from "../services/interfaces/fileStorageService";
+import FileStorageService from "../services/implementations/fileStorageService";
 import { getErrorMessage } from "../utilities/errorUtils";
 import { sendResponseByMimeType } from "../utilities/responseUtil";
 
@@ -22,7 +23,7 @@ const defaultBucket = process.env.FIREBASE_STORAGE_DEFAULT_BUCKET || "";
 const fileStorageService: IFileStorageService = new FileStorageService(
   defaultBucket,
 );
-const entityService: IEntityService = new EntityService(fileStorageService);
+const entityService: IEntityService = new EntityServicePg(fileStorageService);
 
 /* Create entity */
 entityRouter.post(
@@ -74,7 +75,6 @@ entityRouter.get("/", async (req, res) => {
 /* Get entity by id */
 entityRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
-
   try {
     const entity = await entityService.getEntity(id);
     res.status(200).json(entity);

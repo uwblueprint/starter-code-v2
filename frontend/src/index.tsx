@@ -7,20 +7,9 @@ import jwt from "jsonwebtoken";
 import React from "react";
 import ReactDOM from "react-dom";
 // graphql {
-// no-file-storage {
-import {
-  ApolloClient,
-  ApolloProvider,
-  createHttpLink,
-  InMemoryCache,
-} from "@apollo/client";
-// } no-file-storage
-// file-storage {
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { createUploadLink } from "apollo-upload-client";
-// } file-storage
-// auth {
 import { setContext } from "@apollo/client/link/context";
+import { createUploadLink } from "apollo-upload-client";
 
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
 import { AuthenticatedUser, DecodedJWT } from "./types/AuthTypes";
@@ -43,13 +32,8 @@ const REFRESH_MUTATION = `
   }
 `;
 
-// } auth
-// no-file-storage {
-const link = createHttpLink({
-// } no-file-storage
-// file-storage {
+// graphql {
 const link = createUploadLink({
-// } file-storage
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql`,
   credentials: "include",
 });
@@ -97,24 +81,8 @@ const authLink = setContext(async (_, { headers }) => {
 
 // } auth
 const apolloClient = new ApolloClient({
-  // auth {
-  // no-file-storage {
-  link: authLink.concat(link),
-  // } no-file-storage
-  // file-storage {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   link: authLink.concat(link as any),
-  // } file-storage
-  // } auth
-  // no-auth {
-  // no-file-storage {
-  link,
-  // } no-file-storage
-  // file-storage {
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  link: (link as any),
-  // } file-storage
-  // } no-auth
   cache: new InMemoryCache(),
 });
 

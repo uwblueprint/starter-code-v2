@@ -34,8 +34,8 @@ const REGISTER = gql`
     }
   }
 `;
-
 // } graphql
+
 const Signup = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [firstName, setFirstName] = useState("");
@@ -45,8 +45,8 @@ const Signup = (): React.ReactElement => {
 
   // graphql {
   const [register] = useMutation<{ register: AuthenticatedUser }>(REGISTER);
-
   // } graphql
+
   const onSignupClick = async () => {
     // graphql {
     const user: AuthenticatedUser = await authAPIClient.register(
@@ -58,12 +58,12 @@ const Signup = (): React.ReactElement => {
     );
     // } graphql
     // rest {
-    const user: AuthenticatedUser = await authAPIClient.register(
-      firstName,
-      lastName,
-      email,
-      password,
-    );
+    // const user: AuthenticatedUser = await authAPIClient.register(
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   password,
+    // );
     // } rest
     setAuthenticatedUser(user);
   };

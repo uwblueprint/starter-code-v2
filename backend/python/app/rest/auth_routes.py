@@ -33,6 +33,7 @@ cookie_options = {
     "secure": (os.getenv("FLASK_CONFIG") == "production"),
 }
 
+
 blueprint = Blueprint("auth", __name__, url_prefix="/auth")
 
 

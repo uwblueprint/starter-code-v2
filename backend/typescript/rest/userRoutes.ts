@@ -95,7 +95,7 @@ userRouter.post("/", createUserDtoValidator, async (req, res) => {
     });
 
     await authService.sendEmailVerificationLink(req.body.email);
-    
+
     res.status(201).json(newUser);
   } catch (error: unknown) {
     res.status(500).json({ error: getErrorMessage(error) });

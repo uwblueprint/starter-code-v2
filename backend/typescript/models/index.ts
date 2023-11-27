@@ -10,12 +10,8 @@ const DATABASE_URL =
 
 /* eslint-disable-next-line import/prefer-default-export */
 export const sequelize = new Sequelize(DATABASE_URL, {
-  models: [path.join(__dirname, "/*.model.ts")],
+  models: [path.join(__dirname, "/*.pgmodel.ts")],
 });
-
-// } postgresql
-// mongodb {
-import mongoose from "mongoose";
 
 /* eslint-disable-next-line import/prefer-default-export */
 export const mongo = {

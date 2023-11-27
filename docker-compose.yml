@@ -16,7 +16,6 @@ services:
       - CHOKIDAR_USEPOLLING=true
     env_file:
       - ./frontend/.env
-  # typescript {
   ts-backend:
     # TODO: rename container for your project
     container_name: scv2_ts_backend
@@ -27,14 +26,13 @@ services:
       - ./backend/typescript:/app
       - /app/node_modules
     ports:
-      - 5000:5000
+      - 5001:5000
     dns:
       - 8.8.8.8
     # postgresql {
     depends_on:
       db:
         condition: service_healthy
-    # } postgresql
     env_file:
       - ./.env
   # } typescript
@@ -47,16 +45,14 @@ services:
       context: ./backend/python
       dockerfile: Dockerfile
     ports:
-      - 5000:5000
+      - 5001:5000
     dns:
       - 8.8.8.8
     volumes:
       - ./backend/python:/app
-    # postgresql {
     depends_on:
       db:
         condition: service_healthy
-    # } postgresql
     env_file:
       - ./.env
   # } python 
@@ -79,7 +75,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-  # } postgresql
 
 # postgresql {
 volumes:
