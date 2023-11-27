@@ -1,11 +1,7 @@
 import pytest
 
 from app import create_app
-from app.models.user import User
-
-# postgresql {
-from app.models import db
-# } postgresql
+from app.models.user_mg import User
 
 """
 Sample python test.
@@ -49,15 +45,8 @@ def get_expected_user(user):
 
 
 def insert_users():
-    # mongodb {
     user_instances = [User(**data) for data in TEST_USERS]
     User.objects.insert(user_instances, load_bulk=False)
-    # } mongodb
-    # postgresql {
-    user_instances = [User(**data) for data in TEST_USERS]
-    db.session.bulk_save_objects(user_instances)
-    db.session.commit()
-    # } postgresql
 
 
 @pytest.fixture(scope="module", autouse=True)

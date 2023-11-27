@@ -1,4 +1,3 @@
-# file-storage {
 ALLOWABLE_CONTENT_TYPES = [
     "text/plain",
     "application/pdf",
@@ -8,7 +7,6 @@ ALLOWABLE_CONTENT_TYPES = [
 ]
 
 
-# } file-storage
 class EntityDTO(object):
     def __init__(self, **kwargs):
         self.string_field = kwargs.get("string_field")
@@ -20,9 +18,7 @@ class EntityDTO(object):
             else kwargs.get("enum_field")
         )
         self.bool_field = kwargs.get("bool_field")
-        # file-storage {
         self.file = kwargs.get("file")
-        # } file-storage
 
     def validate(self):
         error_list = []
@@ -45,7 +41,6 @@ class EntityDTO(object):
             error_list.append("The enum_field supplied is not an enum.")
         if type(self.bool_field) is not bool:
             error_list.append("The bool_field supplied is not a boolean.")
-        # file-storage {
         if self.file:
             if self.file.content_type not in ALLOWABLE_CONTENT_TYPES:
                 error_list.append(
@@ -54,6 +49,5 @@ class EntityDTO(object):
                         allowed_types_str=", ".join(ALLOWABLE_CONTENT_TYPES),
                     )
                 )
-        # } file-storage
 
         return error_list

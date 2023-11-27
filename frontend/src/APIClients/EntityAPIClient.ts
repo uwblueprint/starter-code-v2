@@ -26,20 +26,13 @@ export type EntityResponse = {
   stringArrayField: string[];
   enumField: EnumField;
   boolField: boolean;
-  // file-storage {
   fileName: string;
-  // } file-storage
 };
 
 const create = async ({
   formData,
 }: {
-  // no-file-storage {
-  formData: EntityRequest;
-  // } no-file-storage
-  // file-storage {
-  formData: FormData;
-  // } file-storage
+  formData: EntityRequest | FormData;
 }): Promise<EntityResponse> => {
   // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
@@ -145,17 +138,66 @@ const getCSV = async (): Promise<string> => {
   }
 };
 
+const getFile = async (uuid: string): Promise<string> => {
+  // auth {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  // } auth
+  try {
+    // auth {
+    const { data } = await baseAPIClient.get(`/entities/files/${uuid}`, {
+      headers: { Authorization: bearerToken },
+    });
+    // } auth
+
+    // no-auth {
+    // const { data } = await baseAPIClient.get(`/entities/files/${uuid}`);
+    // } no-auth
+    return data.fileURL || data.fileUrl;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getCSV = async (): Promise<string> => {
+  // auth {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  // } auth
+  try {
+    // auth {
+    const { data } = await baseAPIClient.get("/entities", {
+      // Following line is necessary to set the Content-Type header
+      // Reference: https://github.com/axios/axios/issues/86
+      data: null,
+      headers: { Authorization: bearerToken, "Content-Type": "text/csv" },
+    });
+    // } auth
+
+    // no-auth {
+    // const { data } = await baseAPIClient.get("/entities", {
+    //   // Following line is necessary to set the Content-Type header
+    //   // Reference: https://github.com/axios/axios/issues/86
+    //   data: null,
+    //   headers: { "Content-Type": "text/csv" },
+    // });
+    // } no-auth
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 const update = async (
   id: number | string,
   {
     entityData,
   }: {
-    // no-file-storage {
-    entityData: EntityRequest;
-    // } no-file-storage
-    // file-storage {
-    entityData: FormData;
-    // } file-storage
+    entityData: EntityRequest | FormData;
   },
 ): Promise<EntityResponse> => {
   // auth {
@@ -179,9 +221,4 @@ const update = async (
   }
 };
 
-// no-file-storage {
-export default { create, get, getCSV, update };
-// } no-file-storage
-// file-storage {
 export default { create, get, getFile, getCSV, update };
-// } file-storage

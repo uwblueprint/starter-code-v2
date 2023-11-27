@@ -1,11 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-// auth {
-import React, { useState, useReducer } from "react";
-// } auth
-// no-auth {
-import React, { useReducer } from "react";
-// } no-auth
+import React, { useState, useReducer, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
 
 // auth {
 import Login from "./components/auth/Login";
@@ -25,7 +21,6 @@ import * as Routes from "./constants/Routes";
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
 import AuthContext from "./contexts/AuthContext";
 import { getLocalStorageObj } from "./utils/LocalStorageUtils";
-// } auth
 import SampleContext, {
   DEFAULT_SAMPLE_CONTEXT,
 } from "./contexts/SampleContext";
@@ -34,12 +29,11 @@ import SampleContextDispatcherContext from "./contexts/SampleContextDispatcherCo
 import EditTeamInfoPage from "./components/pages/EditTeamPage";
 import HooksDemo from "./components/pages/HooksDemo";
 
-// auth {
 import { AuthenticatedUser } from "./types/AuthTypes";
+import authAPIClient from "./APIClients/AuthAPIClient";
+import * as Routes from "./constants/Routes";
 
-// } auth
 const App = (): React.ReactElement => {
-  // auth {
   const currentUser: AuthenticatedUser = getLocalStorageObj<AuthenticatedUser>(
     AUTHENTICATED_USER_KEY,
   );
@@ -48,7 +42,6 @@ const App = (): React.ReactElement => {
     currentUser,
   );
 
-  // } auth
   // Some sort of global state. Context API replaces redux.
   // Split related states into different contexts as necessary.
   // Split dispatcher and state into separate contexts as necessary.
@@ -57,8 +50,29 @@ const App = (): React.ReactElement => {
     DEFAULT_SAMPLE_CONTEXT,
   );
 
+  const REFRESH = gql`
+    mutation Refresh {
+      refresh
+    }
+  `;
+
+  const HOUR_MS = 3300000;
+  const doRefresh = useMutation(REFRESH);
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (currentUser != null) {
+        const [refresh] = doRefresh;
+        const success = await authAPIClient.refresh(refresh);
+        if (!success) {
+          setAuthenticatedUser(null);
+        }
+      }
+    }, HOUR_MS);
+
+    return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+  }, [currentUser, doRefresh]);
+
   return (
-    // auth {
     <SampleContext.Provider value={sampleContext}>
       <SampleContextDispatcherContext.Provider
         value={dispatchSampleContextUpdate}
@@ -70,6 +84,7 @@ const App = (): React.ReactElement => {
             <Switch>
               <Route exact path={Routes.LOGIN_PAGE} component={Login} />
               <Route exact path={Routes.SIGNUP_PAGE} component={Signup} />
+              <Route exact path={Routes.HOOKS_PAGE} component={HooksDemo} />
               <PrivateRoute exact path={Routes.HOME_PAGE} component={Default} />
               <PrivateRoute
                 exact
@@ -88,28 +103,8 @@ const App = (): React.ReactElement => {
               />
               <PrivateRoute
                 exact
-                path={Routes.CREATE_SIMPLE_ENTITY_PAGE}
-                component={SimpleEntityCreatePage}
-              />
-              <PrivateRoute
-                exact
-                path={Routes.UPDATE_SIMPLE_ENTITY_PAGE}
-                component={SimpleEntityUpdatePage}
-              />
-              <PrivateRoute
-                exact
-                path={Routes.DISPLAY_SIMPLE_ENTITY_PAGE}
-                component={SimpleEntityDisplayPage}
-              />
-              <PrivateRoute
-                exact
                 path={Routes.EDIT_TEAM_PAGE}
                 component={EditTeamInfoPage}
-              />
-              <PrivateRoute
-                exact
-                path={Routes.HOOKS_PAGE}
-                component={HooksDemo}
               />
               <Route exact path="*" component={NotFound} />
             </Switch>
@@ -117,26 +112,6 @@ const App = (): React.ReactElement => {
         </AuthContext.Provider>
       </SampleContextDispatcherContext.Provider>
     </SampleContext.Provider>
-    // } auth
-    // no-auth {
-    <SampleContext.Provider value={sampleContext}>
-      <SampleContextDispatcherContext.Provider
-        value={dispatchSampleContextUpdate}
-      >
-        <Router>
-          <Switch>
-            <Route exact path={Routes.HOME_PAGE} component={Default} />
-            <Route exact path={Routes.CREATE_ENTITY_PAGE} component={CreatePage} />
-            <Route exact path={Routes.UPDATE_ENTITY_PAGE} component={UpdatePage} />
-            <Route exact path={Routes.DISPLAY_ENTITY_PAGE} component={DisplayPage} />
-            <Route exact path={Routes.EDIT_TEAM_PAGE} component={EditTeamInfoPage} />
-            <Route exact path={Routes.HOOKS_PAGE} component={HooksDemo} />
-            <Route exact path="*" component={NotFound} />
-          </Switch>
-        </Router>
-      </SampleContextDispatcherContext.Provider>
-    </SampleContext.Provider>
-    // } no-auth
   );
 };
 

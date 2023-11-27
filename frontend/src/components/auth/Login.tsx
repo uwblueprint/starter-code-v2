@@ -47,8 +47,8 @@ const LOGIN_WITH_GOOGLE = gql`
     }
   }
 `;
-
 // } graphql
+
 const Login = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
@@ -60,6 +60,7 @@ const Login = (): React.ReactElement => {
   const [loginWithGoogle] = useMutation<{ loginWithGoogle: AuthenticatedUser }>(
     LOGIN_WITH_GOOGLE,
   );
+  // } graphql
 
   // } graphql
   const onLogInClick = async () => {
@@ -90,12 +91,12 @@ const Login = (): React.ReactElement => {
   };
   // } graphql
   // rest {
-  const onGoogleLoginSuccess = async (tokenId: string) => {
-    const user: AuthenticatedUser = await authAPIClient.loginWithGoogle(
-      tokenId,
-    );
-    setAuthenticatedUser(user);
-  };
+  // const onGoogleLoginSuccess = async (tokenId: string) => {
+  //   const user: AuthenticatedUser = await authAPIClient.loginWithGoogle(
+  //     tokenId,
+  //   );
+  //   setAuthenticatedUser(user);
+  // };
   // } rest
 
   if (authenticatedUser) {

@@ -1,4 +1,3 @@
-# postgresql {
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 # } postgresql
@@ -39,4 +38,3 @@ def init_app(app):
     # connect to MongoDB
     if "MONGODB_URL" in app.config:
         connect(host=app.config["MONGODB_URL"])
-    # } mongodb

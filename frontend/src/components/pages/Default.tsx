@@ -1,14 +1,12 @@
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
-import * as Routes from "../../constants/Routes";
 import SampleContext from "../../contexts/SampleContext";
 
-// auth {
 import Logout from "../auth/Logout";
 import RefreshCredentials from "../auth/RefreshCredentials";
 import ResetPassword from "../auth/ResetPassword";
+import * as Routes from "../../constants/Routes";
 
-// } auth
 type ButtonProps = { text: string; path: string };
 
 const Button = ({ text, path }: ButtonProps) => {
@@ -50,18 +48,6 @@ const Default = (): React.ReactElement => {
         <Button text="Create Entity" path={Routes.CREATE_ENTITY_PAGE} />
         <Button text="Update Entity" path={Routes.UPDATE_ENTITY_PAGE} />
         <Button text="Display Entities" path={Routes.DISPLAY_ENTITY_PAGE} />
-        <Button
-          text="Create Simple Entity"
-          path={Routes.CREATE_SIMPLE_ENTITY_PAGE}
-        />
-        <Button
-          text="Update Simple Entity"
-          path={Routes.UPDATE_SIMPLE_ENTITY_PAGE}
-        />
-        <Button
-          text="Display Simple Entities"
-          path={Routes.DISPLAY_SIMPLE_ENTITY_PAGE}
-        />
         <Button text="Edit Team" path={Routes.EDIT_TEAM_PAGE} />
         <Button text="Hooks Demo" path={Routes.HOOKS_PAGE} />
       </div>
