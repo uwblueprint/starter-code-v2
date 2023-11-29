@@ -39,7 +39,7 @@ jobs:
         if: steps.changes.outputs.frontend == 'true' || steps.changes.outputs.typescript-backend == 'true'
         uses: actions/setup-node@v2
         with:
-          node-version: "14.15.5"
+          node-version: "16.0.0"
           cache: "yarn"
           cache-dependency-path: |
             frontend/yarn.lock
