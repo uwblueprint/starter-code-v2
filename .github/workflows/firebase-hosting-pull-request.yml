@@ -23,7 +23,6 @@ jobs:
           node-version: '16'
       - run: echo "REACT_APP_BACKEND_URL=${{ secrets.PREVIEW_BACKEND_URL }}" > .env
       - run: echo "REACT_APP_OAUTH_CLIENT_ID=${{ secrets.DEV_OAUTH_CLIENT_ID }}" >> .env
-      #- run: echo "NODE_OPTIONS=--openssl-legacy-provider" >> $GITHUB_ENV
       - run: rm -rf node_modules && yarn install --frozen-lockfile && yarn build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
