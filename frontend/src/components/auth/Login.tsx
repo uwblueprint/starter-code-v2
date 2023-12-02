@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import {
   GoogleLogin,
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from "react-google-login";
+  // GoogleLoginResponse,
+  // GoogleLoginResponseOffline,
+  GoogleOAuthProvider
+} from "@react-oauth/google";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 // } graphql
@@ -14,7 +15,7 @@ import { HOME_PAGE, SIGNUP_PAGE } from "../../constants/Routes";
 import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 
-type GoogleResponse = GoogleLoginResponse | GoogleLoginResponseOffline;
+// type GoogleResponse = GoogleLoginResponse | GoogleLoginResponseOffline;
 
 type GoogleErrorResponse = {
   error: string;
@@ -53,7 +54,7 @@ const Login = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // graphql {
   const [login] = useMutation<{ login: AuthenticatedUser }>(LOGIN);
@@ -77,7 +78,7 @@ const Login = (): React.ReactElement => {
   };
 
   const onSignUpClick = () => {
-    history.push(SIGNUP_PAGE);
+    navigate(SIGNUP_PAGE);
   };
 
   // graphql {
@@ -99,7 +100,7 @@ const Login = (): React.ReactElement => {
   // } rest
 
   if (authenticatedUser) {
-    return <Redirect to={HOME_PAGE} />;
+    return <Navigate to={HOME_PAGE} />;
   }
 
   return (

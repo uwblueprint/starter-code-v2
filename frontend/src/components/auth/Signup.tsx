@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 // graphql {
 import { gql, useMutation } from "@apollo/client";
 // } graphql
@@ -69,7 +69,7 @@ const Signup = (): React.ReactElement => {
   };
 
   if (authenticatedUser) {
-    return <Redirect to={HOME_PAGE} />;
+    return <Navigate to={HOME_PAGE} />;
   }
 
   return (

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, Navigate } from "react-router-dom";
 
 import AuthContext from "../../contexts/AuthContext";
 import { LOGIN_PAGE } from "../../constants/Routes";
@@ -18,9 +18,9 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const { authenticatedUser } = useContext(AuthContext);
 
   return authenticatedUser ? (
-    <Route path={path} exact={exact} component={component} />
+    <Route path={path} Component={component}/>
   ) : (
-    <Redirect to={LOGIN_PAGE} />
+    <Navigate to={LOGIN_PAGE} />
   );
 };
 
