@@ -6,7 +6,7 @@ import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { camelizeKeys, decamelizeKeys } from "humps";
 // } python
 // auth {
-import jwt from "jsonwebtoken";
+import { jwtDecode } from "jwt-decode";
 
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { DecodedJWT } from "../types/AuthTypes";
@@ -42,7 +42,7 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
     authHeaderParts.length >= 2 &&
     authHeaderParts[0].toLowerCase() === "bearer"
   ) {
-    const decodedToken = jwt.decode(authHeaderParts[1]) as DecodedJWT;
+    const decodedToken = jwtDecode(authHeaderParts[1]) as DecodedJWT;
 
     if (
       decodedToken &&

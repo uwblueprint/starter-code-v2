@@ -1,11 +1,11 @@
 // graphql {
 // auth {
 import axios from "axios";
-import jwt from "jsonwebtoken";
+import { jwtDecode } from "jwt-decode";
 // } auth
 // } graphql
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 // graphql {
 // no-file-storage {
 import {
@@ -63,7 +63,7 @@ const authLink = setContext(async (_, { headers }) => {
   >(AUTHENTICATED_USER_KEY, "accessToken");
 
   if (token) {
-    const decodedToken = jwt.decode(token) as DecodedJWT;
+    const decodedToken = jwtDecode(token) as DecodedJWT;
 
     // refresh if decodedToken has expired
     if (
@@ -119,7 +119,8 @@ const apolloClient = new ApolloClient({
 });
 
 // } graphql
-ReactDOM.render(
+
+createRoot(document.getElementById("root") as HTMLElement).render(
   // graphql {
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
@@ -132,7 +133,6 @@ ReactDOM.render(
     <App />
   </React.StrictMode>,
   // } rest
-  document.getElementById("root"),
 );
 
 // If you want to start measuring performance in your app, pass a function
