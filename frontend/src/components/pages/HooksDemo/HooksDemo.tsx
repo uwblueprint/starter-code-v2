@@ -117,7 +117,7 @@ const HooksDemo = (): React.ReactElement => {
     const bannerTimer = setTimeout(() => {
       setBannerState({ emoji: bannerState.emoji, showBanner: false });
       // Show banner for 5 seconds
-    }, 5000);
+    }, 8080);
 
     return (): void => {
       // Recall cleanup functions are automatically applied before
