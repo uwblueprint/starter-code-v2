@@ -8,7 +8,7 @@ parent: User Auth
 # Testing User Auth (API Documentation)
 {:.no_toc}
 
-The easiest way to test user auth is to use either the REST or GraphQL endpoints. Suggested tools include Postman, Insomnia, or cURL for REST, and the GraphQL playground (http://localhost:5001/graphql) or Altair for GraphQL. You can also choose to test through the frontend, which calls a subset of these endpoints.
+The easiest way to test user auth is to use either the REST or GraphQL endpoints. Suggested tools include Postman, Insomnia, or cURL for REST, and the GraphQL playground (http://localhost:8080/graphql) or Altair for GraphQL. You can also choose to test through the frontend, which calls a subset of these endpoints.
 
 Note that only Admin users can access user endpoints, and that emails of created users must be unique.
 
