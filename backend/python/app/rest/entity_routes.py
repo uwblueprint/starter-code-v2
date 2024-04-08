@@ -27,6 +27,7 @@ entity_service = EntityService(current_app.logger, file_storage_service)
 # defines a shared URL prefix for all routes
 blueprint = Blueprint("entity", __name__, url_prefix="/entities")
 
+
 # defines GET endpoint for retrieving all entities
 @blueprint.route("/", methods=["GET"], strict_slashes=False)
 @require_authorization_by_role({"User", "Admin"})
