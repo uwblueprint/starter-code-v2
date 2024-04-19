@@ -1,0 +1,5 @@
+name: "CodeQL config"
+
+paths-ignore:
+  # Ignore files from third-party packages, e.g. Swagger
+  - backend/python/app/static
