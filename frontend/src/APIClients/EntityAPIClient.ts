@@ -31,7 +31,7 @@ const create = async ({
   formData,
 }: {
   formData: EntityRequest | FormData;
-}): Promise<EntityResponse> => {
+}): Promise<EntityResponse | null> => {
   // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
@@ -50,11 +50,11 @@ const create = async ({
     // } no-auth
     return data;
   } catch (error) {
-    return error;
+    return null;
   }
 };
 
-const get = async (): Promise<EntityResponse[]> => {
+const get = async (): Promise<EntityResponse[] | null> => {
   // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
@@ -73,11 +73,11 @@ const get = async (): Promise<EntityResponse[]> => {
     // } no-auth
     return data;
   } catch (error) {
-    return error;
+    return null;
   }
 };
 
-const getFile = async (uuid: string): Promise<string> => {
+const getFile = async (uuid: string): Promise<string | null> => {
   // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
@@ -96,11 +96,11 @@ const getFile = async (uuid: string): Promise<string> => {
     // } no-auth
     return data.fileURL || data.fileUrl;
   } catch (error) {
-    return error;
+    return null;
   }
 };
 
-const getCSV = async (): Promise<string> => {
+const getCSV = async (): Promise<string | null> => {
   // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
@@ -127,7 +127,7 @@ const getCSV = async (): Promise<string> => {
     // } no-auth
     return data;
   } catch (error) {
-    return error;
+    return null;
   }
 };
 
@@ -138,7 +138,7 @@ const update = async (
   }: {
     entityData: EntityRequest | FormData;
   },
-): Promise<EntityResponse> => {
+): Promise<EntityResponse | null> => {
   // auth {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
@@ -157,7 +157,7 @@ const update = async (
     // } no-auth
     return data;
   } catch (error) {
-    return error;
+    return null;
   }
 };
 
