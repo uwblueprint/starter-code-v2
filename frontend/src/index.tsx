@@ -1,9 +1,9 @@
 // graphql {
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import jwt from "jsonwebtoken";
 // } graphql
 import React from "react";
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom";
 // graphql {
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
@@ -27,6 +27,13 @@ const REFRESH_MUTATION = `
   }
 `;
 
+const LOGOUT_MUTATION = `
+  mutation Index_Logout($userId: ID!) {
+    logout(userId: $userId)
+  }
+`;
+
+
 // graphql {
 const link = createUploadLink({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql`,
@@ -41,7 +48,7 @@ const authLink = setContext(async (_, { headers }) => {
   >(AUTHENTICATED_USER_KEY, "accessToken");
 
   if (token) {
-    const decodedToken = jwtDecode(token) as DecodedJWT;
+    const decodedToken = jwt.decode(token) as DecodedJWT;
 
     // refresh if decodedToken has expired
     if (
@@ -80,7 +87,7 @@ const apolloClient = new ApolloClient({
 });
 // } graphql
 
-createRoot(document.getElementById("root") as HTMLElement).render(
+ReactDOM.render(
   // graphql {
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
@@ -94,6 +101,7 @@ createRoot(document.getElementById("root") as HTMLElement).render(
   //   <App />
   // </React.StrictMode>,
   // } rest
+  document.getElementById("root"),
 );
 
 // If you want to start measuring performance in your app, pass a function

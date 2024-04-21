@@ -34,24 +34,24 @@ services:
         condition: service_healthy
     env_file:
       - ./.env
-  py-backend:
-    # TODO: rename container for your project
-    container_name: scv2_py_backend
-    restart: always
-    build:
-      context: ./backend/python
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
-    dns:
-      - 8.8.8.8
-    volumes:
-      - ./backend/python:/app
-    depends_on:
-      db:
-        condition: service_healthy
-    env_file:
-      - ./.env
+  # py-backend:
+  #   # TODO: rename container for your project
+  #   container_name: scv2_py_backend
+  #   restart: always
+  #   build:
+  #     context: ./backend/python
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8080:8080
+  #   dns:
+  #     - 8.8.8.8
+  #   volumes:
+  #     - ./backend/python:/app
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   env_file:
+  #     - ./.env
   db:
     # TODO: rename container for your project
     container_name: scv2_db

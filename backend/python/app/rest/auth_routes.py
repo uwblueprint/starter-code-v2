@@ -142,7 +142,7 @@ def logout(user_id):
         return jsonify({"error": (error_message if error_message else str(e))}), 500
 
 
-@blueprint.route(
+@blueprint.route `(
     "/resetPassword/<string:email>", methods=["POST"], strict_slashes=False
 )
 @require_authorization_by_email("email")
