@@ -143,7 +143,6 @@ type LogoutFunction = (
 const logout = async (
   authenticatedUserId: string,
   logoutFunction: LogoutFunction,
-  options?: { raiseError?: boolean}
 ): Promise<boolean> => {
   let success = false;
   try {
