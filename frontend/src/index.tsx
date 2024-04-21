@@ -49,6 +49,7 @@ const authLink = setContext(async (_, { headers }) => {
       (typeof decodedToken === "string" ||
         decodedToken.exp <= Math.round(new Date().getTime() / 1000))
     ) {
+      try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/graphql`,
         { query: REFRESH_MUTATION },
@@ -62,6 +63,10 @@ const authLink = setContext(async (_, { headers }) => {
         accessToken,
       );
       token = accessToken;
+      } catch {
+        localStorage.removeItem(AUTHENTICATED_USER_KEY);
+        location.reload();
+      }
     }
   }
   // return the headers to the context so httpLink can read them
