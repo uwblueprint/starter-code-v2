@@ -31,6 +31,7 @@ cookie_options = {
     "httponly": True,
     "samesite": ("None" if os.getenv("PREVIEW_DEPLOY") else "Strict"),
     "secure": (os.getenv("FLASK_CONFIG") == "production"),
+    "max_age": 60 * 60 * 24 * 7,  # 1 week
 }
 
 

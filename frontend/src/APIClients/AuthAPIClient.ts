@@ -134,7 +134,7 @@ type LogoutFunction = (
   FetchResult<
     {
       logout: null;
-    },
+    }, 
     Record<string, unknown>,
     Record<string, unknown>
   >
@@ -143,6 +143,7 @@ type LogoutFunction = (
 const logout = async (
   authenticatedUserId: string,
   logoutFunction: LogoutFunction,
+  options?: { raiseError?: boolean}
 ): Promise<boolean> => {
   let success = false;
   try {
