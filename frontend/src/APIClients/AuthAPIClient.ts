@@ -134,7 +134,7 @@ type LogoutFunction = (
   FetchResult<
     {
       logout: null;
-    },
+    }, 
     Record<string, unknown>,
     Record<string, unknown>
   >

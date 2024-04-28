@@ -42,6 +42,7 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
       (typeof decodedToken === "string" ||
         decodedToken.exp <= Math.round(new Date().getTime() / 1000))
     ) {
+      try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/auth/refresh`,
         {},
@@ -56,6 +57,10 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
       );
 
       newConfig.headers.Authorization = `Bearer ${accessToken}`;
+      } catch (error) {
+        localStorage.removeItem(AUTHENTICATED_USER_KEY);
+        window.location.href = "/login";
+      }
     }
   }
 
