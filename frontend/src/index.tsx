@@ -65,7 +65,7 @@ const authLink = setContext(async (_, { headers }) => {
       token = accessToken;
       } catch {
         localStorage.removeItem(AUTHENTICATED_USER_KEY);
-        location.reload();
+        window.location.reload();
       }
     }
   }
