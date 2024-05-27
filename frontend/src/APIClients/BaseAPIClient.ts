@@ -1,10 +1,10 @@
-// typescript {
+/* typescript {
 import axios, { AxiosRequestConfig } from "axios";
-// } typescript
-// python {
+} typescript */
+/* python {
 import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { camelizeKeys, decamelizeKeys } from "humps";
-// } python
+python { */
 // auth {
 import jwt from "jsonwebtoken";
 
@@ -17,7 +17,7 @@ const baseAPIClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
 });
 
-// python {
+/* python {
 // Python API uses snake_case, frontend uses camelCase
 // convert request and response data to/from snake_case and camelCase through axios interceptors
 baseAPIClient.interceptors.response.use((response: AxiosResponse) => {
@@ -30,7 +30,7 @@ baseAPIClient.interceptors.response.use((response: AxiosResponse) => {
   return response;
 });
 
-// } python
+python { */
 baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
   const newConfig = { ...config };
 
@@ -67,7 +67,7 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
   }
 
   // } auth
-  // python {
+  /* python {
   if (config.params) {
     newConfig.params = decamelizeKeys(config.params);
   }
@@ -75,7 +75,7 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
     newConfig.data = decamelizeKeys(config.data);
   }
 
-  // } python
+  python { */
   return newConfig;
 });
 

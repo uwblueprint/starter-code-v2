@@ -127,11 +127,11 @@ ReactDOM.render(
     </ApolloProvider>
   </React.StrictMode>,
   // } graphql
-  // rest {
+  /* } rest
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  // } rest
+  } rest */
   document.getElementById("root"),
 );
 

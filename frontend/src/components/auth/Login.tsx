@@ -70,9 +70,9 @@ const Login = (): React.ReactElement => {
       login,
     );
     // } graphql
-    // rest {
+    /* } rest
     const user: AuthenticatedUser = await authAPIClient.login(email, password);
-    // } rest
+    } rest */
     setAuthenticatedUser(user);
   };
 
@@ -89,14 +89,14 @@ const Login = (): React.ReactElement => {
     setAuthenticatedUser(user);
   };
   // } graphql
-  // rest {
+  /* } rest
   const onGoogleLoginSuccess = async (tokenId: string) => {
     const user: AuthenticatedUser = await authAPIClient.loginWithGoogle(
       tokenId,
     );
     setAuthenticatedUser(user);
   };
-  // } rest
+  } rest */
 
   if (authenticatedUser) {
     return <Redirect to={HOME_PAGE} />;
