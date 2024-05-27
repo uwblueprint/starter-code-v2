@@ -89,7 +89,7 @@ vault kv get -format=json kv/internal-tools | python update_secret_files.py
 docker-compose up --build
 ```
 
-The backend runs at http://localhost:5000 and the frontend runs at http://localhost:3000. By default, we use GraphQL (with TypeScript backend), REST (with Python backend), MongoDB, with user auth.
+The backend runs at http://localhost:8080 and the frontend runs at http://localhost:3000. By default, we use GraphQL (with TypeScript backend), REST (with Python backend), MongoDB, with user auth.
 
 
 ## Creating a Release

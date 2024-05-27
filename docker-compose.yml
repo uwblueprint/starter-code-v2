@@ -27,7 +27,7 @@ services:
       - ./backend/typescript:/app
       - /app/node_modules
     ports:
-      - 5000:5000
+      - 8080:8080
     dns:
       - 8.8.8.8
     # postgresql {
@@ -47,7 +47,7 @@ services:
       context: ./backend/python
       dockerfile: Dockerfile
     ports:
-      - 5000:5000
+      - 8080:8080
     dns:
       - 8.8.8.8
     volumes:
