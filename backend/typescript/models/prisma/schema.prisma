@@ -10,5 +10,54 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.DB_HOST}:5432/${process.env.POSTGRES_DB_DEV}`
+  url      = env("DATABASE_URL")
+}
+
+model SequelizeMeta {
+  name String @id @db.VarChar(255)
+}
+
+model entities {
+  id                 Int                      @id @default(autoincrement())
+  string_field       String                   @db.VarChar(255)
+  int_field          Int
+  enum_field         enum_entities_enum_field
+  string_array_field String[]                 @db.VarChar(255)
+  bool_field         Boolean
+  file_name          String                   @db.VarChar(255)
+  createdAt          DateTime?                @db.Timestamptz(6)
+  updatedAt          DateTime?                @db.Timestamptz(6)
+}
+
+model simple_entities {
+  id                 Int                      @id @default(autoincrement())
+  string_field       String                   @db.VarChar(255)
+  int_field          Int
+  enum_field         enum_entities_enum_field
+  string_array_field String[]                 @db.VarChar(255)
+  bool_field         Boolean
+  createdAt          DateTime?                @db.Timestamptz(6)
+  updatedAt          DateTime?                @db.Timestamptz(6)
+}
+
+model users {
+  id         Int             @id @default(autoincrement())
+  first_name String          @db.VarChar(255)
+  last_name  String          @db.VarChar(255)
+  auth_id    String          @db.VarChar(255)
+  role       enum_users_role
+  createdAt  DateTime?       @db.Timestamptz(6)
+  updatedAt  DateTime?       @db.Timestamptz(6)
+}
+
+enum enum_entities_enum_field {
+  A
+  B
+  C
+  D
+}
+
+enum enum_users_role {
+  User
+  Admin
 }
