@@ -4,7 +4,8 @@
 
 FROM node:20.11.1-slim
 
-# Copy firebase cache to avoid downloading upon running image
+# OPTIONAL
+# Copy firebase cache to avoid downloading upon running image. Requires ./firebase/emulators/ folder containing the .jar files 
 RUN mkdir -p /root/.cache/firebase
 COPY ./firebase/ /root/.cache/firebase/
 
