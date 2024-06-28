@@ -1,3 +1,6 @@
+# `docker-compose up --build` (regular initialization)
+# `docker-compose --profile firebase up --build` 
+
 version: "3.7"
 
 services:
@@ -16,7 +19,6 @@ services:
       - CHOKIDAR_USEPOLLING=true
     env_file:
       - ./frontend/.env
-  # typescript {
   ts-backend:
     # TODO: rename container for your project
     container_name: scv2_ts_backend
@@ -30,37 +32,11 @@ services:
       - 8080:8080
     dns:
       - 8.8.8.8
-    # postgresql {
     depends_on:
       db:
         condition: service_healthy
-    # } postgresql
     env_file:
       - ./.env
-  # } typescript
-  # python {
-  py-backend:
-    # TODO: rename container for your project
-    container_name: scv2_py_backend
-    restart: always
-    build:
-      context: ./backend/python
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
-    dns:
-      - 8.8.8.8
-    volumes:
-      - ./backend/python:/app
-    # postgresql {
-    depends_on:
-      db:
-        condition: service_healthy
-    # } postgresql
-    env_file:
-      - ./.env
-  # } python 
-  # postgresql {
   db:
     # TODO: rename container for your project
     container_name: scv2_db
@@ -79,9 +55,30 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-  # } postgresql
+  firebase-emulator:
+    container_name: firebase_emulator
+    build: 
+      context: ./firebase
+      dockerfile: Dockerfile
+    ports:
+      - 5003:5003  # Port for Firebase Emulator Suite UI
+      - 9099:9099  # Port for Authentication Emulator
+      - 5002:5002  # Port for Firestore Emulator (adjust if conflicts with your backend)
+      - 9199:9199  # Port for Storage Emulator
+      - 4500:4500 # Internal port for logging (firebase)
+      - 4400:4400 # Internal port for hub (firebase)
+    environment:
+      - FIREBASE_TOKEN="1//05wAMTqkNDx8mCgYIARAAGAUSNwF-L9Ir1jSF3Fj3JvZEik_LuOC6_0MGPNj2mLrhiHaFc10AkmIHz5vxFhMIPoFMWvz4mtfPQv8"
+    depends_on:
+      - ts-backend  
+    profiles:
+      - firebase-emulator
+    # healthcheck:
+    #   test: ["curl", "--fail http://localhost:5003"]
+    #   interval: 1m30s
+    #   timeout: 30s
+    #   retries: 5
+    #   start_period: 30s
 
-# postgresql {
 volumes:
   postgres_data:
-# } postgresql
