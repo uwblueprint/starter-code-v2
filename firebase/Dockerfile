@@ -2,12 +2,13 @@
 # TODO: migrate to uwblueprint official database/project 
 # TODO: move away from authentication token to GOOGLE_APPLICATION_CREDENTIALS: https://cloud.google.com/docs/authentication/provide-credentials-adc 
 
+# to generate token, use firebase login:ci 
+
 FROM node:20.11.1-slim
 
-# OPTIONAL
-# Copy firebase cache to avoid downloading upon running image. Requires ./firebase/emulators/ folder containing the .jar files 
-RUN mkdir -p /root/.cache/firebase
-COPY ./firebase/ /root/.cache/firebase/
+# OPTIONAL: (optimization) Copy firebase cache to avoid downloading upon running image. Requires ./firebase/emulators/ folder containing the .jar files 
+# RUN mkdir -p /root/.cache/firebase
+# COPY ./firebase/ /root/.cache/firebase/
 
 WORKDIR /app
 
