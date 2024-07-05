@@ -19,6 +19,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
     env_file:
       - ./frontend/.env
+  # typescript {
   ts-backend:
     # TODO: rename container for your project
     container_name: scv2_ts_backend
@@ -32,11 +33,37 @@ services:
       - 8080:8080
     dns:
       - 8.8.8.8
+    # postgresql {
     depends_on:
       db:
         condition: service_healthy
+    # } postgresql
     env_file:
       - ./.env
+  # } typescript
+  # python {
+  py-backend:
+    # TODO: rename container for your project
+    container_name: scv2_py_backend
+    restart: always
+    build:
+      context: ./backend/python
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    dns:
+      - 8.8.8.8
+    volumes:
+      - ./backend/python:/app
+    # postgresql {
+    depends_on:
+      db:
+        condition: service_healthy
+    # } postgresql
+    env_file:
+      - ./.env
+  # } python 
+  # postgresql {
   db:
     # TODO: rename container for your project
     container_name: scv2_db
@@ -55,6 +82,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  # } postgresql
   firebase-emulator:
     container_name: firebase_emulator
     build: 
@@ -80,5 +108,7 @@ services:
     #   retries: 5
     #   start_period: 30s
 
+# postgresql {
 volumes:
   postgres_data:
+# } postgresql
