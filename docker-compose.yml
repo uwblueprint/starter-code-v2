@@ -42,26 +42,26 @@ services:
       - ./.env
   # } typescript
   # python {
-  py-backend:
-    # TODO: rename container for your project
-    container_name: scv2_py_backend
-    restart: always
-    build:
-      context: ./backend/python
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
-    dns:
-      - 8.8.8.8
-    volumes:
-      - ./backend/python:/app
-    # postgresql {
-    depends_on:
-      db:
-        condition: service_healthy
-    # } postgresql
-    env_file:
-      - ./.env
+  # py-backend:
+  #   # TODO: rename container for your project
+  #   container_name: scv2_py_backend
+  #   restart: always
+  #   build:
+  #     context: ./backend/python
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8080:8080
+  #   dns:
+  #     - 8.8.8.8
+  #   volumes:
+  #     - ./backend/python:/app
+  #   # postgresql {
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   # } postgresql
+  #   env_file:
+  #     - ./.env
   # } python 
   # postgresql {
   db:
@@ -96,9 +96,7 @@ services:
       - 4500:4500 # Internal port for logging (firebase)
       - 4400:4400 # Internal port for hub (firebase)
     environment:
-      - FIREBASE_TOKEN="1//05wAMTqkNDx8mCgYIARAAGAUSNwF-L9Ir1jSF3Fj3JvZEik_LuOC6_0MGPNj2mLrhiHaFc10AkmIHz5vxFhMIPoFMWvz4mtfPQv8"
-    depends_on:
-      - ts-backend  
+      - FIREBASE_TOKEN=${FIREBASE_TOKEN}
     profiles:
       - firebase-emulator
     # healthcheck:
