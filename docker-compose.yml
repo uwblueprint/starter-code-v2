@@ -98,7 +98,7 @@ services:
       - 4500:4500 # Internal port for logging (firebase)
       - 4400:4400 # Internal port for hub (firebase)
     environment:
-      - FIREBASE_TOKEN=$(FIREBASE_TOKEN)
+      - FIREBASE_TOKEN=${FIREBASE_TOKEN}
     profiles:
       - firebase-emulator
     # healthcheck:
