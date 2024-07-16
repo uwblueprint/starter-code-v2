@@ -13,5 +13,7 @@ RUN yarn install
 
 COPY . ./
 
+RUN npx prisma generate --schema=models/prisma/schema.prisma
+
 EXPOSE 8080
 ENTRYPOINT ["yarn", "dev"]
