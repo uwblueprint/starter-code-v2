@@ -3,6 +3,9 @@ import fetch, { Response } from "node-fetch";
 import { Token } from "../types";
 import logger from "./logger";
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const Logger = logger(__filename);
 
 const FIREBASE_SIGN_IN_URL =
