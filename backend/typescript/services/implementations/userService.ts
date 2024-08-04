@@ -341,8 +341,8 @@
   // } mongodb
 // postgresql {
 import * as firebaseAdmin from "firebase-admin";
+import { PrismaClient } from "@prisma/client";
 import IUserService from "../interfaces/userService";
-import { PrismaClient } from '@prisma/client';
 import { CreateUserDTO, Role, UpdateUserDTO, UserDTO } from "../../types";
 import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
@@ -356,24 +356,24 @@ class UserService implements IUserService {
     let firebaseUser: firebaseAdmin.auth.UserRecord;
 
     try {
-      user = await prisma.user.findUnique({
-        where: { id: userId }
+      user = await prisma.users.findUnique({
+        where: { id: Number(userId) },
       });
 
       if (!user) {
         throw new Error(`userId ${userId} not found.`);
       }
 
-      firebaseUser = await firebaseAdmin.auth().getUser(user.authId);
+      firebaseUser = await firebaseAdmin.auth().getUser(user.auth_id);
     } catch (error: unknown) {
       Logger.error(`Failed to get user. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
 
     return {
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      id: String(user.id),
+      firstName: user.first_name,
+      lastName: user.last_name,
       email: firebaseUser.email ?? "",
       role: user.role,
     };
@@ -385,8 +385,8 @@ class UserService implements IUserService {
 
     try {
       firebaseUser = await firebaseAdmin.auth().getUserByEmail(email);
-      user = await prisma.user.findUnique({
-        where: { authId: firebaseUser.uid }
+      user = await prisma.users.findUnique({
+        where: { auth_id: firebaseUser.uid },
       });
 
       if (!user) {
@@ -398,9 +398,9 @@ class UserService implements IUserService {
     }
 
     return {
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      id: String(user.id),
+      firstName: user.first_name,
+      lastName: user.last_name,
       email: firebaseUser.email ?? "",
       role: user.role,
     };
@@ -408,8 +408,8 @@ class UserService implements IUserService {
 
   async getUserRoleByAuthId(authId: string): Promise<Role> {
     try {
-      const user = await prisma.user.findUnique({
-        where: { authId }
+      const user = await prisma.users.findUnique({
+        where: { auth_id: authId },
       });
 
       if (!user) {
@@ -417,21 +417,23 @@ class UserService implements IUserService {
       }
       return user.role;
     } catch (error: unknown) {
-      Logger.error(`Failed to get user role. Reason = ${getErrorMessage(error)}`);
+      Logger.error(
+        `Failed to get user role. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }
 
   async getUserIdByAuthId(authId: string): Promise<string> {
     try {
-      const user = await prisma.user.findUnique({
-        where: { authId }
+      const user = await prisma.users.findUnique({
+        where: { auth_id: authId },
       });
 
       if (!user) {
         throw new Error(`User with authId ${authId} not found.`);
       }
-      return user.id;
+      return String(user.id);
     } catch (error: unknown) {
       Logger.error(`Failed to get user id. Reason = ${getErrorMessage(error)}`);
       throw error;
@@ -440,14 +442,14 @@ class UserService implements IUserService {
 
   async getAuthIdById(userId: string): Promise<string> {
     try {
-      const user = await prisma.user.findUnique({
-        where: { id: userId }
+      const user = await prisma.users.findUnique({
+        where: { id: Number(userId) },
       });
 
       if (!user) {
         throw new Error(`User ID ${userId} not found.`);
       }
-      return user.authId;
+      return user.auth_id;
     } catch (error: unknown) {
       Logger.error(`Failed to get authId. Reason = ${getErrorMessage(error)}`);
       throw error;
@@ -458,26 +460,30 @@ class UserService implements IUserService {
     let userDtos: Array<UserDTO> = [];
 
     try {
-      const users = await prisma.user.findMany();
+      const users = await prisma.users.findMany();
 
-      userDtos = await Promise.all(users.map(async (user) => {
-        let firebaseUser: firebaseAdmin.auth.UserRecord;
+      userDtos = await Promise.all(
+        users.map(async (user) => {
+          let firebaseUser: firebaseAdmin.auth.UserRecord;
 
-        try {
-          firebaseUser = await firebaseAdmin.auth().getUser(user.authId);
-        } catch (error) {
-          Logger.error(`User with authId ${user.authId} could not be fetched from Firebase`);
-          throw error;
-        }
+          try {
+            firebaseUser = await firebaseAdmin.auth().getUser(user.auth_id);
+          } catch (error) {
+            Logger.error(
+              `User with authId ${user.auth_id} could not be fetched from Firebase`,
+            );
+            throw error;
+          }
 
-        return {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: firebaseUser.email ?? "",
-          role: user.role,
-        };
-      }));
+          return {
+            id: String(user.id),
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: firebaseUser.email ?? "",
+            role: user.role,
+          };
+        }),
+      );
     } catch (error: unknown) {
       Logger.error(`Failed to get users. Reason = ${getErrorMessage(error)}`);
       throw error;
@@ -486,12 +492,16 @@ class UserService implements IUserService {
     return userDtos;
   }
 
-  async createUser(user: CreateUserDTO, authId?: string, signUpMethod = "PASSWORD"): Promise<UserDTO> {
+  async createUser(
+    user: CreateUserDTO,
+    authId: string,
+    signUpMethod = "PASSWORD",
+  ): Promise<UserDTO> {
     let firebaseUser: firebaseAdmin.auth.UserRecord;
 
     try {
       if (signUpMethod === "GOOGLE") {
-        firebaseUser = await firebaseAdmin.auth().getUser(authId!);
+        firebaseUser = await firebaseAdmin.auth().getUser(authId);
       } else {
         firebaseUser = await firebaseAdmin.auth().createUser({
           email: user.email,
@@ -499,19 +509,19 @@ class UserService implements IUserService {
         });
       }
 
-      const newUser = await prisma.user.create({
+      const newUser = await prisma.users.create({
         data: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          authId: firebaseUser.uid,
+          first_name: user.firstName,
+          last_name: user.lastName,
+          auth_id: firebaseUser.uid,
           role: user.role,
-        }
+        },
       });
 
       return {
-        id: newUser.id,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
+        id: String(newUser.id),
+        firstName: newUser.first_name,
+        lastName: newUser.last_name,
         email: firebaseUser.email ?? "",
         role: newUser.role,
       };
@@ -523,23 +533,25 @@ class UserService implements IUserService {
 
   async updateUserById(userId: string, user: UpdateUserDTO): Promise<UserDTO> {
     try {
-      const updateResult = await prisma.user.update({
-        where: { id: userId },
+      const updateResult = await prisma.users.update({
+        where: { id: Number(userId) },
         data: {
-          firstName: user.firstName,
-          lastName: user.lastName,
+          first_name: user.firstName,
+          last_name: user.lastName,
           role: user.role,
-        }
+        },
       });
 
-      let firebaseUser = await firebaseAdmin.auth().updateUser(updateResult.authId, {
-        email: user.email
-      });
+      let firebaseUser = await firebaseAdmin
+        .auth()
+        .updateUser(updateResult.auth_id, {
+          email: user.email,
+        });
 
       return {
-        id: updateResult.id,
-        firstName: updateResult.firstName,
-        lastName: updateResult.lastName,
+        id: String(updateResult.id),
+        firstName: updateResult.first_name,
+        lastName: updateResult.last_name,
         email: firebaseUser.email ?? "",
         role: updateResult.role,
       };
@@ -551,14 +563,16 @@ class UserService implements IUserService {
 
   async deleteUserById(userId: string): Promise<void> {
     try {
-      const user = await prisma.user.delete({
-        where: { id: userId }
+      const user = await prisma.users.delete({
+        where: { id: Number(userId) },
       });
 
       try {
-        await firebaseAdmin.auth().deleteUser(user.authId);
+        await firebaseAdmin.auth().deleteUser(user.auth_id);
       } catch (error) {
-        Logger.error(`Failed to delete Firebase user after deleting user in database. AuthId: ${user.authId}`);
+        Logger.error(
+          `Failed to delete Firebase user after deleting user in database. AuthId: ${user.auth_id}`,
+        );
         throw error;
       }
     } catch (error: unknown) {
@@ -570,18 +584,22 @@ class UserService implements IUserService {
   async deleteUserByEmail(email: string): Promise<void> {
     try {
       const firebaseUser = await firebaseAdmin.auth().getUserByEmail(email);
-      const user = await prisma.user.delete({
-        where: { authId: firebaseUser.uid }
+      const user = await prisma.users.delete({
+        where: { auth_id: firebaseUser.uid },
       });
 
       try {
-        await firebaseAdmin.auth().deleteUser(user.authId);
+        await firebaseAdmin.auth().deleteUser(user.auth_id);
       } catch (error) {
-        Logger.error(`Failed to delete Firebase user after deleting user in database. AuthId: ${user.authId}`);
+        Logger.error(
+          `Failed to delete Firebase user after deleting user in database. AuthId: ${user.auth_id}`,
+        );
         throw error;
       }
     } catch (error: unknown) {
-      Logger.error(`Failed to delete user by email. Reason = ${getErrorMessage(error)}`);
+      Logger.error(
+        `Failed to delete user by email. Reason = ${getErrorMessage(error)}`,
+      );
       throw error;
     }
   }

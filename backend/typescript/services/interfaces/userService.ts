@@ -13,7 +13,7 @@ interface IUserService {
    * @returns A UserDTO containing the user's information or null if no user is found.
    * @throws Error if the retrieval process fails.
    */
-  getUserById(userId: string): Promise<UserDTO | null>;
+  getUserById(userId: string): Promise<UserDTO>;
 
   /**
    * Retrieves a user by their email address.
@@ -21,7 +21,7 @@ interface IUserService {
    * @returns A UserDTO containing the user's information or null if no user is found.
    * @throws Error if the retrieval process fails.
    */
-  getUserByEmail(email: string): Promise<UserDTO | null>;
+  getUserByEmail(email: string): Promise<UserDTO>;
 
   /**
    * Retrieves the role of a user by their authentication ID.
@@ -29,7 +29,7 @@ interface IUserService {
    * @returns The role of the user or null if the user cannot be found.
    * @throws Error if the retrieval process fails.
    */
-  getUserRoleByAuthId(authId: string): Promise<Role | null>;
+  getUserRoleByAuthId(authId: string): Promise<Role>;
 
   /**
    * Retrieves the ID of a user by their authentication ID.
@@ -37,7 +37,7 @@ interface IUserService {
    * @returns The user's ID or null if the user cannot be found.
    * @throws Error if the retrieval process fails.
    */
-  getUserIdByAuthId(authId: string): Promise<string | null>;
+  getUserIdByAuthId(authId: string): Promise<string>;
 
   /**
    * Retrieves the authentication ID associated with a user ID.
@@ -45,7 +45,7 @@ interface IUserService {
    * @returns The authentication ID or null if the user cannot be found.
    * @throws Error if the retrieval process fails.
    */
-  getAuthIdById(userId: string): Promise<string | null>;
+  getAuthIdById(userId: string): Promise<string>;
 
   /**
    * Retrieves all users in the system.
