@@ -45,7 +45,7 @@ model users {
   id         Int             @id @default(autoincrement())
   first_name String          @db.VarChar(255)
   last_name  String          @db.VarChar(255)
-  auth_id    String          @db.VarChar(255)
+  auth_id    String          @unique @db.VarChar(255)
   role       enum_users_role
   createdAt  DateTime?       @db.Timestamptz(6)
   updatedAt  DateTime?       @db.Timestamptz(6)
