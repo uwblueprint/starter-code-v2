@@ -1,5 +1,7 @@
 // postgresql {
 import { snakeCase } from "lodash";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 // } postgresql
 
 import UserModel from "../../../models/user.model";
@@ -10,9 +12,6 @@ import { UserDTO } from "../../../types";
 // mongodb {
 import db from "../../../testUtils/testDb";
 // } mongodb
-// postgresql {
-import { testSql } from "../../../testUtils/testDb";
-// } postgresql
 
 const testUsers = [
   {
@@ -70,18 +69,18 @@ describe("mongo userService", (): void => {
 });
 // } mongodb
 
-// postgresql {
+// postgresql {  
 describe("pg userService", () => {
   let userService: UserService;
 
   beforeEach(async () => {
-    await testSql.sync({ force: true });
+    await prisma.$connect();
+    await prisma.user.deleteMany(); // Clear the User table before each test
     userService = new UserService();
   });
 
   afterAll(async () => {
-    await testSql.sync({ force: true });
-    await testSql.close();
+    await prisma.$disconnect();
   });
 
   it("getUsers", async () => {
@@ -93,7 +92,7 @@ describe("pg userService", () => {
       return userSnakeCase;
     });
 
-    await UserModel.bulkCreate(users);
+    await prisma.user.createMany({ data: users });
 
     const res = await userService.getUsers();
 

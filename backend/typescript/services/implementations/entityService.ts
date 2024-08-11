@@ -173,7 +173,10 @@ export default EntityService;
 // postgresql {
 import { v4 as uuidv4 } from "uuid";
 
-import PgEntity from "../../models/entity.model";
+import { PrismaClient, entities, enum_entities_enum_field} from '@prisma/client';
+
+const prisma = new PrismaClient();
+
 import {
   IEntityService,
   EntityRequestDTO,
@@ -182,6 +185,7 @@ import {
 import IFileStorageService from "../interfaces/fileStorageService";
 import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
+import { EnumType } from "typescript";
 
 const Logger = logger(__filename);
 
@@ -194,9 +198,9 @@ class EntityService implements IEntityService {
 
   /* eslint-disable class-methods-use-this */
   async getEntity(id: string): Promise<EntityResponseDTO> {
-    let entity: PgEntity | null;
+    let entity: entities | null;
     try {
-      entity = await PgEntity.findByPk(id, { raw: true });
+      entity = await prisma.entities.findUnique({ where: { id: Number(id) } });
       if (!entity) {
         throw new Error(`Entity id ${id} not found`);
       }
@@ -209,7 +213,7 @@ class EntityService implements IEntityService {
       id: String(entity.id),
       stringField: entity.string_field,
       intField: entity.int_field,
-      enumField: entity.enum_field,
+      enumField: entity.enum_field as enum_entities_enum_field,
       stringArrayField: entity.string_array_field,
       boolField: entity.bool_field,
       fileName: entity.file_name,
@@ -218,12 +222,12 @@ class EntityService implements IEntityService {
 
   async getEntities(): Promise<EntityResponseDTO[]> {
     try {
-      const entities: Array<PgEntity> = await PgEntity.findAll({ raw: true });
+      const entities: Array<entities> = await prisma.entities.findMany();
       return entities.map((entity) => ({
         id: String(entity.id),
         stringField: entity.string_field,
         intField: entity.int_field,
-        enumField: entity.enum_field,
+        enumField: entity.enum_field as enum_entities_enum_field,
         stringArrayField: entity.string_array_field,
         boolField: entity.bool_field,
         fileName: entity.file_name,
@@ -237,7 +241,7 @@ class EntityService implements IEntityService {
   }
 
   async createEntity(entity: EntityRequestDTO): Promise<EntityResponseDTO> {
-    let newEntity: PgEntity | null;
+    let newEntity: entities | null;
     const fileName = entity.filePath ? uuidv4() : "";
     try {
       if (entity.filePath) {
@@ -247,13 +251,15 @@ class EntityService implements IEntityService {
           entity.fileContentType,
         );
       }
-      newEntity = await PgEntity.create({
-        string_field: entity.stringField,
-        int_field: entity.intField,
-        enum_field: entity.enumField,
-        string_array_field: entity.stringArrayField,
-        bool_field: entity.boolField,
-        file_name: fileName,
+      newEntity = await prisma.entities.create({
+        data: {
+          string_field: entity.stringField,
+          int_field: entity.intField,
+          enum_field: entity.enumField as enum_entities_enum_field,
+          string_array_field: entity.stringArrayField,
+          bool_field: entity.boolField,
+          file_name: fileName,
+        },
       });
     } catch (error: unknown) {
       Logger.error(
@@ -265,7 +271,7 @@ class EntityService implements IEntityService {
       id: String(newEntity.id),
       stringField: newEntity.string_field,
       intField: newEntity.int_field,
-      enumField: newEntity.enum_field,
+      enumField: newEntity.enum_field as enum_entities_enum_field,
       stringArrayField: newEntity.string_array_field,
       boolField: newEntity.bool_field,
       fileName,
@@ -276,14 +282,15 @@ class EntityService implements IEntityService {
     id: string,
     entity: EntityRequestDTO,
   ): Promise<EntityResponseDTO | null> {
-    let resultingEntity: PgEntity | null;
-    let updateResult: [number, PgEntity[]] | null;
+    let resultingEntity: entities | null;
     let fileName = "";
     try {
-      const currentEntity = await PgEntity.findByPk(id, {
-        raw: true,
-        attributes: ["file_name"],
-      });
+      const currentEntity = await prisma.entities.findUnique({
+        where: { id: Number(id) },
+        select: {
+          file_name: true,
+        }
+      }) as { file_name: string } | null ;
       const currentFileName = currentEntity?.file_name;
       if (entity.filePath) {
         fileName = currentFileName || uuidv4();
@@ -303,33 +310,32 @@ class EntityService implements IEntityService {
       } else if (currentFileName) {
         await this.storageService.deleteFile(currentFileName);
       }
-      updateResult = await PgEntity.update(
+      resultingEntity = await prisma.entities.update({
+        where: { id: Number(id) },
+        data :
         {
           string_field: entity.stringField,
           int_field: entity.intField,
-          enum_field: entity.enumField,
+          enum_field: entity.enumField as enum_entities_enum_field,
           string_array_field: entity.stringArrayField,
           bool_field: entity.boolField,
           file_name: fileName,
         },
-        { where: { id }, returning: true },
-      );
-
-      if (!updateResult[0]) {
-        throw new Error(`Entity id ${id} not found`);
-      }
-      [, [resultingEntity]] = updateResult;
+      });
     } catch (error: unknown) {
       Logger.error(
         `Failed to update entity. Reason = ${getErrorMessage(error)}`,
       );
       throw error;
     }
+    if (!resultingEntity) {
+      throw new Error(`Failed to update entity with id ${id}`);
+    }
     return {
       id: String(resultingEntity.id),
       stringField: resultingEntity.string_field,
       intField: resultingEntity.int_field,
-      enumField: resultingEntity.enum_field,
+      enumField: resultingEntity.enum_field as enum_entities_enum_field,
       stringArrayField: resultingEntity.string_array_field,
       boolField: resultingEntity.bool_field,
       fileName,
@@ -338,12 +344,10 @@ class EntityService implements IEntityService {
 
   async deleteEntity(id: string): Promise<string> {
     try {
-      const entityToDelete = await PgEntity.findByPk(id, { raw: true });
-      const deleteResult: number | null = await PgEntity.destroy({
-        where: { id },
-      });
+      const entityToDelete = await prisma.entities.findUnique({ where: { id: Number(id) } });
+      await prisma.entities.delete({ where: { id: Number(id) } });
 
-      if (!entityToDelete || !deleteResult) {
+      if (!entityToDelete) {
         throw new Error(`Entity id ${id} not found`);
       }
       if (entityToDelete.file_name) {
@@ -360,5 +364,4 @@ class EntityService implements IEntityService {
 }
 
 export default EntityService;
-
 // } postgresql
